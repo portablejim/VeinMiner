@@ -22,12 +22,24 @@ public class BlockID
     public BlockID(String format, String delimiter, int defaultVal)
     {
         String[] s = format.split(delimiter);
-        
-        id = CommonUtils.parseInt(s[0].trim(), defaultVal);
+
+        try {
+            id = Integer.parseInt(s[0]);
+        }
+        catch (NumberFormatException e) {
+            id = defaultVal;
+        }
+
         if (s.length < 2)
             metadata = -1;
-        else
-            metadata = CommonUtils.parseInt(s[1].trim(), -1);
+        else {
+            try {
+                metadata = Integer.parseInt(s[2]);
+            }
+            catch (NumberFormatException e) {
+                metadata = -1;
+            }
+        }
     }
     
     public BlockID(String format, String delimiter)
@@ -42,7 +54,7 @@ public class BlockID
      */
     public BlockID(String format)
     {
-        this(format, ",");
+        this(format, ":");
     }
     
     public BlockID(Block block, int metadata)
@@ -95,15 +107,12 @@ public class BlockID
     @Override
     public int hashCode()
     {
-        int result = 23;
-        result = HashCodeUtil.hash(result, id);
-        result = HashCodeUtil.hash(result, metadata);
-        return result;
+        return (this.id << 8) + this.metadata;
     }
     
     @Override
     public String toString()
     {
-        return (metadata == -1 ? id + "" : id + ", " + metadata);
+        return (metadata == -1 ? id + "" : id + ":" + metadata);
     }
 }
