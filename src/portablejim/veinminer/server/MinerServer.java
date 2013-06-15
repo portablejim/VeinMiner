@@ -1,5 +1,11 @@
 package portablejim.veinminer.server;
 
+import portablejim.veinminer.util.BlockID;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  * User: james

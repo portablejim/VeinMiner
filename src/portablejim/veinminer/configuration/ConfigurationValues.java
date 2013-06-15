@@ -1,11 +1,11 @@
-package portablejim.veinminer.server;
+package portablejim.veinminer.configuration;
 
 /**
  * Created with IntelliJ IDEA.
  * User: james
- * Date: 8/06/13
- * Time: 5:08 PM
+ * Date: 14/06/13
+ * Time: 3:30 PM
  * To change this template use File | Settings | File Templates.
  */
-public class PlayerSettings {
+public class ConfigurationValues {
 }
