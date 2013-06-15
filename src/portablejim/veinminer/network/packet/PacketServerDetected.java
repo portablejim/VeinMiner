@@ -1,5 +1,7 @@
 package portablejim.veinminer.network.packet;
 
+import portablejim.veinminer.network.PacketTypeHandler;
+
 /**
  * Created with IntelliJ IDEA.
  * User: james
@@ -8,4 +10,7 @@ package portablejim.veinminer.network.packet;
  * To change this template use File | Settings | File Templates.
  */
 public class PacketServerDetected extends PacketVeinMiner {
+    public PacketServerDetected(PacketTypeHandler packetType) {
+        super(packetType);
+    }
 }
