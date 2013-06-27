@@ -40,6 +40,11 @@ public class ConfigurationSettings {
      */
     private HashMap<BlockID, Integer> blockCongruenceMap;
 
+    /**
+     * The items specified as each tool.
+     */
+    private Set<Integer>[] toolIds;
+
     private int blockLimit;
 
     private int radiusLimit;
@@ -125,13 +130,41 @@ public class ConfigurationSettings {
         return blockCongruenceList.get(listId);
     }
 
-    public boolean areBlocksCongurent(BlockID block1, BlockID block2) {
+    public boolean areBlocksCongruent(BlockID block1, BlockID block2) {
 
         if (blockCongruenceMap.containsKey(block1) && blockCongruenceMap.containsKey(block2)) {
             return  blockCongruenceMap.get(block1) == blockCongruenceMap.get(block2);
         }
 
         return false;
+    }
+
+    public void setToolIds(ToolType tool, String ids) {
+        String[] toolsString = ids.split(",");
+
+        for (String idString : toolsString) {
+            int newToolId;
+
+            try {
+                newToolId = Integer.parseInt(idString);
+            }
+            catch (NumberFormatException e) {
+                // Invalid, skip value
+                continue;
+            }
+
+            toolIds[tool.ordinal()].add(newToolId);
+        }
+    }
+
+    public void clearToolIds() {
+        for (ToolType tool : ToolType.values()) {
+
+        }
+    }
+
+    public Set<Integer>[] getToolIds() {
+        return toolIds;
     }
 
     public int getBlockLimit() {
