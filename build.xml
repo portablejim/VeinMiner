@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE project>
+<project name="VeinMiner" default="build">
+    <description>Generic ForgeMod Builder</description>
+
+    <target name="init">
+        <!-- load properties from files -->
+        <property file="ant/build.properties"/>
+        <property file="ant/mod.properties"/>
+        <property name="version" value="${version.minecraft}.r${version.build}"/>
+
+        <!-- base dirs -->
+        <property name="dev.home" location="${dir.project}"/>
+        <property name="mcp.home" location="${dir.mcp}"/>
+        <property name="release.home" location="${dev.home}/release"/>
+        <property name="release.jar" value="[${version.minecraft}]${mod.id}.${version}.jar"/>
+
+        <!-- setup python -->
+        <property name="python.win" location="${mcp.home}/runtime/bin/python/python_mcp"/>
+        <condition property="python" value="${python.win}" else="python">
+            <os family="Windows"/>
+        </condition>
+
+        <!-- setup source dirs -->
+        <property name="dev.src" location="${dev.home}/src"/>
+        <property name="dev.ant" location="${dev.home}/ant" />
+        <property name="dev.package" location="${dev.home}/package" />
+
+        <!-- check if the directories are present -->
+        <condition property="has.dev.src" value="true" else="false">
+            <available file="${dev.src}" type="dir"/>
+        </condition>
+
+        <!-- setup MCP dirs -->
+        <property name="mcp.src" location="${mcp.home}/src"/>
+        <property name="mcp.src.minecraft" location="${mcp.src}/minecraft"/>
+        <property name="mcp.bin" location="${mcp.home}/reobf/minecraft"/>
+    </target>
+
+    <target name="clean">
+        <!-- clean minecraft sources -->
+        <delete verbose="true" failonerror="false">
+            <fileset dir="${mcp.src.minecraft}">
+                <present present="both" targetdir="${dev.src}"/>
+            </fileset>
+        </delete>
+
+        <!-- clean classes -->
+        <delete verbose="true" failonerror="false">
+            <fileset dir="${mcp.bin}"/>
+        </delete>
+    </target>
+
+    <target name="merge-mod" if="${has.dev.src}">
+        <!-- merge minecraft sources -->
+        <copy todir="${mcp.src.minecraft}" overwrite="true" verbose="true">
+            <fileset dir="${dev.src}" includes="**/*.java"/>
+        </copy>
+    </target>
+
+    <target name="recompile">
+        <!-- recompile -->
+        <exec executable="${python}" dir="${mcp.home}" failonerror="true">
+            <arg value="${mcp.home}/runtime/recompile.py"/>
+        </exec>
+    </target>
+
+    <target name="reobfuscate">
+        <!-- reobfuscate -->
+        <exec executable="${python}" dir="${mcp.home}" failonerror="true">
+            <arg value="${mcp.home}/runtime/reobfuscate.py"/>
+            <arg value="--srgnames" />
+        </exec>
+    </target>
+
+    <target name="build-Forge-jar">
+        <!-- build the jar -->
+        <jar manifest="${dev.ant}/manifest/MANIFEST.MF" destfile="${release.home}/${release.jar}">
+            <fileset dir="${mcp.bin}" includes="portablejim/veinminer/**/*.class"/>
+            <fileset dir="${dev.package}" />
+        </jar>
+    </target>
+
+    <target name="build" depends="init">
+        <!-- build the project and clean up MCP after -->
+        <antcall target="clean"/>
+        <antcall target="merge-mod"/>
+        <antcall target="recompile"/>
+        <antcall target="reobfuscate"/>
+        <antcall target="build-Forge-jar"/>
+
+        <antcall target="clean"/>
+    </target>
+</project>
