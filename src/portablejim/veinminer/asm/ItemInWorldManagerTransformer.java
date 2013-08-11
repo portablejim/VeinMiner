@@ -4,6 +4,9 @@ import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.asm.transformers.DeobfuscationTransformer;
 import cpw.mods.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
 import cpw.mods.fml.relauncher.IClassTransformer;
+import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.world.World;
 import org.objectweb.asm.*;
 import org.objectweb.asm.commons.LocalVariablesSorter;
 import org.objectweb.asm.tree.*;
@@ -17,7 +20,7 @@ public class ItemInWorldManagerTransformer implements IClassTransformer {
     public String targetClassName = "portablejim/veinminer/VeinMiner";
     public String targetClassType = "Lportablejim/veinminer/VeinMiner;";
     public String targetMethodName = "blockMined";
-    public String targetMethodType = "(IIIZ)V";
+    public String targetMethodType = "(%s%sIIIZ)V";
     public static final HashMap<String, String> srgMappings;
     static {
         srgMappings = new HashMap<String, String>();
@@ -27,9 +30,12 @@ public class ItemInWorldManagerTransformer implements IClassTransformer {
         srgMappings.put("thisPlayerMP", "field_73090_b");
     }
 
+    private HashMap<String, String> typemap;
+
     private boolean obfuscated = true;
 
     public ItemInWorldManagerTransformer() {
+        typemap = new HashMap<String, String>();
     }
 
     @Override
@@ -75,11 +81,18 @@ public class ItemInWorldManagerTransformer implements IClassTransformer {
         // Add in function call to call function
         InsnList veinMinerFunctionCall = new InsnList();
         veinMinerFunctionCall.add(new FieldInsnNode(Opcodes.GETSTATIC, targetClassName, "instance", targetClassType));
+        veinMinerFunctionCall.add(new VarInsnNode(Opcodes.ALOAD, 0));
+        veinMinerFunctionCall.add(new FieldInsnNode(Opcodes.GETFIELD, obfuscatedClassName.replace(".", "/"), getCorrectName("theWorld"), typemap.get(getCorrectName("theWorld"))));
+        veinMinerFunctionCall.add(new VarInsnNode(Opcodes.ALOAD, 0));
+        veinMinerFunctionCall.add(new FieldInsnNode(Opcodes.GETFIELD, obfuscatedClassName.replace(".", "/"), getCorrectName("thisPlayerMP"), typemap.get(getCorrectName("thisPlayerMP"))));
         veinMinerFunctionCall.add(new VarInsnNode(Opcodes.ILOAD, 1));
         veinMinerFunctionCall.add(new VarInsnNode(Opcodes.ILOAD, 2));
         veinMinerFunctionCall.add(new VarInsnNode(Opcodes.ILOAD, 3));
         veinMinerFunctionCall.add(new VarInsnNode(Opcodes.ILOAD, newVarIndex));
-        veinMinerFunctionCall.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, targetClassName, targetMethodName, targetMethodType));
+
+        String worldType = typemap.get(getCorrectName("theWorld"));
+        String playerType = typemap.get(getCorrectName("thisPlayerMP"));
+        veinMinerFunctionCall.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, targetClassName, targetMethodName, String.format(targetMethodType, worldType, playerType)));
         curMethod.instructions.insert(curMethod.instructions.get(index), veinMinerFunctionCall);
         ++index;
 
@@ -94,6 +107,16 @@ public class ItemInWorldManagerTransformer implements IClassTransformer {
         ClassNode classNode = new ClassNode();
         ClassReader classReader = new ClassReader(bytes);
         classReader.accept(classNode, 0);
+
+        // Setup type map
+        for(FieldNode variable : classNode.fields) {
+            String srgVariableName = FMLDeobfuscatingRemapper.INSTANCE.mapFieldName(obfuscatedClassName, variable.name, variable.desc);
+            FMLLog.getLogger().info(String.format("FIELD: %s | %s", srgVariableName, getCorrectName("theWorld")));
+            if(getCorrectName("theWorld").equals(srgVariableName) ||
+                    getCorrectName("thisPlayerMP").equals(srgVariableName)) {
+                typemap.put(srgVariableName, variable.desc);
+            }
+        }
 
         Iterator<MethodNode> methods = classNode.methods.iterator();
         while(methods.hasNext()) {
