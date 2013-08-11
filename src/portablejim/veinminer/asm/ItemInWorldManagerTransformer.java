@@ -1,41 +1,27 @@
 package portablejim.veinminer.asm;
 
-import cpw.mods.fml.common.FMLLog;
-import cpw.mods.fml.common.asm.transformers.DeobfuscationTransformer;
 import cpw.mods.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
 import cpw.mods.fml.relauncher.IClassTransformer;
-import net.minecraft.client.multiplayer.WorldClient;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.world.World;
 import org.objectweb.asm.*;
 import org.objectweb.asm.commons.LocalVariablesSorter;
 import org.objectweb.asm.tree.*;
-import portablejim.veinminer.VeinMiner;
-
 import java.util.HashMap;
 import java.util.Iterator;
 
-public class ItemInWorldManagerTransformer implements IClassTransformer {
+public class ItemInWorldManagerTransformer extends GenericTransformer implements IClassTransformer {
 
     public String targetClassName = "portablejim/veinminer/VeinMiner";
     public String targetClassType = "Lportablejim/veinminer/VeinMiner;";
     public String targetMethodName = "blockMined";
     public String targetMethodType = "(%s%sIIIZ)V";
-    public static final HashMap<String, String> srgMappings;
-    static {
+
+    public  ItemInWorldManagerTransformer() {
+        super();
         srgMappings = new HashMap<String, String>();
         srgMappings.put("uncheckedTryHarvestBlock", "func_73082_a");
         srgMappings.put("tryHarvestBlock", "func_73084_b");
         srgMappings.put("theWorld", "field_73092_a");
         srgMappings.put("thisPlayerMP", "field_73090_b");
-    }
-
-    private HashMap<String, String> typemap;
-
-    private boolean obfuscated = true;
-
-    public ItemInWorldManagerTransformer() {
-        typemap = new HashMap<String, String>();
     }
 
     @Override
@@ -45,24 +31,7 @@ public class ItemInWorldManagerTransformer implements IClassTransformer {
             obfuscated = !transformedName.equals(name);
             bytes = transformItemInWorldManager(name, bytes);
         }
-
         return bytes;
-    }
-
-    private String getCorrectName(String name) {
-        if(obfuscated && srgMappings.containsKey(name)) {
-            return srgMappings.get(name);
-        }
-        return name;
-    }
-
-    public boolean isMethodWithName(AbstractInsnNode instruction, String obfuscatedClassName, String name) {
-        if(instruction.getType() == AbstractInsnNode.METHOD_INSN) {
-            MethodInsnNode methodNode = (MethodInsnNode)instruction;
-            String srgName = FMLDeobfuscatingRemapper.INSTANCE.mapMethodName(obfuscatedClassName, methodNode.name, methodNode.desc);
-            return srgName.equals(getCorrectName(name));
-        }
-        return false;
     }
 
     private void transformUncheckedTryHarvestBlock(MethodNode curMethod, String obfuscatedClassName) {
@@ -111,7 +80,6 @@ public class ItemInWorldManagerTransformer implements IClassTransformer {
         // Setup type map
         for(FieldNode variable : classNode.fields) {
             String srgVariableName = FMLDeobfuscatingRemapper.INSTANCE.mapFieldName(obfuscatedClassName, variable.name, variable.desc);
-            FMLLog.getLogger().info(String.format("FIELD: %s | %s", srgVariableName, getCorrectName("theWorld")));
             if(getCorrectName("theWorld").equals(srgVariableName) ||
                     getCorrectName("thisPlayerMP").equals(srgVariableName)) {
                 typemap.put(srgVariableName, variable.desc);
