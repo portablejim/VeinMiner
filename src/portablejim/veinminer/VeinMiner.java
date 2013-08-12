@@ -1,5 +1,6 @@
 package portablejim.veinminer;
 
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.Mod.PreInit;
@@ -14,6 +15,8 @@ import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
+import portablejim.veinminer.event.EntityDropHook;
 import portablejim.veinminer.lib.ModInfo;
 import portablejim.veinminer.proxy.CommonProxy;
 
@@ -33,6 +36,7 @@ public class VeinMiner {
 
     @Init
     public void init(FMLInitializationEvent event) {
+        MinecraftForge.EVENT_BUS.register(new EntityDropHook());
     }
 
     @PostInit

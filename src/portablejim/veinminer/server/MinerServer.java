@@ -1,10 +1,6 @@
 package portablejim.veinminer.server;
 
-import portablejim.veinminer.util.BlockID;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import net.minecraft.entity.Entity;
 
 /**
  * Created with IntelliJ IDEA.
@@ -21,5 +17,11 @@ public class MinerServer {
         instance = this;
     }
 
+    public void addEntity(Entity entity) {
 
+    }
+
+    public boolean isRegistered(int x, int y, int z) {
+        return false;
+    }
 }
