@@ -19,6 +19,7 @@ import net.minecraftforge.common.MinecraftForge;
 import portablejim.veinminer.event.EntityDropHook;
 import portablejim.veinminer.lib.ModInfo;
 import portablejim.veinminer.proxy.CommonProxy;
+import portablejim.veinminer.util.BlockID;
 
 @Mod(modid = ModInfo.MOD_ID, name = ModInfo.MOD_NAME, version = ModInfo.VERSION)
 @NetworkMod(clientSideRequired = false, serverSideRequired = false, channels = { ModInfo.CHANNEL } )
@@ -49,6 +50,6 @@ public class VeinMiner {
 
     }
 
-    public void blockMined(World world, EntityPlayerMP player, int x, int y, int z, boolean harvestBlockSuccess) {
+    public void blockMined(World world, EntityPlayerMP player, int x, int y, int z, boolean harvestBlockSuccess, BlockID blockId) {
     }
 }
