@@ -31,6 +31,7 @@ public class EntityDropHook {
         boolean isBlock = Block.blocksList[entity.entityId] != null;
         boolean isItem = Item.itemsList[entity.entityId] != null;
 
+        new MinerServer();
         if((isBlock || isItem) && MinerServer.instance.isRegistered(entityX, entityY, entityZ)) {
             MinerServer.instance.addEntity(entity);
             event.setCanceled(true);
