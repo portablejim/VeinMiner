@@ -56,4 +56,30 @@ public class Point {
         }
         return false;
     }
+
+    public int distanceFrom(Point target) {
+        return distanceFrom(target.x, target.y, target.z);
+    }
+
+    /**
+     *
+     * @param x X coordinate of target.
+     * @param y Y coordinate of target.
+     * @param z Z coordinate of target.
+     * @return square of distance
+     */
+    public int distanceFrom(int x, int y, int z) {
+        int distanceX = this.x - x;
+        int distanceY = this.y - y;
+        int distanceZ = this.z - z;
+        return distanceX * distanceX + distanceY * distanceY + distanceZ * distanceZ;
+    }
+
+    public boolean isWithinRange(Point target, int range) {
+        return isWithinRange(target.x, target.y, target.z, range);
+    }
+
+    public boolean isWithinRange(int x, int y, int z, int range) {
+        return distanceFrom(x, y, z) <= (range * range);
+    }
 }

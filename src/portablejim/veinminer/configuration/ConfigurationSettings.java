@@ -1,5 +1,6 @@
 package portablejim.veinminer.configuration;
 
+import net.minecraft.item.ItemStack;
 import portablejim.veinminer.util.BlockID;
 
 import java.util.ArrayList;
@@ -211,5 +212,9 @@ public class ConfigurationSettings {
 
     public void setDefaultSneakMode(boolean defaultSneakMode) {
         this.defaultSneakMode = defaultSneakMode;
+    }
+
+    public boolean toolIsOfType(ItemStack tool, ToolType type) {
+        return this.toolIds[type.ordinal()].contains(tool.itemID);
     }
 }
