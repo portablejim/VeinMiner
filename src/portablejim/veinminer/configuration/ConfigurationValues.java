@@ -1,5 +1,9 @@
 package portablejim.veinminer.configuration;
 
+import net.minecraftforge.common.Configuration;
+
+import java.io.File;
+
 /**
  * Created with IntelliJ IDEA.
  * User: james
@@ -9,8 +13,17 @@ package portablejim.veinminer.configuration;
  */
 public class ConfigurationValues {
 
+    private Configuration configFile;
+
+    public static final String CONFIG_BLOCKLIST = "blockList";
+    public static final String CONFIG_BLOCKLIST_COMMENT = "IDs of blocks to auto-mine. Separate ids with ',' and metadata from ID with ':'.";
+    public static final String CONFIG_ITEMLIST = "itemList";
+    public static final String CONFIG_ITEMLIST_COMMENT = "Tools to use to auto-mine with. Separate ids with ',' and metadata from ID with ':'.";
+    public static final String CONFIG_LIMITS = "limit";
+    public static final String CONFIG_MISC = "misc";
+
     public String PICKAXE_BLOCK_ID_LIST;
-    public static final String PICKAKE_BLOCK_ID_LIST_DEFAULT = "14,15,16,21,24:0,21,24:0,24:1,24:2,48,56,73,89,129";
+    public static final String PICKAXE_BLOCK_ID_LIST_DEFAULT = "14,15,16,21,24:0,21,24:0,24:1,24:2,48,56,73,89,129";
     public static final String PICKAXE_BLOCK_ID_LIST_CONFIGNAME = "blockList.pickaxe";
     public static final String PICKAXE_BLOCK_ID_LIST_DESCRIPTION = "Block ids to auto-mine when using a configured pickaxe. [default: '14,15,16,21,24:0,21,24:0,24:1,24:2,48,56,73,89,129']";
 
@@ -63,4 +76,31 @@ public class ConfigurationValues {
     public static final boolean ENABLE_ON_SNEAK_STATUS_DEFAULT = false;
     public static final String ENABLE_ON_SNEAK_STATUS_CONFIGNAME = "default.enableOnSneak";
     public static final String ENABLE_ON_SNEAK_STATUS_DESCRIPTION = "By default, enable VeinMiner only when sneaking, otherwise only enable when not sneaking. This is used if the client does not have the mod. [range: 'true' or 'false' default: false]";
+
+    public ConfigurationValues(File file) {
+        configFile = new Configuration(file);
+        loadConfigFile();
+    }
+
+    public void loadConfigFile() {
+        configFile.load();
+
+        configFile.addCustomCategoryComment(CONFIG_BLOCKLIST, CONFIG_BLOCKLIST_COMMENT);
+        PICKAXE_BLOCK_ID_LIST = configFile.get(CONFIG_BLOCKLIST, PICKAXE_BLOCK_ID_LIST_CONFIGNAME, PICKAXE_BLOCK_ID_LIST_DEFAULT, PICKAXE_BLOCK_ID_LIST_DESCRIPTION).getString();
+        SHOVEL_BLOCK_ID_LIST = configFile.get(CONFIG_BLOCKLIST, SHOVEL_BLOCK_ID_LIST_CONFIGNAME, SHOVEL_BLOCK_ID_LIST_DEFAULT, SHOVEL_BLOCK_ID_LIST_DESCRIPTION).getString();
+        AXE_BLOCK_ID_LIST = configFile.get(CONFIG_BLOCKLIST, AXE_BLOCK_ID_LIST_CONFIGNAME, PICKAXE_BLOCK_ID_LIST_DEFAULT, AXE_BLOCK_ID_LIST_DESCRIPTION).getString();
+        configFile.addCustomCategoryComment(CONFIG_ITEMLIST, CONFIG_ITEMLIST_COMMENT);
+        PICKAXE_ID_LIST = configFile.get(CONFIG_ITEMLIST, PICKAXE_ID_LIST_CONFIGNAME, PICKAXE_ID_LIST_DEFAULT, PICKAXE_ID_LIST_DESCRIPTION).getString();
+        SHOVEL_ID_LIST = configFile.get(CONFIG_ITEMLIST, SHOVEL_ID_LIST_CONFIGNAME, PICKAXE_ID_LIST_DEFAULT, SHOVEL_ID_LIST_DESCRIPTION).getString();
+        AXE_ID_LIST = configFile.get(CONFIG_ITEMLIST, AXE_ID_LIST_CONFIGNAME, PICKAXE_ID_LIST_DEFAULT, AXE_ID_LIST_DESCRIPTION).getString();
+
+        BLOCK_LIMIT = configFile.get(CONFIG_LIMITS, BLOCK_LIMIT_CONFIGNAME, BLOCK_LIMIT_DEFAULT, BLOCK_LIMIT_DESCRIPTION).getInt(BLOCK_LIMIT_DEFAULT);
+        RADIUS_LIMIT = configFile.get(CONFIG_LIMITS, RADIUS_LIMIT_CONFIGNAME, RADIUS_LIMIT_DEFAULT, RADIUS_LIMIT_DESCRIPTION).getInt(RADIUS_LIMIT_DEFAULT);
+        BLOCKS_PER_TICK = configFile.get(CONFIG_LIMITS, BLOCKS_PER_TICK_CONFIGNAME, BLOCKS_PER_TICK_DEFAULT, BLOCKS_PER_TICK_DESCRIPTION).getInt(BLOCKS_PER_TICK_DEFAULT);
+
+        BLOCK_EQUIVALENCY_LIST = configFile.get(CONFIG_MISC, BLOCK_EQUIVALENCY_LIST_CONFIGNAME, BLOCK_EQUIVALENCY_LIST_DEFAULT, BLOCK_EQUIVALENCY_LIST_DESCRIPTION).getString();
+        ENABLE_ON_SNEAK_STATUS = configFile.get(CONFIG_MISC, ENABLE_ON_SNEAK_STATUS_CONFIGNAME, ENABLE_ON_SNEAK_STATUS_DEFAULT, ENABLE_ON_SNEAK_STATUS_DESCRIPTION).getBoolean(ENABLE_ON_SNEAK_STATUS_DEFAULT);
+
+        configFile.save();
+    }
 }

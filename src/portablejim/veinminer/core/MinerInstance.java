@@ -1,5 +1,7 @@
 package portablejim.veinminer.core;
 
+import cpw.mods.fml.common.registry.TickRegistry;
+import cpw.mods.fml.relauncher.Side;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemInWorldManager;
@@ -7,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.FoodStats;
 import net.minecraft.world.World;
 import portablejim.veinminer.configuration.ConfigurationSettings;
+import portablejim.veinminer.event.InstanceTicker;
 import portablejim.veinminer.server.MinerServer;
 import portablejim.veinminer.server.PlayerStatus;
 import portablejim.veinminer.util.BlockID;
@@ -46,10 +49,11 @@ public class MinerInstance {
         finished = false;
         serverInstance = server;
         usedItem = player.getCurrentEquippedItem();
+        TickRegistry.registerTickHandler(new InstanceTicker(this), Side.SERVER);
     }
 
     private boolean shouldContinue() {
-        if(!player.getCurrentEquippedItem().isItemEqual(usedItem)) {
+        if(player.getCurrentEquippedItem() == null || !player.getCurrentEquippedItem().isItemEqual(usedItem)) {
             this.finished = true;
         }
         FoodStats food = player.getFoodStats();
@@ -80,7 +84,12 @@ public class MinerInstance {
     }
 
     private void mineBlock(int x, int y, int z) {
-        player.theItemInWorldManager.tryHarvestBlock(x, y, z);
+        boolean success = player.theItemInWorldManager.tryHarvestBlock(x, y, z);
+        // Only go ahead if block was destroyed. Stops mining through protected areas.
+        if(success) {
+            Point newPoint = new Point(x, y, z);
+            destroyQueue.add(newPoint);
+        }
     }
 
     public synchronized void mineVein(int x, int y, int z) {
@@ -111,9 +120,19 @@ public class MinerInstance {
                     }
 
                     if(toolAllowedForBlock(usedItem, newBlock)) {
-                        mineBlock(x, y, z);
+                        mineBlock(x + dx, y + dy, z + dz);
                     }
                 }
+            }
+        }
+    }
+
+    public void mineScheduled() {
+        int quantity = 1;
+        for(int i = 0; i < quantity; i++) {
+            if(!destroyQueue.isEmpty()) {
+                Point target = destroyQueue.remove();
+                mineVein(target.getX(), target.getY(), target.getZ());
             }
         }
     }

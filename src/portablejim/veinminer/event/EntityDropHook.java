@@ -7,6 +7,8 @@ import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import portablejim.veinminer.server.MinerServer;
 
+import java.util.Arrays;
+
 /**
  * Created with IntelliJ IDEA.
  * User: james
@@ -24,15 +26,26 @@ public class EntityDropHook {
             return;
         }
 
+        if(MinerServer.instance == null) {
+            return;
+        }
+
         int entityX = (int)Math.floor(entity.posX);
         int entityY = (int)Math.floor(entity.posY);
         int entityZ = (int)Math.floor(entity.posZ);
 
-        boolean isBlock = Block.blocksList[entity.entityId] != null;
-        boolean isItem = Item.itemsList[entity.entityId] != null;
+        boolean isBlock = false;
+        boolean isItem = false;
 
-        new MinerServer();
-        if((isBlock || isItem) && MinerServer.instance.isRegistered(entityX, entityY, entityZ)) {
+        if(entity.entityId < Block.blocksList.length) {
+            isBlock = Block.blocksList[entity.entityId] != null;
+        }
+        if(entity.entityId < Item.itemsList.length) {
+            isItem = Item.itemsList[entity.entityId] != null;
+        }
+
+        //new MinerServer();
+        if((isBlock || isItem) && MinerServer.instance != null && MinerServer.instance.isRegistered(entityX, entityY, entityZ)) {
             MinerServer.instance.addEntity(entity);
             event.setCanceled(true);
         }

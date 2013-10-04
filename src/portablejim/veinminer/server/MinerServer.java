@@ -2,6 +2,7 @@ package portablejim.veinminer.server;
 
 import net.minecraft.entity.Entity;
 import portablejim.veinminer.configuration.ConfigurationSettings;
+import portablejim.veinminer.configuration.ConfigurationValues;
 import portablejim.veinminer.core.MinerInstance;
 
 import java.util.HashMap;
@@ -21,10 +22,10 @@ public class MinerServer {
     private HashMap<String, PlayerStatus> players;
     private ConfigurationSettings settings;
 
-    public MinerServer() {
+    public MinerServer(ConfigurationValues configValues) {
         instance = this;
         players = new HashMap<String, PlayerStatus>();
-        settings = new ConfigurationSettings();
+        settings = new ConfigurationSettings(configValues);
     }
 
     public void setPlayerStatus(String player, PlayerStatus status) {

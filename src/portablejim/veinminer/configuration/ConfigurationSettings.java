@@ -3,10 +3,8 @@ package portablejim.veinminer.configuration;
 import net.minecraft.item.ItemStack;
 import portablejim.veinminer.util.BlockID;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.io.File;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,10 +15,25 @@ import java.util.Set;
  */
 public class ConfigurationSettings {
 
-    public ConfigurationSettings() {
+    ConfigurationValues configValues;
+
+    public ConfigurationSettings(ConfigurationValues configValues) {
+        this.configValues = configValues;
+        toolIds = new Set[ToolType.values().length];
+        for (ToolType tool : ToolType.values()) {
+            toolIds[tool.ordinal()] = new HashSet<Integer>();
+        }
+        blockWhitelist = new ArrayList[ToolType.values().length];
         for (ToolType tool : ToolType.values()) {
             blockWhitelist[tool.ordinal()] = new ArrayList<BlockID>();
         }
+
+        parseConfigValues();
+    }
+
+    private void parseConfigValues() {
+        setBlockWhitelist(ToolType.PICKAXE, configValues.PICKAXE_BLOCK_ID_LIST);
+        setToolIds(ToolType.PICKAXE, configValues.PICKAXE_ID_LIST);
     }
 
     public enum ToolType { PICKAXE, SHOVEL, AXE  }
@@ -61,7 +74,7 @@ public class ConfigurationSettings {
      *                  See {@link ConfigurationValues}.
      * @param tool
      */
-    public void setBlockWhitelist(String whitelist, ToolType tool) {
+    public void setBlockWhitelist(ToolType tool, String whitelist) {
         String[] blocksString = whitelist.split(",");
 
         for (String blockString : blocksString ) {

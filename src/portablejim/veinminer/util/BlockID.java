@@ -34,7 +34,7 @@ public class BlockID
             metadata = -1;
         else {
             try {
-                metadata = Integer.parseInt(s[2]);
+                metadata = Integer.parseInt(s[1]);
             }
             catch (NumberFormatException e) {
                 metadata = -1;
