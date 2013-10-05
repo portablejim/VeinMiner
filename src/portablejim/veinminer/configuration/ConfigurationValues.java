@@ -23,9 +23,9 @@ public class ConfigurationValues {
     public static final String CONFIG_MISC = "misc";
 
     public String PICKAXE_BLOCK_ID_LIST;
-    public static final String PICKAXE_BLOCK_ID_LIST_DEFAULT = "14,15,16,21,24:0,21,24:0,24:1,24:2,48,56,73,89,129";
+    public static final String PICKAXE_BLOCK_ID_LIST_DEFAULT = "14,15,16,21,24:0,21,24:0,24:1,24:2,48,56,73,74,89,129";
     public static final String PICKAXE_BLOCK_ID_LIST_CONFIGNAME = "blockList.pickaxe";
-    public static final String PICKAXE_BLOCK_ID_LIST_DESCRIPTION = "Block ids to auto-mine when using a configured pickaxe. [default: '14,15,16,21,24:0,21,24:0,24:1,24:2,48,56,73,89,129']";
+    public static final String PICKAXE_BLOCK_ID_LIST_DESCRIPTION = "Block ids to auto-mine when using a configured pickaxe. [default: '14,15,16,21,24:0,21,24:0,24:1,24:2,48,56,73,74,89,129']";
 
     public String SHOVEL_BLOCK_ID_LIST;
     public static final String SHOVEL_BLOCK_ID_LIST_DEFAULT = "82";
@@ -72,11 +72,6 @@ public class ConfigurationValues {
     public static final String BLOCKS_PER_TICK_CONFIGNAME = "limit.blocksPerTick";
     public static final String BLOCKS_PER_TICK_DESCRIPTION = "Maximum number of blocks to be removed per game tick (1/20 seconds). Using a low number will keep the game from getting huge performance drops but also decreases the speed at which blocks are destroyed. [range: 1 ~ 1000, default: 50]";
 
-    public boolean ENABLE_ON_SNEAK_STATUS;
-    public static final boolean ENABLE_ON_SNEAK_STATUS_DEFAULT = false;
-    public static final String ENABLE_ON_SNEAK_STATUS_CONFIGNAME = "default.enableOnSneak";
-    public static final String ENABLE_ON_SNEAK_STATUS_DESCRIPTION = "By default, enable VeinMiner only when sneaking, otherwise only enable when not sneaking. This is used if the client does not have the mod. [range: 'true' or 'false' default: false]";
-
     public ConfigurationValues(File file) {
         configFile = new Configuration(file);
         loadConfigFile();
@@ -99,7 +94,6 @@ public class ConfigurationValues {
         BLOCKS_PER_TICK = configFile.get(CONFIG_LIMITS, BLOCKS_PER_TICK_CONFIGNAME, BLOCKS_PER_TICK_DEFAULT, BLOCKS_PER_TICK_DESCRIPTION).getInt(BLOCKS_PER_TICK_DEFAULT);
 
         BLOCK_EQUIVALENCY_LIST = configFile.get(CONFIG_MISC, BLOCK_EQUIVALENCY_LIST_CONFIGNAME, BLOCK_EQUIVALENCY_LIST_DEFAULT, BLOCK_EQUIVALENCY_LIST_DESCRIPTION).getString();
-        ENABLE_ON_SNEAK_STATUS = configFile.get(CONFIG_MISC, ENABLE_ON_SNEAK_STATUS_CONFIGNAME, ENABLE_ON_SNEAK_STATUS_DEFAULT, ENABLE_ON_SNEAK_STATUS_DESCRIPTION).getBoolean(ENABLE_ON_SNEAK_STATUS_DEFAULT);
 
         configFile.save();
     }

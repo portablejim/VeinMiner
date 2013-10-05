@@ -27,13 +27,25 @@ public class ConfigurationSettings {
         for (ToolType tool : ToolType.values()) {
             blockWhitelist[tool.ordinal()] = new ArrayList<BlockID>();
         }
+        blockCongruenceList = new ArrayList<Set<BlockID>>();
+        blockCongruenceMap = new HashMap<BlockID, Integer>();
 
         parseConfigValues();
     }
 
     private void parseConfigValues() {
+        setBlockWhitelist(ToolType.AXE, configValues.AXE_BLOCK_ID_LIST);
         setBlockWhitelist(ToolType.PICKAXE, configValues.PICKAXE_BLOCK_ID_LIST);
+        setBlockWhitelist(ToolType.SHOVEL, configValues.SHOVEL_BLOCK_ID_LIST);
+        setToolIds(ToolType.AXE, configValues.AXE_ID_LIST);
         setToolIds(ToolType.PICKAXE, configValues.PICKAXE_ID_LIST);
+        setToolIds(ToolType.SHOVEL, configValues.SHOVEL_ID_LIST);
+
+        setBlockLimit(configValues.BLOCK_LIMIT);
+        setBlocksPerTick(configValues.BLOCKS_PER_TICK);
+        setRadiusLimit(configValues.RADIUS_LIMIT);
+
+        setBlockCongruenceList(configValues.BLOCK_EQUIVALENCY_LIST);
     }
 
     public enum ToolType { PICKAXE, SHOVEL, AXE  }
@@ -109,7 +121,8 @@ public class ConfigurationSettings {
 
         for (String congruentBlocks : blocksString) {
             int newId = blockCongruenceList.size();
-            List<BlockID> newCongruentBlocks = new ArrayList<BlockID>();
+            //List<BlockID> newCongruentBlocks = new ArrayList<BlockID>();
+            Set<BlockID> newCongruentBlocks = new HashSet<BlockID>();
 
             if (!congruentBlocks.contains("-")) {
                  continue;
@@ -128,6 +141,12 @@ public class ConfigurationSettings {
             }
 
             newCongruentBlocks.addAll(newCongruentBlocks);
+            if(newId < blockCongruenceList.size()) {
+                blockCongruenceList.get(newId).addAll(newCongruentBlocks);
+            }
+            else {
+                blockCongruenceList.add(newId, newCongruentBlocks);
+            }
         }
     }
 
@@ -217,14 +236,6 @@ public class ConfigurationSettings {
         }
 
         this.blocksPerTick = blocksPerTick;
-    }
-
-    public boolean isDefaultSneakMode() {
-        return defaultSneakMode;
-    }
-
-    public void setDefaultSneakMode(boolean defaultSneakMode) {
-        this.defaultSneakMode = defaultSneakMode;
     }
 
     public boolean toolIsOfType(ItemStack tool, ToolType type) {

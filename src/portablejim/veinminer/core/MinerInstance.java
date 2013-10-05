@@ -36,6 +36,8 @@ public class MinerInstance {
     private BlockID targetBlock;
     private boolean finished;
     private ItemStack usedItem;
+    private int numBlocksMined;
+    private Point initalBlock;
 
     private static final int MIN_HUNGER = 1;
 
@@ -49,17 +51,25 @@ public class MinerInstance {
         finished = false;
         serverInstance = server;
         usedItem = player.getCurrentEquippedItem();
+        numBlocksMined = 0;
+        initalBlock = new Point(x, y, z);
         TickRegistry.registerTickHandler(new InstanceTicker(this), Side.SERVER);
     }
 
     private boolean shouldContinue() {
+        // Item equipped
         if(player.getCurrentEquippedItem() == null || !player.getCurrentEquippedItem().isItemEqual(usedItem)) {
             this.finished = true;
         }
+
+        // Not hungry
         FoodStats food = player.getFoodStats();
         if(food.getFoodLevel() < MIN_HUNGER) {
             this.finished = true;
         }
+
+
+        // Player exists and is in correct status (correct button held)
         String playerName = player.getEntityName();
         PlayerStatus playerStatus = serverInstance.getPlayerStatus(playerName);
         if(playerStatus == null) {
@@ -68,6 +78,14 @@ public class MinerInstance {
         else if(playerStatus == PlayerStatus.DISABLED || playerStatus == PlayerStatus.INACTIVE ||
                 (playerStatus == PlayerStatus.SHIFT_ACTIVE && !player.isSneaking()) ||
                 (playerStatus == PlayerStatus.SHIFT_INACTIVE && player.isSneaking())) {
+            this.finished = true;
+        }
+
+        // Within mined block limits
+        if(numBlocksMined < serverInstance.getConfigurationSettings().getBlockLimit()) {
+            numBlocksMined++;
+        }
+        else {
             this.finished = true;
         }
 
@@ -111,9 +129,21 @@ public class MinerInstance {
                     Point newBlockPos = new Point(x + dx, y + dy, z + dz);
                     BlockID newBlock = new BlockID(world, x + dx, y + dy, z + dz);
 
+                    // Ensure valid block
                     if(Block.blocksList[newBlock.id] == null) {
                         continue;
                     }
+
+                    ConfigurationSettings configSettings = serverInstance.getConfigurationSettings();
+
+                    if(!newBlock.equals(targetBlock) && !configSettings.areBlocksCongruent(newBlock, targetBlock)) {
+                        continue;
+                    }
+
+                    if(!newBlockPos.isWithinRange(initalBlock, configSettings.getRadiusLimit())) {
+                        continue;
+                    }
+
                     // Block already scheduled.
                     if(awaitingEntityDrop.contains(newBlockPos)) {
                         continue;
@@ -128,7 +158,7 @@ public class MinerInstance {
     }
 
     public void mineScheduled() {
-        int quantity = 1;
+        int quantity = serverInstance.getConfigurationSettings().getBlocksPerTick();
         for(int i = 0; i < quantity; i++) {
             if(!destroyQueue.isEmpty()) {
                 Point target = destroyQueue.remove();
