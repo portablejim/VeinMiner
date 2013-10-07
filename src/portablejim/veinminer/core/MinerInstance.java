@@ -3,8 +3,8 @@ package portablejim.veinminer.core;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 import net.minecraft.block.Block;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemInWorldManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.FoodStats;
 import net.minecraft.world.World;
@@ -13,10 +13,12 @@ import portablejim.veinminer.event.InstanceTicker;
 import portablejim.veinminer.server.MinerServer;
 import portablejim.veinminer.server.PlayerStatus;
 import portablejim.veinminer.util.BlockID;
+import portablejim.veinminer.util.ItemStackID;
 import portablejim.veinminer.util.Point;
 
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -30,7 +32,7 @@ public class MinerInstance {
     public MinerServer serverInstance;
     private ConcurrentLinkedQueue<Point> destroyQueue;
     private HashSet<Point> awaitingEntityDrop;
-    private LinkedHashMap<BlockID, Integer> drops;
+    private LinkedHashMap<ItemStackID, Integer> drops;
     private World world;
     private EntityPlayerMP player;
     private BlockID targetBlock;
@@ -38,13 +40,14 @@ public class MinerInstance {
     private ItemStack usedItem;
     private int numBlocksMined;
     private Point initalBlock;
+    private boolean cleanedUp;
 
     private static final int MIN_HUNGER = 1;
 
     public MinerInstance(World world, EntityPlayerMP player, int x, int y, int z, BlockID blockID, MinerServer server) {
         destroyQueue = new ConcurrentLinkedQueue<Point>();
         awaitingEntityDrop = new HashSet<Point>();
-        drops = new LinkedHashMap<BlockID, Integer>();
+        drops = new LinkedHashMap<ItemStackID, Integer>();
         this.world = world;
         this.player = player;
         targetBlock = blockID;
@@ -53,6 +56,10 @@ public class MinerInstance {
         usedItem = player.getCurrentEquippedItem();
         numBlocksMined = 0;
         initalBlock = new Point(x, y, z);
+        cleanedUp = false;
+
+        serverInstance.addInstance(this);
+
         TickRegistry.registerTickHandler(new InstanceTicker(this), Side.SERVER);
     }
 
@@ -102,11 +109,15 @@ public class MinerInstance {
     }
 
     private void mineBlock(int x, int y, int z) {
+        Point newPoint = new Point(x, y, z);
+        awaitingEntityDrop.add(newPoint);
         boolean success = player.theItemInWorldManager.tryHarvestBlock(x, y, z);
         // Only go ahead if block was destroyed. Stops mining through protected areas.
         if(success) {
-            Point newPoint = new Point(x, y, z);
             destroyQueue.add(newPoint);
+        }
+        else {
+            awaitingEntityDrop.remove(newPoint);
         }
     }
 
@@ -164,6 +175,50 @@ public class MinerInstance {
                 Point target = destroyQueue.remove();
                 mineVein(target.getX(), target.getY(), target.getZ());
             }
+            else if(!drops.isEmpty()){
+                // All blocks have been mined. This is done last.
+                serverInstance.removeInstance(this);
+                spawnDrops();
+                cleanedUp = true;
+                return;
+            }
         }
+    }
+
+    private void spawnDrops() {
+        for(Map.Entry<ItemStackID, Integer> schedDrop : drops.entrySet()) {
+            ItemStackID itemStack = schedDrop.getKey();
+            int numItems = schedDrop.getValue();
+            while (numItems > itemStack.getMaxStackSize()) {
+                ItemStack newItemStack = new ItemStack(itemStack.getItemId(), itemStack.getMaxStackSize(), itemStack.getDamage());
+                EntityItem newEntityItem = new EntityItem(world, initalBlock.getX(), initalBlock.getY(), initalBlock.getZ(), newItemStack);
+                world.spawnEntityInWorld(newEntityItem);
+                numItems -= itemStack.getMaxStackSize();
+            }
+            ItemStack newItemStack = new ItemStack(itemStack.getItemId(), numItems, itemStack.getDamage());
+            EntityItem newEntityItem = new EntityItem(world, initalBlock.getX(), initalBlock.getY(), initalBlock.getZ(), newItemStack);
+            world.spawnEntityInWorld(newEntityItem);
+        }
+        drops.clear();
+    }
+
+    public boolean isRegistered(Point p) {
+        return awaitingEntityDrop.contains(p);
+    }
+
+    public void addDrop(EntityItem entity, Point point) {
+        ItemStack item = entity.getEntityItem();
+        ItemStackID itemInfo = new ItemStackID(item.itemID, item.getItemDamage(), item.getMaxStackSize());
+
+        if(drops.containsKey(itemInfo)) {
+            int oldDropNumber = drops.get(itemInfo);
+            int newDropNumber = oldDropNumber + item.stackSize;
+            drops.put(itemInfo, newDropNumber);
+        }
+        else {
+            drops.put(itemInfo, item.stackSize);
+        }
+
+        awaitingEntityDrop.remove(point);
     }
 }
