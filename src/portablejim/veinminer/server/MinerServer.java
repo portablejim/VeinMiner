@@ -33,7 +33,12 @@ public class MinerServer {
     }
 
     public void setPlayerStatus(String player, PlayerStatus status) {
-        players.put(player, status);
+        if(status == PlayerStatus.DISABLED) {
+            players.remove(player);
+        }
+        else {
+            players.put(player, status);
+        }
     }
 
     public void removePlayer(String player) {

@@ -13,7 +13,11 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.network.NetworkMod;
+import cpw.mods.fml.common.registry.LanguageRegistry;
+import net.minecraft.command.ICommandManager;
+import net.minecraft.command.ServerCommandManager;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
@@ -22,6 +26,7 @@ import portablejim.veinminer.core.MinerInstance;
 import portablejim.veinminer.event.EntityDropHook;
 import portablejim.veinminer.lib.ModInfo;
 import portablejim.veinminer.proxy.CommonProxy;
+import portablejim.veinminer.server.MinerCommand;
 import portablejim.veinminer.server.MinerServer;
 import portablejim.veinminer.server.PlayerStatus;
 import portablejim.veinminer.util.BlockID;
@@ -57,12 +62,17 @@ public class VeinMiner {
     @ServerStarted
     public void serverStarted(FMLServerStartedEvent event) {
         new MinerServer(configurationValues);
+
+        LanguageRegistry.instance().addStringLocalization("command.veinminer", "/veinminer enable");
+        LanguageRegistry.instance().addStringLocalization("command.veinminer.enable", "/veinminer enable auto/shift/no_shift");
+
+        ServerCommandManager serverCommandManger = (ServerCommandManager) MinecraftServer.getServer().getCommandManager();
+        serverCommandManger.registerCommand(new MinerCommand());
     }
 
     public void blockMined(World world, EntityPlayerMP player, int x, int y, int z, boolean harvestBlockSuccess, BlockID blockId) {
         String output = String.format("Block mined at %d,%d,%d, result %b, block id is %d:%d", x, y, z, harvestBlockSuccess, blockId.id, blockId.metadata);
         MinerInstance ins = new MinerInstance(world, player, x, y, z, blockId, MinerServer.instance);
-        MinerServer.instance.setPlayerStatus(player.username, PlayerStatus.SHIFT_ACTIVE);
         ins.mineVein(x, y, z);
         FMLLog.getLogger().info(output);
     }
