@@ -65,7 +65,8 @@ public class MinerInstance {
 
     private boolean shouldContinue() {
         // Item equipped
-        if(player.getCurrentEquippedItem() == null || !player.getCurrentEquippedItem().isItemEqual(usedItem)) {
+        if(!serverInstance.getConfigurationSettings().getEnableAllTools() &&
+                (player.getCurrentEquippedItem() == null || !player.getCurrentEquippedItem().isItemEqual(usedItem))) {
             this.finished = true;
         }
 
@@ -160,7 +161,7 @@ public class MinerInstance {
                         continue;
                     }
 
-                    if(toolAllowedForBlock(usedItem, newBlock)) {
+                    if(configSettings.getEnableAllBlocks() || toolAllowedForBlock(usedItem, newBlock)) {
                         mineBlock(x + dx, y + dy, z + dz);
                     }
                 }

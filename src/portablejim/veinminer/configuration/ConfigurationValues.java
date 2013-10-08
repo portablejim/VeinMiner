@@ -21,6 +21,7 @@ public class ConfigurationValues {
     public static final String CONFIG_ITEMLIST_COMMENT = "Tools to use to auto-mine with. Separate ids with ',' and metadata from ID with ':'.";
     public static final String CONFIG_LIMITS = "limit";
     public static final String CONFIG_MISC = "misc";
+    public static final String CONFIG_OVERRIDE = "overrides";
 
     public String PICKAXE_BLOCK_ID_LIST;
     public static final String PICKAXE_BLOCK_ID_LIST_DEFAULT = "14,15,16,21,24:0,21,24:0,24:1,24:2,48,56,73,74,89,129";
@@ -72,6 +73,16 @@ public class ConfigurationValues {
     public static final String BLOCKS_PER_TICK_CONFIGNAME = "limit.blocksPerTick";
     public static final String BLOCKS_PER_TICK_DESCRIPTION = "Maximum number of blocks to be removed per game tick (1/20 seconds). Using a low number will keep the game from getting huge performance drops but also decreases the speed at which blocks are destroyed. [range: 1 ~ 1000, default: 50]";
 
+    public boolean ENABLE_ALL_BLOCKS;
+    public static final boolean ENABLE_ALL_BLOCKS_DEFAULT = false;
+    public static final String ENABLE_ALL_BLOCKS_CONFIGNAME = "override.allBlocks";
+    public static final String ENABLE_ALL_BLOCKS_DESCRIPTION = "Mine all blocks with all registered tools that can harvest blocks.";
+
+    public boolean ENABLE_ALL_TOOLS;
+    public static final boolean ENABLE_ALL_TOOLS_DEFAULT = false;
+    public static final String ENABLE_ALL_TOOLS_CONFIGNAME = "override.allTools";
+    public static final String ENABLE_ALL_TOOLS_DESCRIPTION = "Allow all tools, including the open hand, to be used to mine blocks.";
+
     public ConfigurationValues(File file) {
         configFile = new Configuration(file);
         loadConfigFile();
@@ -94,6 +105,9 @@ public class ConfigurationValues {
         BLOCKS_PER_TICK = configFile.get(CONFIG_LIMITS, BLOCKS_PER_TICK_CONFIGNAME, BLOCKS_PER_TICK_DEFAULT, BLOCKS_PER_TICK_DESCRIPTION).getInt(BLOCKS_PER_TICK_DEFAULT);
 
         BLOCK_EQUIVALENCY_LIST = configFile.get(CONFIG_MISC, BLOCK_EQUIVALENCY_LIST_CONFIGNAME, BLOCK_EQUIVALENCY_LIST_DEFAULT, BLOCK_EQUIVALENCY_LIST_DESCRIPTION).getString();
+
+        ENABLE_ALL_BLOCKS = configFile.get(CONFIG_OVERRIDE, ENABLE_ALL_BLOCKS_CONFIGNAME, ENABLE_ALL_BLOCKS_DEFAULT, ENABLE_ALL_BLOCKS_DESCRIPTION).getBoolean(ENABLE_ALL_BLOCKS_DEFAULT);
+        ENABLE_ALL_TOOLS = configFile.get(CONFIG_OVERRIDE, ENABLE_ALL_TOOLS_CONFIGNAME, ENABLE_ALL_TOOLS_DEFAULT, ENABLE_ALL_TOOLS_DESCRIPTION).getBoolean(ENABLE_ALL_TOOLS_DEFAULT);
 
         configFile.save();
     }

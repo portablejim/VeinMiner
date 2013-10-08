@@ -46,6 +46,25 @@ public class ConfigurationSettings {
         setRadiusLimit(configValues.RADIUS_LIMIT);
 
         setBlockCongruenceList(configValues.BLOCK_EQUIVALENCY_LIST);
+
+        setEnableAllBlocks(configValues.ENABLE_ALL_BLOCKS);
+        setEnableAllTools(configValues.ENABLE_ALL_TOOLS);
+    }
+
+    public boolean getEnableAllBlocks() {
+        return enableAllBlocks;
+    }
+
+    public void setEnableAllBlocks(boolean enableAllBlocks) {
+        this.enableAllBlocks = enableAllBlocks;
+    }
+
+    public boolean getEnableAllTools() {
+        return enableAllTools;
+    }
+
+    public void setEnableAllTools(boolean enableAllTools) {
+        this.enableAllTools = enableAllTools;
     }
 
     public enum ToolType { PICKAXE, SHOVEL, AXE  }
@@ -77,7 +96,9 @@ public class ConfigurationSettings {
 
     private int blocksPerTick;
 
-    private boolean defaultSneakMode;
+    private boolean enableAllBlocks;
+
+    private boolean enableAllTools;
 
     /**
      * Add the blocks mentioned in whitelist to the block whitelist for the specified tool.
