@@ -7,5 +7,5 @@ package portablejim.veinminer.proxy;
  * Time: 9:37 AM
  * To change this template use File | Settings | File Templates.
  */
-public class ClientProxy extends CommonProxy {
+public class ClientProxy implements CommonProxy {
 }
