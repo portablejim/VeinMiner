@@ -8,4 +8,8 @@ package portablejim.veinminer.proxy;
  * To change this template use File | Settings | File Templates.
  */
 public class ServerProxy implements CommonProxy {
+    @Override
+    public void registerKeybind() {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
 }

@@ -8,4 +8,5 @@ package portablejim.veinminer.proxy;
  * To change this template use File | Settings | File Templates.
  */
 public interface CommonProxy {
+    public void registerKeybind();
 }

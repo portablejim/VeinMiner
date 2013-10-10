@@ -1,5 +1,10 @@
 package portablejim.veinminer.proxy;
 
+import cpw.mods.fml.client.registry.KeyBindingRegistry;
+import net.minecraft.client.settings.KeyBinding;
+import org.lwjgl.input.Keyboard;
+import portablejim.veinminer.client.ActivateMinerKeybind;
+
 /**
  * Created with IntelliJ IDEA.
  * User: james
@@ -8,4 +13,13 @@ package portablejim.veinminer.proxy;
  * To change this template use File | Settings | File Templates.
  */
 public class ClientProxy implements CommonProxy {
+    @Override
+    public void registerKeybind() {
+        KeyBinding enableKeyBinding = new KeyBinding("Activate Veinminer", Keyboard.KEY_LSHIFT);
+        KeyBinding[] keyBindings = {enableKeyBinding};
+        boolean[] repeats = {false};
+        ActivateMinerKeybind enableKeyBind = new ActivateMinerKeybind(keyBindings, repeats);
+
+        KeyBindingRegistry.registerKeyBinding(enableKeyBind);
+    }
 }
