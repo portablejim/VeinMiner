@@ -25,6 +25,7 @@ import portablejim.veinminer.configuration.ConfigurationValues;
 import portablejim.veinminer.core.MinerInstance;
 import portablejim.veinminer.event.EntityDropHook;
 import portablejim.veinminer.lib.ModInfo;
+import portablejim.veinminer.network.PacketHandler;
 import portablejim.veinminer.proxy.CommonProxy;
 import portablejim.veinminer.server.MinerCommand;
 import portablejim.veinminer.server.MinerServer;
@@ -32,7 +33,7 @@ import portablejim.veinminer.server.PlayerStatus;
 import portablejim.veinminer.util.BlockID;
 
 @Mod(modid = ModInfo.MOD_ID, name = ModInfo.MOD_NAME, version = ModInfo.VERSION)
-@NetworkMod(clientSideRequired = false, serverSideRequired = false, channels = { ModInfo.CHANNEL } )
+@NetworkMod(clientSideRequired = false, serverSideRequired = false, channels = { ModInfo.CHANNEL }, packetHandler = PacketHandler.class)
 public class VeinMiner {
 
     ConfigurationValues configurationValues;

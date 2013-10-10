@@ -11,6 +11,6 @@ import portablejim.veinminer.network.PacketTypeHandler;
  */
 public class PacketServerDetected extends PacketVeinMiner {
     public PacketServerDetected(PacketTypeHandler packetType) {
-        super(packetType);
+        super(PacketTypeHandler.SERVER_DETECTED, false);
     }
 }

@@ -10,7 +10,7 @@ import portablejim.veinminer.network.PacketTypeHandler;
  * To change this template use File | Settings | File Templates.
  */
 public class PacketClientPresent extends PacketVeinMiner {
-    public PacketClientPresent(PacketTypeHandler packetType) {
-        super(packetType);
+    public PacketClientPresent() {
+        super(PacketTypeHandler.CLIENT_PRESENT, false);
     }
 }
