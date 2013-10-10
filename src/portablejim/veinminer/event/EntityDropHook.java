@@ -41,6 +41,10 @@ public class EntityDropHook {
 
         EntityItem entityItem = (EntityItem) entity;
 
+        if(entityItem.getDataWatcher().getWatchableObjectItemStack(10) == null) {
+            return;
+        }
+
         boolean isBlock = false;
         boolean isItem = false;
 
