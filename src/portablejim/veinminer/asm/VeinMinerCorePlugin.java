@@ -14,7 +14,8 @@ public class VeinMinerCorePlugin implements IFMLLoadingPlugin {
 
     @Override
     public String[] getASMTransformerClass() {
-        return new String[] { "portablejim.veinminer.asm.ItemInWorldManagerTransformer" };
+        return new String[] { "portablejim.veinminer.asm.ItemInWorldManagerTransformer",
+            "portablejim.veinminer.asm.EntityPlayerMPTransformer"};
     }
 
     @Override
