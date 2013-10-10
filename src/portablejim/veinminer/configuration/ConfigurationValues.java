@@ -24,9 +24,9 @@ public class ConfigurationValues {
     public static final String CONFIG_OVERRIDE = "overrides";
 
     public String PICKAXE_BLOCK_ID_LIST;
-    public static final String PICKAXE_BLOCK_ID_LIST_DEFAULT = "14,15,16,21,24:0,21,24:0,24:1,24:2,48,56,73,74,89,129";
+    public static final String PICKAXE_BLOCK_ID_LIST_DEFAULT = "14,15,16,21,24,48,56,73,74,89,129";
     public static final String PICKAXE_BLOCK_ID_LIST_CONFIGNAME = "blockList.pickaxe";
-    public static final String PICKAXE_BLOCK_ID_LIST_DESCRIPTION = "Block ids to auto-mine when using a configured pickaxe. [default: '14,15,16,21,24:0,21,24:0,24:1,24:2,48,56,73,74,89,129']";
+    public static final String PICKAXE_BLOCK_ID_LIST_DESCRIPTION = "Block ids to auto-mine when using a configured pickaxe. [default: '14,15,16,21,24,48,56,73,74,89,129']";
 
     public String SHOVEL_BLOCK_ID_LIST;
     public static final String SHOVEL_BLOCK_ID_LIST_DEFAULT = "82";
@@ -34,9 +34,9 @@ public class ConfigurationValues {
     public static final String SHOVEL_BLOCK_ID_LIST_DESCRIPTION = "Block ids to auto-mine when using a configured shovel. [default: '82']";
 
     public String AXE_BLOCK_ID_LIST;
-    public static final String AXE_BLOCK_ID_LIST_DEFAULT = "17:0,17:1,17:2,17:3,17:3,18:0,18:1,18:2,18:3";
+    public static final String AXE_BLOCK_ID_LIST_DEFAULT = "17,18";
     public static final String AXE_BLOCK_ID_LIST_CONFIGNAME = "blockList.axe";
-    public static final String AXE_BLOCK_ID_LIST_DESCRIPTION = "Block ids to auto-mine when using a configured axe. [default '17:0,17:1,17:2,17:3,17:3,18:0,18:1,18:2,18:3']";
+    public static final String AXE_BLOCK_ID_LIST_DESCRIPTION = "Block ids to auto-mine when using a configured axe. [default '17,18']";
 
     public String PICKAXE_ID_LIST;
     public static final String PICKAXE_ID_LIST_DEFAULT = "257,270,274,278,285";
