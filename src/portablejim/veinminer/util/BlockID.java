@@ -81,28 +81,9 @@ public class BlockID
         this(world, x, y, z, world.getBlockMetadata(x, y, z));
     }
 
-    // Returns -1 if there is only one type of block and the metadata is 0
-    private static int getMetaValue(World world, int x, int y, int z, int meta) {
-        int blockId = world.getBlockId(x, y, z);
-        List sameBlocks = new ArrayList();
-
-        if(Block.blocksList[blockId] == null) {
-            return meta;
-        }
-
-        Block.blocksList[blockId].getSubBlocks(blockId, CreativeTabs.tabAllSearch, sameBlocks);
-
-        if(sameBlocks.size() == 1 && meta == 0) {
-            return -1;
-        }
-        else {
-            return meta;
-        }
-    }
-    
     public BlockID(World world, int x, int y, int z, int metadata)
     {
-        this(world.getBlockId(x, y, z), getMetaValue(world, x, y, z, metadata));
+        this(world.getBlockId(x, y, z), metadata);
     }
     
     @Override

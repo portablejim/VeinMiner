@@ -54,9 +54,9 @@ public class ConfigurationValues {
     public static final String AXE_ID_LIST_DESCRIPTION = "Item ids to use as a axe. [default '258,271,275,279,286']";
 
     public String BLOCK_EQUIVALENCY_LIST;
-    public static final String BLOCK_EQUIVALENCY_LIST_DEFAULT = "73-74";
+    public static final String BLOCK_EQUIVALENCY_LIST_DEFAULT = "73:0-74:0";
     public static final String BLOCK_EQUIVALENCY_LIST_CONFIGNAME = "equalBlocks";
-    public static final String BLOCK_EQUIVALENCY_LIST_DESCRIPTION = "Block IDs to consider equivalent. Separate blocks with '-'. Separate groups with ',' [default: '73-74']";
+    public static final String BLOCK_EQUIVALENCY_LIST_DESCRIPTION = "Block IDs (with metadata) to consider equivalent. Separate block IDs from metadata with ':'. Separate blocks with '-'. Separate groups with ',' [default: '73:0-74:0']";
 
     public int BLOCK_LIMIT;
     public static final int BLOCK_LIMIT_DEFAULT = 800;
