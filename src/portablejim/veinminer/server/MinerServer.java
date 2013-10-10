@@ -22,12 +22,14 @@ public class MinerServer {
 
     public static MinerServer instance;
     private HashSet<MinerInstance> minerInstances;
+    private HashSet<String> clientPlayers;
     private HashMap<String, PlayerStatus> players;
     private ConfigurationSettings settings;
 
     public MinerServer(ConfigurationValues configValues) {
         instance = this;
         minerInstances = new HashSet<MinerInstance>();
+        clientPlayers = new HashSet<String>();
         players = new HashMap<String, PlayerStatus>();
         settings = new ConfigurationSettings(configValues);
     }
@@ -48,7 +50,12 @@ public class MinerServer {
     }
 
     public PlayerStatus getPlayerStatus(String player) {
-        return players.get(player);
+        if(players.containsKey(player)) {
+            return players.get(player);
+        }
+        else {
+            return PlayerStatus.DISABLED;
+        }
     }
 
     public void addEntity(Entity entity) {
@@ -94,5 +101,28 @@ public class MinerServer {
 
     public ConfigurationSettings getConfigurationSettings() {
         return settings;
+    }
+
+    public HashSet<String> getClientPlayers() {
+        return clientPlayers;
+    }
+
+    public boolean playerHasClient(String playerName) {
+        return clientPlayers.contains(playerName);
+    }
+
+    public void addClientPlayer(String playerName) {
+        clientPlayers.add(playerName);
+        if(getPlayerStatus(playerName).equals(PlayerStatus.DISABLED)) {
+            setPlayerStatus(playerName, PlayerStatus.INACTIVE);
+        }
+    }
+
+    public void removeClientPlayer(String playerName) {
+        clientPlayers.remove(playerName);
+    }
+
+    public void setClientPlayers(HashSet<String> clientPlayers) {
+        this.clientPlayers = clientPlayers;
     }
 }
