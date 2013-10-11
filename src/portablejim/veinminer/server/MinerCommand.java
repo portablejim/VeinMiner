@@ -4,6 +4,7 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
+import net.minecraft.util.ChatMessageComponent;
 
 /**
  * Created with IntelliJ IDEA.
@@ -34,7 +35,7 @@ public class MinerCommand extends CommandBase {
                 }
                 else if(astring[1].equals("disable")) {
                     minerServer.setPlayerStatus(player, PlayerStatus.DISABLED);
-                    icommandsender.sendChatToPlayer(LanguageRegistry.instance().getStringLocalization("command.veinminer.set.disable"));
+                    icommandsender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("command.veinminer.set.disable"));
                 }
                 else if(astring[1].equals("auto")) {
                     if(minerServer.playerHasClient(player)) {
@@ -43,15 +44,15 @@ public class MinerCommand extends CommandBase {
                     else {
                         minerServer.setPlayerStatus(player, PlayerStatus.DISABLED);
                     }
-                    icommandsender.sendChatToPlayer(LanguageRegistry.instance().getStringLocalization("command.veinminer.set.auto"));
+                    icommandsender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("command.veinminer.set.auto"));
                 }
                 else if(astring[1].equals("sneak")) {
                     minerServer.setPlayerStatus(player, PlayerStatus.SNEAK_ACTIVE);
-                    icommandsender.sendChatToPlayer(LanguageRegistry.instance().getStringLocalization("command.veinminer.set.sneak"));
+                    icommandsender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("command.veinminer.set.sneak"));
                 }
                 else if(astring[1].equals("no_sneak")) {
                     minerServer.setPlayerStatus(player, PlayerStatus.SNEAK_INACTIVE);
-                    icommandsender.sendChatToPlayer(LanguageRegistry.instance().getStringLocalization("command.veinminer.set.nosneak"));
+                    icommandsender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("command.veinminer.set.nosneak"));
                 }
             }
             else if(astring[0].equals("help")) {
@@ -67,6 +68,6 @@ public class MinerCommand extends CommandBase {
 
     @Override
     public String getCommandUsage(ICommandSender par1ICommandSender) {
-        return par1ICommandSender.translateString("command.veinminer", new Object[0]);
+        return "command.veinminer";
     }
 }

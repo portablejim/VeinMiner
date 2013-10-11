@@ -3,6 +3,7 @@ package portablejim.veinminer.network.packet;
 import cpw.mods.fml.common.network.Player;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
+import net.minecraft.util.ChatMessageComponent;
 import portablejim.veinminer.network.PacketTypeHandler;
 import portablejim.veinminer.server.MinerServer;
 import portablejim.veinminer.server.PlayerStatus;
@@ -49,15 +50,15 @@ public class PacketClientPresent extends PacketVeinMiner {
             switch (preferredMode) {
                 case PreferredMode.AUTO:
                     // Already set to auto
-                    thePlayer.sendChatToPlayer("VeinMiner set to use keybind ('auto')");
+                    thePlayer.sendChatToPlayer(ChatMessageComponent.createFromText("VeinMiner set to use keybind ('auto')"));
                     break;
                 case PreferredMode.SNEAK:
                     MinerServer.instance.setPlayerStatus(playerName, PlayerStatus.SNEAK_ACTIVE);
-                    thePlayer.sendChatToPlayer("Veinminer set to activate on sneak.");
+                    thePlayer.sendChatToPlayer(ChatMessageComponent.createFromText("Veinminer set to activate on sneak."));
                     break;
                 case PreferredMode.NO_SNEAK:
                     MinerServer.instance.setPlayerStatus(playerName, PlayerStatus.SNEAK_INACTIVE);
-                    thePlayer.sendChatToPlayer("Veinminer set to deactivate on sneak.");
+                    thePlayer.sendChatToPlayer(ChatMessageComponent.createFromText("Veinminer set to deactivate on sneak."));
             }
         }
     }

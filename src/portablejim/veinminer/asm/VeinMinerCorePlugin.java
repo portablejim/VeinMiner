@@ -1,6 +1,5 @@
 package portablejim.veinminer.asm;
 
-import cpw.mods.fml.relauncher.IClassTransformer;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 
 import java.util.Map;

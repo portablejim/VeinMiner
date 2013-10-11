@@ -1,7 +1,7 @@
 package portablejim.veinminer.asm;
 
 import cpw.mods.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
-import cpw.mods.fml.relauncher.IClassTransformer;
+import net.minecraft.launchwrapper.IClassTransformer;
 import org.objectweb.asm.*;
 import org.objectweb.asm.commons.LocalVariablesSorter;
 import org.objectweb.asm.tree.*;
