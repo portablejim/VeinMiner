@@ -1,5 +1,6 @@
 package portablejim.veinminer.server;
 
+import cpw.mods.fml.common.registry.LanguageRegistry;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
@@ -26,18 +27,31 @@ public class MinerCommand extends CommandBase {
     public void processCommand(ICommandSender icommandsender, String[] astring) {
         if(astring.length > 0) {
             String player = icommandsender.getCommandSenderName();
+            MinerServer minerServer = MinerServer.instance;
             if(astring[0].equals("enable")) {
                 if(astring.length == 1) {
                     throw new WrongUsageException("command.veinminer.enable", new Object[0]);
                 }
+                else if(astring[1].equals("disable")) {
+                    minerServer.setPlayerStatus(player, PlayerStatus.DISABLED);
+                    icommandsender.sendChatToPlayer(LanguageRegistry.instance().getStringLocalization("command.veinminer.set.disable"));
+                }
                 else if(astring[1].equals("auto")) {
-                    MinerServer.instance.setPlayerStatus(player, PlayerStatus.DISABLED);
+                    if(minerServer.playerHasClient(player)) {
+                        minerServer.setPlayerStatus(player, PlayerStatus.INACTIVE);
+                    }
+                    else {
+                        minerServer.setPlayerStatus(player, PlayerStatus.DISABLED);
+                    }
+                    icommandsender.sendChatToPlayer(LanguageRegistry.instance().getStringLocalization("command.veinminer.set.auto"));
                 }
                 else if(astring[1].equals("shift")) {
-                    MinerServer.instance.setPlayerStatus(player, PlayerStatus.SHIFT_ACTIVE);
+                    minerServer.setPlayerStatus(player, PlayerStatus.SHIFT_ACTIVE);
+                    icommandsender.sendChatToPlayer(LanguageRegistry.instance().getStringLocalization("command.veinminer.set.shift"));
                 }
                 else if(astring[1].equals("no_shift")) {
-                    MinerServer.instance.setPlayerStatus(player, PlayerStatus.SHIFT_INACTIVE);
+                    minerServer.setPlayerStatus(player, PlayerStatus.SHIFT_INACTIVE);
+                    icommandsender.sendChatToPlayer(LanguageRegistry.instance().getStringLocalization("command.veinminer.set.noshift"));
                 }
             }
             else if(astring[0].equals("help")) {
