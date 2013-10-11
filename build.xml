@@ -13,7 +13,7 @@
         <property name="dev.home" location="${dir.project}"/>
         <property name="mcp.home" location="${dir.mcp}"/>
         <property name="release.home" location="${dev.home}/release"/>
-        <property name="release.jar" value="[${version.minecraft}]${mod.id}.${version}.jar"/>
+        <property name="release.jar" value="${mod.id}.${version}_MC${version.minecraft}.jar"/>
 
         <!-- setup python -->
         <property name="python.win" location="${mcp.home}/runtime/bin/python/python_mcp"/>
