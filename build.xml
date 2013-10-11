@@ -56,6 +56,20 @@
         <copy todir="${mcp.src.minecraft}" overwrite="true" verbose="true">
             <fileset dir="${dev.src}" includes="**/*.java"/>
         </copy>
+        <copy todir="${dev.package}/replaced" overwrite="true" verbose="true">
+            <fileset dir="${dev.package}" excludes="replaced" />
+        </copy>
+    </target>
+    
+    <target name="renumber">
+        <replace dir="${dev.home}" value="${version.build}">
+            <include name="package/replaced/mcmod.info" />
+            <replacetoken>@@@DEV@@@</replacetoken>
+        </replace>
+        <replace dir="${mcp.src.minecraft}" value="${version.build}">
+            <include name="portablejim/veinminer/lib/ModInfo.java" />
+            <replacetoken>@@@DEV@@@</replacetoken>
+        </replace>
     </target>
 
     <target name="recompile">
@@ -77,7 +91,7 @@
         <!-- build the jar -->
         <jar manifest="${dev.ant}/manifest/MANIFEST.MF" destfile="${release.home}/${release.jar}">
             <fileset dir="${mcp.bin}" includes="portablejim/veinminer/**/*.class"/>
-            <fileset dir="${dev.package}" />
+            <fileset dir="${dev.package}/replaced" />
         </jar>
     </target>
 
@@ -85,6 +99,7 @@
         <!-- build the project and clean up MCP after -->
         <antcall target="clean"/>
         <antcall target="merge-mod"/>
+        <antcall target="renumber"/>
         <antcall target="recompile"/>
         <antcall target="reobfuscate"/>
         <antcall target="build-Forge-jar"/>
