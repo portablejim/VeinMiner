@@ -69,11 +69,11 @@ public class VeinMiner {
         new MinerServer(configurationValues);
 
         LanguageRegistry.instance().addStringLocalization("command.veinminer", "/veinminer enable");
-        LanguageRegistry.instance().addStringLocalization("command.veinminer.enable", "/veinminer enable disable/auto/shift/no_shift");
+        LanguageRegistry.instance().addStringLocalization("command.veinminer.enable", "/veinminer enable disable/auto/sneak/no_sneak");
         LanguageRegistry.instance().addStringLocalization("command.veinminer.set.disable", "Veinminer activation: disabled");
         LanguageRegistry.instance().addStringLocalization("command.veinminer.set.auto", "Veinminer activation: Using client keybind (useless without mod on client)");
-        LanguageRegistry.instance().addStringLocalization("command.veinminer.set.shift", "Veinminer activation: When pressing shift");
-        LanguageRegistry.instance().addStringLocalization("command.veinminer.set.noshift", "Veinminer activation: When not pressing shift");
+        LanguageRegistry.instance().addStringLocalization("command.veinminer.set.sneak", "Veinminer activation: When sneaking");
+        LanguageRegistry.instance().addStringLocalization("command.veinminer.set.nosneak", "Veinminer activation: When not sneaking");
 
         ServerCommandManager serverCommandManger = (ServerCommandManager) MinecraftServer.getServer().getCommandManager();
         serverCommandManger.registerCommand(new MinerCommand());

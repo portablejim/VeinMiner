@@ -4,7 +4,6 @@ import net.minecraft.item.ItemStack;
 import portablejim.veinminer.util.BlockID;
 import portablejim.veinminer.util.PreferredMode;
 
-import java.io.File;
 import java.util.*;
 
 /**
@@ -270,8 +269,8 @@ public class ConfigurationSettings {
 
     /**
      * Sets the preferred mode to the modeString if valid or fallback if modeString is not valid
-     * @param modeString one of 'auto', 'shift', 'no_shift'
-     * @param fallback one of 'auto', 'shift', 'no_shift'
+     * @param modeString one of 'auto', 'sneak', 'no_sneak'
+     * @param fallback one of 'auto', 'sneak', 'no_sneak'
      * @return If modestring is valid
      */
     public boolean setPreferredMode(String modeString, String fallback) {
@@ -279,12 +278,12 @@ public class ConfigurationSettings {
             preferredMode = PreferredMode.AUTO;
             return true;
         }
-        else if("shift".equals(modeString)) {
-            preferredMode = PreferredMode.SHIFT;
+        else if("sneak".equals(modeString)) {
+            preferredMode = PreferredMode.SNEAK;
             return true;
         }
-        else if("no_shift".equals(modeString)) {
-            preferredMode = PreferredMode.NO_SHIFT;
+        else if("no_sneak".equals(modeString)) {
+            preferredMode = PreferredMode.NO_SNEAK;
             return true;
         }
 
@@ -298,7 +297,7 @@ public class ConfigurationSettings {
 
     /**
      * Returns the preferred mode.
-     * @return One of PreferredMode.AUTO, PreferredMode.SHIFT, PreferredMode.NO_SHIFT
+     * @return One of PreferredMode.AUTO, PreferredMode.SNEAK, PreferredMode.NO_SNEAK
      */
     public int getPreferredMode() {
         return this.preferredMode;

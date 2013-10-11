@@ -45,13 +45,13 @@ public class MinerCommand extends CommandBase {
                     }
                     icommandsender.sendChatToPlayer(LanguageRegistry.instance().getStringLocalization("command.veinminer.set.auto"));
                 }
-                else if(astring[1].equals("shift")) {
-                    minerServer.setPlayerStatus(player, PlayerStatus.SHIFT_ACTIVE);
-                    icommandsender.sendChatToPlayer(LanguageRegistry.instance().getStringLocalization("command.veinminer.set.shift"));
+                else if(astring[1].equals("sneak")) {
+                    minerServer.setPlayerStatus(player, PlayerStatus.SNEAK_ACTIVE);
+                    icommandsender.sendChatToPlayer(LanguageRegistry.instance().getStringLocalization("command.veinminer.set.sneak"));
                 }
-                else if(astring[1].equals("no_shift")) {
-                    minerServer.setPlayerStatus(player, PlayerStatus.SHIFT_INACTIVE);
-                    icommandsender.sendChatToPlayer(LanguageRegistry.instance().getStringLocalization("command.veinminer.set.noshift"));
+                else if(astring[1].equals("no_sneak")) {
+                    minerServer.setPlayerStatus(player, PlayerStatus.SNEAK_INACTIVE);
+                    icommandsender.sendChatToPlayer(LanguageRegistry.instance().getStringLocalization("command.veinminer.set.nosneak"));
                 }
             }
             else if(astring[0].equals("help")) {

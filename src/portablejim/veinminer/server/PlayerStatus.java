@@ -8,5 +8,5 @@ package portablejim.veinminer.server;
  * To change this template use File | Settings | File Templates.
  */
 public enum PlayerStatus {
-    DISABLED, INACTIVE, ACTIVE, SHIFT_ACTIVE, SHIFT_INACTIVE
+    DISABLED, INACTIVE, ACTIVE, SNEAK_ACTIVE, SNEAK_INACTIVE
 }
