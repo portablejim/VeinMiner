@@ -5,7 +5,7 @@
         "name": "Vein Miner",
         "description": "When a configured block is harvested a chain reaction is initiated to break connected blocks of the same type. Takes durability and health for each block mined.",
         "version": "@@@DEV@@@",
-        "mcversion": "1.5.2",
+        "mcversion": "1.6.x",
         "url": "",
         "updateUrl": "",
         "authors": [ "portablejim" ],
