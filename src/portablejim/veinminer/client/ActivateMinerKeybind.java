@@ -2,8 +2,11 @@ package portablejim.veinminer.client;
 
 import cpw.mods.fml.client.registry.KeyBindingRegistry;
 import cpw.mods.fml.common.TickType;
+import cpw.mods.fml.common.network.PacketDispatcher;
 import net.minecraft.client.settings.KeyBinding;
 import portablejim.veinminer.lib.ModInfo;
+import portablejim.veinminer.network.PacketTypeHandler;
+import portablejim.veinminer.network.packet.PacketClientSettings;
 
 import java.util.EnumSet;
 
@@ -21,12 +24,12 @@ public class ActivateMinerKeybind extends KeyBindingRegistry.KeyHandler {
 
     @Override
     public void keyDown(EnumSet<TickType> types, KeyBinding kb, boolean tickEnd, boolean isRepeat) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        PacketDispatcher.sendPacketToServer(PacketTypeHandler.populatePacket(new PacketClientSettings(true)));
     }
 
     @Override
     public void keyUp(EnumSet<TickType> types, KeyBinding kb, boolean tickEnd) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        PacketDispatcher.sendPacketToServer(PacketTypeHandler.populatePacket(new PacketClientSettings(false)));
     }
 
     @Override
