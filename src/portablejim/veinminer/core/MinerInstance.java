@@ -70,12 +70,13 @@ public class MinerInstance {
             this.finished = true;
         }
 
+        this.finished = serverInstance.getUpdateToolAllowed(this.finished, player);
+
         // Not hungry
         FoodStats food = player.getFoodStats();
         if(food.getFoodLevel() < MIN_HUNGER) {
             this.finished = true;
         }
-
 
         // Player exists and is in correct status (correct button held)
         String playerName = player.getEntityName();
