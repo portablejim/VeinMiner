@@ -49,6 +49,7 @@ public class VeinMiner {
     @PreInit
     public void preInit(FMLPreInitializationEvent event) {
         configurationValues = new ConfigurationValues(event.getSuggestedConfigurationFile());
+        proxy.setupConfig(configurationValues);
         proxy.registerKeybind();
     }
 

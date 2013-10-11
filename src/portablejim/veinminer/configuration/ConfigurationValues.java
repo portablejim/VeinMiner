@@ -22,6 +22,8 @@ public class ConfigurationValues {
     public static final String CONFIG_LIMITS = "limit";
     public static final String CONFIG_MISC = "misc";
     public static final String CONFIG_OVERRIDE = "overrides";
+    public static final String CONFIG_CLIENT = "client";
+    public static final String CONFIG_CLIENT_COMMENT = "These settings are used client side, so they have no impact on servers.";
 
     public String PICKAXE_BLOCK_ID_LIST;
     public static final String PICKAXE_BLOCK_ID_LIST_DEFAULT = "14,15,16,21,24,48,56,73,74,89,129";
@@ -83,6 +85,11 @@ public class ConfigurationValues {
     public static final String ENABLE_ALL_TOOLS_CONFIGNAME = "override.allTools";
     public static final String ENABLE_ALL_TOOLS_DESCRIPTION = "Allow all tools, including the open hand, to be used to mine blocks.";
 
+    public String CLIENT_PREFERRED_MODE;
+    public static final String CLIENT_PREFERRED_MODE_DEFAULT = "shift";
+    public static final String CLIENT_PREFERRED_MODE_CONFIGNAME = "client.preferredMode";
+    public static final String CLIENT_PREFERRED_MODE_DESCRIPTION = "What mode should the client use when joining a game.\nValid modes: [default: shift\n  'auto' = enables on press of keybind\n  'shift' = enables on holding shift\n  'no_shift' = disables on holding shift";
+
     public ConfigurationValues(File file) {
         configFile = new Configuration(file);
         loadConfigFile();
@@ -108,6 +115,9 @@ public class ConfigurationValues {
 
         ENABLE_ALL_BLOCKS = configFile.get(CONFIG_OVERRIDE, ENABLE_ALL_BLOCKS_CONFIGNAME, ENABLE_ALL_BLOCKS_DEFAULT, ENABLE_ALL_BLOCKS_DESCRIPTION).getBoolean(ENABLE_ALL_BLOCKS_DEFAULT);
         ENABLE_ALL_TOOLS = configFile.get(CONFIG_OVERRIDE, ENABLE_ALL_TOOLS_CONFIGNAME, ENABLE_ALL_TOOLS_DEFAULT, ENABLE_ALL_TOOLS_DESCRIPTION).getBoolean(ENABLE_ALL_TOOLS_DEFAULT);
+
+        configFile.addCustomCategoryComment(CONFIG_CLIENT, CONFIG_CLIENT_COMMENT);
+        CLIENT_PREFERRED_MODE = configFile.get(CONFIG_CLIENT, CLIENT_PREFERRED_MODE_CONFIGNAME, CLIENT_PREFERRED_MODE_DEFAULT, CLIENT_PREFERRED_MODE_DESCRIPTION).getString();
 
         configFile.save();
     }

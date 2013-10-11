@@ -2,6 +2,7 @@ package portablejim.veinminer.configuration;
 
 import net.minecraft.item.ItemStack;
 import portablejim.veinminer.util.BlockID;
+import portablejim.veinminer.util.PreferredMode;
 
 import java.io.File;
 import java.util.*;
@@ -49,6 +50,8 @@ public class ConfigurationSettings {
 
         setEnableAllBlocks(configValues.ENABLE_ALL_BLOCKS);
         setEnableAllTools(configValues.ENABLE_ALL_TOOLS);
+
+        setPreferredMode(configValues.CLIENT_PREFERRED_MODE, ConfigurationValues.CLIENT_PREFERRED_MODE_DEFAULT);
     }
 
     public boolean getEnableAllBlocks() {
@@ -99,6 +102,8 @@ public class ConfigurationSettings {
     private boolean enableAllBlocks;
 
     private boolean enableAllTools;
+
+    private int preferredMode;
 
     /**
      * Add the blocks mentioned in whitelist to the block whitelist for the specified tool.
@@ -261,5 +266,41 @@ public class ConfigurationSettings {
 
     public boolean toolIsOfType(ItemStack tool, ToolType type) {
         return this.toolIds[type.ordinal()].contains(tool.itemID);
+    }
+
+    /**
+     * Sets the preferred mode to the modeString if valid or fallback if modeString is not valid
+     * @param modeString one of 'auto', 'shift', 'no_shift'
+     * @param fallback one of 'auto', 'shift', 'no_shift'
+     * @return If modestring is valid
+     */
+    public boolean setPreferredMode(String modeString, String fallback) {
+        if("auto".equals(modeString)) {
+            preferredMode = PreferredMode.AUTO;
+            return true;
+        }
+        else if("shift".equals(modeString)) {
+            preferredMode = PreferredMode.SHIFT;
+            return true;
+        }
+        else if("no_shift".equals(modeString)) {
+            preferredMode = PreferredMode.NO_SHIFT;
+            return true;
+        }
+
+        // No valid option.
+        // Set to fallback
+        if(fallback != null) {
+            setPreferredMode(fallback, null);
+        }
+        return false;
+    }
+
+    /**
+     * Returns the preferred mode.
+     * @return One of PreferredMode.AUTO, PreferredMode.SHIFT, PreferredMode.NO_SHIFT
+     */
+    public int getPreferredMode() {
+        return this.preferredMode;
     }
 }

@@ -7,6 +7,8 @@ import net.minecraft.network.NetLoginHandler;
 import net.minecraft.network.packet.NetHandler;
 import net.minecraft.network.packet.Packet1Login;
 import net.minecraft.server.MinecraftServer;
+import portablejim.veinminer.VeinMiner;
+import portablejim.veinminer.configuration.ConfigurationSettings;
 import portablejim.veinminer.network.packet.PacketClientPresent;
 
 /**
@@ -44,6 +46,8 @@ public class ConnectionHandler implements IConnectionHandler{
 
     @Override
     public void clientLoggedIn(NetHandler clientHandler, INetworkManager manager, Packet1Login login) {
-        manager.addToSendQueue(PacketTypeHandler.populatePacket(new PacketClientPresent()));
+        ConfigurationSettings settings = VeinMiner.instance.proxy.getConfigSettings();
+        int mode = settings.getPreferredMode();
+        manager.addToSendQueue(PacketTypeHandler.populatePacket(new PacketClientPresent(mode)));
     }
 }
