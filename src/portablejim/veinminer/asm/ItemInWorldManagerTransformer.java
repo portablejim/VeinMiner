@@ -1,3 +1,20 @@
+/* This file is part of VeinMiner.
+ *
+ *    VeinMiner is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Lesser General Public License as
+ *    published by the Free Software Foundation, either version 3 of
+ *     the License, or (at your option) any later version.
+ *
+ *    VeinMiner is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Lesser General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Lesser General Public
+ *    License along with VeinMiner.
+ *    If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package portablejim.veinminer.asm;
 
 import cpw.mods.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
@@ -9,6 +26,14 @@ import portablejim.veinminer.util.BlockID;
 
 import java.util.HashMap;
 import java.util.Iterator;
+
+/**
+ * Modifies ItemInWorldManager to add a call to VeinMiner.blockMined() to
+ * capture the mining of a block to start VeinMiner.
+ *
+ * It also stores the result of tryHarvestBlock() (whether the attempt to mine
+ * a block was successful) and uses it as an argument to blockMined().
+ */
 
 public class ItemInWorldManagerTransformer extends GenericTransformer implements IClassTransformer {
 
