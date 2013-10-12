@@ -32,7 +32,7 @@ public class ClientProxy implements CommonProxy {
     private ConfigurationSettings configSettings;
     @Override
     public void registerKeybind() {
-        KeyBinding enableKeyBinding = new KeyBinding("Activate Veinminer", Keyboard.KEY_LSHIFT);
+        KeyBinding enableKeyBinding = new KeyBinding("Activate Veinminer", Keyboard.KEY_GRAVE);
         KeyBinding[] keyBindings = {enableKeyBinding};
         boolean[] repeats = {false};
         ActivateMinerKeybind enableKeyBind = new ActivateMinerKeybind(keyBindings, repeats);
