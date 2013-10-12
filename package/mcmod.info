@@ -6,7 +6,7 @@
         "description": "When a configured block is harvested a chain reaction is initiated to break connected blocks of the same type. Takes durability and health for each block mined.",
         "version": "@@@DEV@@@",
         "mcversion": "1.6.x",
-        "url": "",
+        "url": "http://minecraft.curseforge.com/mc-mods/veinminer/",
         "updateUrl": "",
         "authors": [ "portablejim" ],
         "credits": "Inspired by ConnectedDestruction by DaftPVF, currently maintained by bspkrs.",

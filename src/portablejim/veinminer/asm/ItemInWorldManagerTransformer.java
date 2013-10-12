@@ -1,3 +1,20 @@
+/* This file is part of VeinMiner.
+ *
+ *    VeinMiner is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Lesser General Public License as
+ *    published by the Free Software Foundation, either version 3 of
+ *     the License, or (at your option) any later version.
+ *
+ *    VeinMiner is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Lesser General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Lesser General Public
+ *    License along with VeinMiner.
+ *    If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package portablejim.veinminer.asm;
 
 import cpw.mods.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
@@ -10,13 +27,21 @@ import portablejim.veinminer.util.BlockID;
 import java.util.HashMap;
 import java.util.Iterator;
 
+/**
+ * Modifies ItemInWorldManager to add a call to VeinMiner.blockMined() to
+ * capture the mining of a block to start VeinMiner.
+ *
+ * It also stores the result of tryHarvestBlock() (whether the attempt to mine
+ * a block was successful) and uses it as an argument to blockMined().
+ */
+
 public class ItemInWorldManagerTransformer extends GenericTransformer implements IClassTransformer {
 
-    public String targetClassName = "portablejim/veinminer/VeinMiner";
-    public String targetClassType = "Lportablejim/veinminer/VeinMiner;";
-    public String targetMethodName = "blockMined";
-    public String targetMethodType = "(%s%sIIIZ%s)V";
-    public String blockIdClassName = "portablejim/veinminer/util/BlockID";
+    private final String targetClassName = "portablejim/veinminer/VeinMiner";
+    private final String targetClassType = "Lportablejim/veinminer/VeinMiner;";
+    private final String targetMethodName = "blockMined";
+    private final String targetMethodType = "(%s%sIIIZ%s)V";
+    private final String blockIdClassName = "portablejim/veinminer/util/BlockID";
 
     public  ItemInWorldManagerTransformer() {
         super();
@@ -38,7 +63,7 @@ public class ItemInWorldManagerTransformer extends GenericTransformer implements
         return bytes;
     }
 
-    private InsnList buildBlockIdFunctionCall(String obfuscatedClassName, String worldType, LocalVariablesSorter varSorter, int blockVarIndex) {
+    private InsnList buildBlockIdFunctionCall(String obfuscatedClassName, String worldType, int blockVarIndex) {
         InsnList blockIdFunctionCall = new InsnList();
         blockIdFunctionCall.add(new TypeInsnNode(Opcodes.NEW, blockIdClassName));
         blockIdFunctionCall.add(new InsnNode(Opcodes.DUP));
@@ -47,7 +72,6 @@ public class ItemInWorldManagerTransformer extends GenericTransformer implements
         blockIdFunctionCall.add(new VarInsnNode(Opcodes.ILOAD, 1));
         blockIdFunctionCall.add(new VarInsnNode(Opcodes.ILOAD, 2));
         blockIdFunctionCall.add(new VarInsnNode(Opcodes.ILOAD, 3));
-        String blockMethodType = "(%sIII)V";
         blockIdFunctionCall.add(new MethodInsnNode(Opcodes.INVOKESPECIAL, blockIdClassName, "<init>", String.format("(%sIII)V", worldType)));
 
         blockIdFunctionCall.add(new VarInsnNode(Opcodes.ASTORE, blockVarIndex));
@@ -62,15 +86,15 @@ public class ItemInWorldManagerTransformer extends GenericTransformer implements
         String worldType = typemap.get(getCorrectName("theWorld"));
         String playerType = typemap.get(getCorrectName("thisPlayerMP"));
 
-        while(!isMethodWithName(curMethod.instructions.get(index), obfuscatedClassName, "destroyBlockInWorldPartially")) {
+        while(!isMethodWithName(curMethod.instructions.get(index), "destroyBlockInWorldPartially")) {
             ++index;
         }
 
         int blockVarIndex = varSorter.newLocal(Type.getType(BlockID.class));
-        curMethod.instructions.insert(curMethod.instructions.get(index), buildBlockIdFunctionCall(obfuscatedClassName, worldType, varSorter, blockVarIndex));
+        curMethod.instructions.insert(curMethod.instructions.get(index), buildBlockIdFunctionCall(obfuscatedClassName, worldType, blockVarIndex));
         ++index;
 
-        while(!isMethodWithName(curMethod.instructions.get(index), obfuscatedClassName, "tryHarvestBlock")) {
+        while(!isMethodWithName(curMethod.instructions.get(index), "tryHarvestBlock")) {
             ++index;
         }
 
@@ -119,12 +143,10 @@ public class ItemInWorldManagerTransformer extends GenericTransformer implements
             }
         }
 
-        Iterator<MethodNode> methods = classNode.methods.iterator();
-        while(methods.hasNext()) {
-            MethodNode curMethod = methods.next();
+        for (MethodNode curMethod : classNode.methods) {
             String srgFunctionName = FMLDeobfuscatingRemapper.INSTANCE.mapMethodName(obfuscatedClassName, curMethod.name, curMethod.desc);
 
-            if(getCorrectName("uncheckedTryHarvestBlock").equals(srgFunctionName)) {
+            if (getCorrectName("uncheckedTryHarvestBlock").equals(srgFunctionName)) {
                 transformUncheckedTryHarvestBlock(curMethod, obfuscatedClassName);
             }
         }

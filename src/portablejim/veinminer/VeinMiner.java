@@ -1,3 +1,20 @@
+/* This file is part of VeinMiner.
+ *
+ *    VeinMiner is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Lesser General Public License as
+ *    published by the Free Software Foundation, either version 3 of
+ *     the License, or (at your option) any later version.
+ *
+ *    VeinMiner is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Lesser General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Lesser General Public
+ *    License along with VeinMiner.
+ *    If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package portablejim.veinminer;
 
 import cpw.mods.fml.common.FMLLog;
@@ -32,6 +49,11 @@ import portablejim.veinminer.server.MinerCommand;
 import portablejim.veinminer.server.MinerServer;
 import portablejim.veinminer.server.PlayerStatus;
 import portablejim.veinminer.util.BlockID;
+
+/**
+ * This class is the main mod class for Veinminer. It is loaded as a mod
+ * through ForgeModLoader.
+ */
 
 @Mod(modid = ModInfo.MOD_ID, name = ModInfo.MOD_NAME, version = ModInfo.VERSION)
 @NetworkMod(clientSideRequired = false, serverSideRequired = false, channels = { ModInfo.CHANNEL },
@@ -71,9 +93,15 @@ public class VeinMiner {
         LanguageRegistry.instance().addStringLocalization("command.veinminer", "/veinminer enable");
         LanguageRegistry.instance().addStringLocalization("command.veinminer.enable", "/veinminer enable disable/auto/sneak/no_sneak");
         LanguageRegistry.instance().addStringLocalization("command.veinminer.set.disable", "Veinminer activation: disabled");
-        LanguageRegistry.instance().addStringLocalization("command.veinminer.set.auto", "Veinminer activation: Using client keybind (useless without mod on client)");
+        LanguageRegistry.instance().addStringLocalization("command.veinminer.set.auto", "Veinminer activation: Using client keybind");
         LanguageRegistry.instance().addStringLocalization("command.veinminer.set.sneak", "Veinminer activation: When sneaking");
         LanguageRegistry.instance().addStringLocalization("command.veinminer.set.nosneak", "Veinminer activation: When not sneaking");
+        LanguageRegistry.instance().addStringLocalization("command.veinminer.help", "Sub-commands available:\n'enable': change veinminer activation modes");
+        LanguageRegistry.instance().addStringLocalization("command.veinminer.help.enable", "Available activation modes:\n"
+                + "'disable': Completely disable\n"
+                + "'auto': Activate on keybind (useless without mod on client)\n"
+                + "'sneak': Activate while sneaking\n"
+                + "'no_sneak': Activate while not sneaking");
 
         ServerCommandManager serverCommandManger = (ServerCommandManager) MinecraftServer.getServer().getCommandManager();
         serverCommandManger.registerCommand(new MinerCommand());

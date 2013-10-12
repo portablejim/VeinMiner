@@ -1,3 +1,20 @@
+/* This file is part of VeinMiner.
+ *
+ *    VeinMiner is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Lesser General Public License as
+ *    published by the Free Software Foundation, either version 3 of
+ *     the License, or (at your option) any later version.
+ *
+ *    VeinMiner is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Lesser General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Lesser General Public
+ *    License along with VeinMiner.
+ *    If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package portablejim.veinminer.configuration;
 
 import net.minecraftforge.common.Configuration;
@@ -5,12 +22,11 @@ import net.minecraftforge.common.Configuration;
 import java.io.File;
 
 /**
- * Created with IntelliJ IDEA.
- * User: james
- * Date: 14/06/13
- * Time: 3:30 PM
- * To change this template use File | Settings | File Templates.
+ * Stores the raw values of configs which are stored in the config file.
+ *
+ * The Forge config file writer to write files.
  */
+
 public class ConfigurationValues {
 
     private Configuration configFile;
@@ -56,9 +72,9 @@ public class ConfigurationValues {
     public static final String AXE_ID_LIST_DESCRIPTION = "Item ids to use as a axe. [default '258,271,275,279,286']";
 
     public String BLOCK_EQUIVALENCY_LIST;
-    public static final String BLOCK_EQUIVALENCY_LIST_DEFAULT = "73:0-74:0";
+    public static final String BLOCK_EQUIVALENCY_LIST_DEFAULT = "73:0-74:0,17:0-17:4-17:8,17:1-17:5-17:9,17:2-17:6-17:10,17:3-17:7-17:11";
     public static final String BLOCK_EQUIVALENCY_LIST_CONFIGNAME = "equalBlocks";
-    public static final String BLOCK_EQUIVALENCY_LIST_DESCRIPTION = "Block IDs (with metadata) to consider equivalent. Separate block IDs from metadata with ':'. Separate blocks with '-'. Separate groups with ',' [default: '73:0-74:0']";
+    public static final String BLOCK_EQUIVALENCY_LIST_DESCRIPTION = "Block IDs (with metadata) to consider equivalent.\nSeparate block IDs from metadata with ':'. Separate blocks with '-'. Separate groups with ','\n[default: '73:0-74:0,17:0-17:4-17:8,17:1-17:5-17:9,17:2-17:6-17:10,17:3-17:7-17:11']";
 
     public int BLOCK_LIMIT;
     public static final int BLOCK_LIMIT_DEFAULT = 800;
