@@ -26,17 +26,13 @@ import portablejim.veinminer.configuration.ConfigurationValues;
 
 public class ServerProxy implements CommonProxy {
     @Override
-    public void registerKeybind() {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
+    public void registerKeybind() { }
 
     @Override
-    public void setupConfig(ConfigurationValues config) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
+    public void setupConfig(ConfigurationValues config) { }
 
     @Override
     public ConfigurationSettings getConfigSettings() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 }

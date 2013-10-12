@@ -22,7 +22,6 @@ import net.minecraft.network.packet.Packet250CustomPayload;
 import portablejim.veinminer.lib.ModInfo;
 import portablejim.veinminer.network.packet.PacketClientPresent;
 import portablejim.veinminer.network.packet.PacketClientSettings;
-import portablejim.veinminer.network.packet.PacketServerDetected;
 import portablejim.veinminer.network.packet.PacketVeinMiner;
 
 import java.io.ByteArrayInputStream;
@@ -34,8 +33,7 @@ import java.io.DataInputStream;
 
 public enum PacketTypeHandler {
     CLIENT_PRESENT(PacketClientPresent.class),
-    CLIENT_SETTINGS(PacketClientSettings.class),
-    SERVER_DETECTED(PacketServerDetected.class);
+    CLIENT_SETTINGS(PacketClientSettings.class);
 
     private Class<? extends PacketVeinMiner> subClassType;
 
@@ -57,6 +55,7 @@ public enum PacketTypeHandler {
             e.printStackTrace(System.err);
         }
 
+        assert packet != null;
         packet.populate(dataInputStream);
 
         return packet;

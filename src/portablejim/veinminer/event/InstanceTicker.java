@@ -28,15 +28,13 @@ import java.util.EnumSet;
  */
 
 public class InstanceTicker implements ITickHandler {
-    MinerInstance minerInstance;
+    final MinerInstance minerInstance;
     public InstanceTicker(MinerInstance caller) {
         minerInstance = caller;
     }
 
     @Override
-    public void tickStart(EnumSet<TickType> type, Object... tickData) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
+    public void tickStart(EnumSet<TickType> type, Object... tickData) { }
 
     @Override
     public void tickEnd(EnumSet<TickType> type, Object... tickData) {

@@ -46,7 +46,7 @@ public abstract class GenericTransformer {
         return name;
     }
 
-    public boolean isMethodWithName(AbstractInsnNode instruction, String obfuscatedClassName, String name) {
+    public boolean isMethodWithName(AbstractInsnNode instruction, String name) {
         if(instruction.getType() == AbstractInsnNode.METHOD_INSN) {
             MethodInsnNode methodNode = (MethodInsnNode)instruction;
             String srgName = FMLDeobfuscatingRemapper.INSTANCE.mapMethodName(methodNode.owner, methodNode.name, methodNode.desc);

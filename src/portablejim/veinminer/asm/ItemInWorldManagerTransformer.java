@@ -37,11 +37,11 @@ import java.util.Iterator;
 
 public class ItemInWorldManagerTransformer extends GenericTransformer implements IClassTransformer {
 
-    public String targetClassName = "portablejim/veinminer/VeinMiner";
-    public String targetClassType = "Lportablejim/veinminer/VeinMiner;";
-    public String targetMethodName = "blockMined";
-    public String targetMethodType = "(%s%sIIIZ%s)V";
-    public String blockIdClassName = "portablejim/veinminer/util/BlockID";
+    private final String targetClassName = "portablejim/veinminer/VeinMiner";
+    private final String targetClassType = "Lportablejim/veinminer/VeinMiner;";
+    private final String targetMethodName = "blockMined";
+    private final String targetMethodType = "(%s%sIIIZ%s)V";
+    private final String blockIdClassName = "portablejim/veinminer/util/BlockID";
 
     public  ItemInWorldManagerTransformer() {
         super();
@@ -63,7 +63,7 @@ public class ItemInWorldManagerTransformer extends GenericTransformer implements
         return bytes;
     }
 
-    private InsnList buildBlockIdFunctionCall(String obfuscatedClassName, String worldType, LocalVariablesSorter varSorter, int blockVarIndex) {
+    private InsnList buildBlockIdFunctionCall(String obfuscatedClassName, String worldType, int blockVarIndex) {
         InsnList blockIdFunctionCall = new InsnList();
         blockIdFunctionCall.add(new TypeInsnNode(Opcodes.NEW, blockIdClassName));
         blockIdFunctionCall.add(new InsnNode(Opcodes.DUP));
@@ -72,7 +72,6 @@ public class ItemInWorldManagerTransformer extends GenericTransformer implements
         blockIdFunctionCall.add(new VarInsnNode(Opcodes.ILOAD, 1));
         blockIdFunctionCall.add(new VarInsnNode(Opcodes.ILOAD, 2));
         blockIdFunctionCall.add(new VarInsnNode(Opcodes.ILOAD, 3));
-        String blockMethodType = "(%sIII)V";
         blockIdFunctionCall.add(new MethodInsnNode(Opcodes.INVOKESPECIAL, blockIdClassName, "<init>", String.format("(%sIII)V", worldType)));
 
         blockIdFunctionCall.add(new VarInsnNode(Opcodes.ASTORE, blockVarIndex));
@@ -87,15 +86,15 @@ public class ItemInWorldManagerTransformer extends GenericTransformer implements
         String worldType = typemap.get(getCorrectName("theWorld"));
         String playerType = typemap.get(getCorrectName("thisPlayerMP"));
 
-        while(!isMethodWithName(curMethod.instructions.get(index), obfuscatedClassName, "destroyBlockInWorldPartially")) {
+        while(!isMethodWithName(curMethod.instructions.get(index), "destroyBlockInWorldPartially")) {
             ++index;
         }
 
         int blockVarIndex = varSorter.newLocal(Type.getType(BlockID.class));
-        curMethod.instructions.insert(curMethod.instructions.get(index), buildBlockIdFunctionCall(obfuscatedClassName, worldType, varSorter, blockVarIndex));
+        curMethod.instructions.insert(curMethod.instructions.get(index), buildBlockIdFunctionCall(obfuscatedClassName, worldType, blockVarIndex));
         ++index;
 
-        while(!isMethodWithName(curMethod.instructions.get(index), obfuscatedClassName, "tryHarvestBlock")) {
+        while(!isMethodWithName(curMethod.instructions.get(index), "tryHarvestBlock")) {
             ++index;
         }
 
@@ -144,12 +143,10 @@ public class ItemInWorldManagerTransformer extends GenericTransformer implements
             }
         }
 
-        Iterator<MethodNode> methods = classNode.methods.iterator();
-        while(methods.hasNext()) {
-            MethodNode curMethod = methods.next();
+        for (MethodNode curMethod : classNode.methods) {
             String srgFunctionName = FMLDeobfuscatingRemapper.INSTANCE.mapMethodName(obfuscatedClassName, curMethod.name, curMethod.desc);
 
-            if(getCorrectName("uncheckedTryHarvestBlock").equals(srgFunctionName)) {
+            if (getCorrectName("uncheckedTryHarvestBlock").equals(srgFunctionName)) {
                 transformUncheckedTryHarvestBlock(curMethod, obfuscatedClassName);
             }
         }

@@ -33,7 +33,7 @@ import java.util.Iterator;
  */
 
 public class EntityPlayerMPTransformer extends GenericTransformer implements IClassTransformer {
-    final static String commandName = "veinminer";
+    private final static String commandName = "veinminer";
 
     public EntityPlayerMPTransformer() {
         super();
@@ -53,13 +53,11 @@ public class EntityPlayerMPTransformer extends GenericTransformer implements ICl
         ClassReader classReader = new ClassReader(bytes);
         classReader.accept(classNode, 0);
 
-        Iterator<MethodNode> methods = classNode.methods.iterator();
-        while(methods.hasNext()) {
-            MethodNode curMethod = methods.next();
+        for (MethodNode curMethod : classNode.methods) {
             String srgFunctionName = FMLDeobfuscatingRemapper.INSTANCE.mapMethodName(obfuscatedClassName, curMethod.name, curMethod.desc);
 
-            if(getCorrectName("canCommandSenderUseCommand").equals(srgFunctionName)) {
-                transformCanCommandSenderUseCommand(curMethod, obfuscatedClassName);
+            if (getCorrectName("canCommandSenderUseCommand").equals(srgFunctionName)) {
+                transformCanCommandSenderUseCommand(curMethod);
             }
         }
 
@@ -69,7 +67,7 @@ public class EntityPlayerMPTransformer extends GenericTransformer implements ICl
 
     }
 
-    private void transformCanCommandSenderUseCommand(MethodNode curMethod, String obfuscatedClassName) {
+    private void transformCanCommandSenderUseCommand(MethodNode curMethod) {
         int index = 0;
 
         while(!(curMethod.instructions.get(index) instanceof LabelNode)) {

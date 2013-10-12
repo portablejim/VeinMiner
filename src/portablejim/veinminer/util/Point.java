@@ -66,10 +66,7 @@ public class Point {
             return false;
         }
         Point otherPoint = (Point)other;
-        if(this.x == otherPoint.x && this.y == otherPoint.y && this.z == otherPoint.z) {
-            return true;
-        }
-        return false;
+        return this.x == otherPoint.x && this.y == otherPoint.y && this.z == otherPoint.z;
     }
 
     public int distanceFrom(Point target) {

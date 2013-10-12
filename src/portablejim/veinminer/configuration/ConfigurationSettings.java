@@ -31,7 +31,7 @@ import java.util.*;
 
 public class ConfigurationSettings {
 
-    ConfigurationValues configValues;
+    private ConfigurationValues configValues;
 
     public ConfigurationSettings(ConfigurationValues configValues) {
         this.configValues = configValues;
@@ -73,7 +73,7 @@ public class ConfigurationSettings {
         return enableAllBlocks;
     }
 
-    public void setEnableAllBlocks(boolean enableAllBlocks) {
+    void setEnableAllBlocks(boolean enableAllBlocks) {
         this.enableAllBlocks = enableAllBlocks;
     }
 
@@ -81,7 +81,7 @@ public class ConfigurationSettings {
         return enableAllTools;
     }
 
-    public void setEnableAllTools(boolean enableAllTools) {
+    void setEnableAllTools(boolean enableAllTools) {
         this.enableAllTools = enableAllTools;
     }
 
@@ -125,9 +125,9 @@ public class ConfigurationSettings {
      * @param whitelist String of blocks with metadata value to add to whitelist. Format is ':' to separate block id and
      *                  metadata and ',' to separate blocks. e.g. "[block id]:[metadata],[block id]".
      *                  See {@link ConfigurationValues}.
-     * @param tool
+     * @param tool Tool to set the whitelist for.
      */
-    public void setBlockWhitelist(ToolType tool, String whitelist) {
+    void setBlockWhitelist(ToolType tool, String whitelist) {
         String[] blocksString = whitelist.split(",");
 
         for (String blockString : blocksString ) {
@@ -157,7 +157,7 @@ public class ConfigurationSettings {
      *                       groups. e.g. "[block id]:[metadata]-[block id];[block id]-[block id]-[block id]".
      *                       See {@link ConfigurationValues}
      */
-    public void setBlockCongruenceList(String congruenceList) {
+    void setBlockCongruenceList(String congruenceList) {
         String[] blocksString = congruenceList.split(",");
 
         for (String congruentBlocks : blocksString) {
@@ -207,13 +207,13 @@ public class ConfigurationSettings {
     public boolean areBlocksCongruent(BlockID block1, BlockID block2) {
 
         if (blockCongruenceMap.containsKey(block1) && blockCongruenceMap.containsKey(block2)) {
-            return  blockCongruenceMap.get(block1) == blockCongruenceMap.get(block2);
+            return blockCongruenceMap.get(block1).equals(blockCongruenceMap.get(block2));
         }
 
         return false;
     }
 
-    public void setToolIds(ToolType tool, String ids) {
+    void setToolIds(ToolType tool, String ids) {
         String[] toolsString = ids.split(",");
 
         for (String idString : toolsString) {
@@ -231,12 +231,6 @@ public class ConfigurationSettings {
         }
     }
 
-    public void clearToolIds() {
-        for (ToolType tool : ToolType.values()) {
-
-        }
-    }
-
     public Set<Integer>[] getToolIds() {
         return toolIds;
     }
@@ -245,7 +239,7 @@ public class ConfigurationSettings {
         return blockLimit;
     }
 
-    public void setBlockLimit(int blockLimit) {
+    void setBlockLimit(int blockLimit) {
         this.blockLimit = blockLimit;
     }
 
@@ -253,7 +247,7 @@ public class ConfigurationSettings {
         return radiusLimit;
     }
 
-    public void setRadiusLimit(int radiusLimit) {
+    void setRadiusLimit(int radiusLimit) {
         if (radiusLimit < -1) {
             radiusLimit = -1;
         }
@@ -268,7 +262,7 @@ public class ConfigurationSettings {
         return blocksPerTick;
     }
 
-    public void setBlocksPerTick(int blocksPerTick) {
+    void setBlocksPerTick(int blocksPerTick) {
         if (blocksPerTick < -1) {
             blocksPerTick = -1;
         }
@@ -289,7 +283,7 @@ public class ConfigurationSettings {
      * @param fallback one of 'auto', 'sneak', 'no_sneak'
      * @return If modestring is valid
      */
-    public boolean setPreferredMode(String modeString, String fallback) {
+    boolean setPreferredMode(String modeString, String fallback) {
         if("auto".equals(modeString)) {
             preferredMode = PreferredMode.AUTO;
             return true;

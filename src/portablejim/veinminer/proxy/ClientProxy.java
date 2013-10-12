@@ -29,7 +29,7 @@ import portablejim.veinminer.configuration.ConfigurationValues;
  */
 
 public class ClientProxy implements CommonProxy {
-    ConfigurationSettings configSettings;
+    private ConfigurationSettings configSettings;
     @Override
     public void registerKeybind() {
         KeyBinding enableKeyBinding = new KeyBinding("Activate Veinminer", Keyboard.KEY_LSHIFT);

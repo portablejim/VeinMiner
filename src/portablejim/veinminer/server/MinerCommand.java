@@ -49,7 +49,7 @@ public class MinerCommand extends CommandBase {
             MinerServer minerServer = MinerServer.instance;
             if(astring[0].equals("enable")) {
                 if(astring.length == 1) {
-                    throw new WrongUsageException("command.veinminer.enable", new Object[0]);
+                    throw new WrongUsageException("command.veinminer.enable");
                 }
                 else if(astring[1].equals(modes[0])) {
                     minerServer.setPlayerStatus(player, PlayerStatus.DISABLED);
@@ -86,7 +86,7 @@ public class MinerCommand extends CommandBase {
         }
         else
         {
-            throw new WrongUsageException("command.veinminer", new Object[0]);
+            throw new WrongUsageException("command.veinminer");
         }
         //To change body of implemented methods use File | Settings | File Templates.
     }
@@ -108,6 +108,6 @@ public class MinerCommand extends CommandBase {
 
     @Override
     public String getCommandUsage(ICommandSender par1ICommandSender) {
-        return par1ICommandSender.translateString("command.veinminer", new Object[0]);
+        return par1ICommandSender.translateString("command.veinminer");
     }
 }

@@ -45,8 +45,8 @@ public class BlockID
     /**
      * String must be one or two integer values delimited with the delimiter string. ex "17|0","|"
      * 
-     * @param format
-     * @param delimiter
+     * @param format Two integer values delimited by the delimiter character
+     * @param delimiter Character to split the two numbers declared in format
      */
     public BlockID(String format, String delimiter, int defaultVal)
     {
@@ -77,9 +77,9 @@ public class BlockID
     }
     
     /**
-     * String must be one or two integer values delimited with a comma. ex "17,0"
+     * String must be one or two integer values delimited with a colon. ex "17:0"
      * 
-     * @param format
+     * @param format Two integers delimetered with a ':'
      */
     public BlockID(String format)
     {
@@ -112,8 +112,8 @@ public class BlockID
     }
     
     @Override
-    public BlockID clone()
-    {
+    public BlockID clone() throws CloneNotSupportedException {
+        super.clone();
         return new BlockID(id, metadata);
     }
     

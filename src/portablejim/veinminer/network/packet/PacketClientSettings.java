@@ -34,7 +34,7 @@ import java.io.IOException;
  */
 
 public class PacketClientSettings extends PacketVeinMiner {
-    public boolean isKeyDown;
+    private boolean isKeyDown;
 
     public PacketClientSettings() {
         super(PacketTypeHandler.CLIENT_SETTINGS, false);

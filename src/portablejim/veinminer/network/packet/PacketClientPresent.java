@@ -37,7 +37,7 @@ import java.io.IOException;
  */
 
 public class PacketClientPresent extends PacketVeinMiner {
-    int preferredMode;
+    private int preferredMode;
 
     public PacketClientPresent() {
         super(PacketTypeHandler.CLIENT_PRESENT, false);

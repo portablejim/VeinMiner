@@ -90,10 +90,8 @@ public class MinerServer {
         }
         EntityItem entityItem = (EntityItem) entity;
 
-        Iterator<MinerInstance> iterator = minerInstances.iterator();
-        while(iterator.hasNext()) {
-            MinerInstance minerInstance = iterator.next();
-            if(minerInstance.isRegistered(p)) {
+        for (MinerInstance minerInstance : minerInstances) {
+            if (minerInstance.isRegistered(p)) {
                 minerInstance.addDrop(entityItem, p);
             }
         }
@@ -111,9 +109,8 @@ public class MinerServer {
         Point p = new Point(x, y, z);
         boolean registered = false;
 
-        Iterator<MinerInstance> iterator = minerInstances.iterator();
-        while(iterator.hasNext()) {
-            if(iterator.next().isRegistered(p)) {
+        for (MinerInstance minerInstance : minerInstances) {
+            if (minerInstance.isRegistered(p)) {
                 registered = true;
             }
         }
@@ -156,11 +153,10 @@ public class MinerServer {
     }
 
     public boolean getUpdateToolAllowed(boolean toolAllowed, EntityPlayerMP player) {
-        Boolean allowed = new Boolean(toolAllowed);
-        Iterator<IToolOverride> iterator = toolOverrides.iterator();
-        while (iterator.hasNext()) {
-            iterator.next().updateToolAllowed(allowed, player);
+        Boolean allowed = toolAllowed;
+        for (IToolOverride toolOverride : toolOverrides) {
+            toolOverride.updateToolAllowed(allowed, player);
         }
-        return allowed.booleanValue();
+        return allowed;
     }
 }
