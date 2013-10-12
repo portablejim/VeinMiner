@@ -71,9 +71,15 @@ public class VeinMiner {
         LanguageRegistry.instance().addStringLocalization("command.veinminer", "/veinminer enable");
         LanguageRegistry.instance().addStringLocalization("command.veinminer.enable", "/veinminer enable disable/auto/sneak/no_sneak");
         LanguageRegistry.instance().addStringLocalization("command.veinminer.set.disable", "Veinminer activation: disabled");
-        LanguageRegistry.instance().addStringLocalization("command.veinminer.set.auto", "Veinminer activation: Using client keybind (useless without mod on client)");
+        LanguageRegistry.instance().addStringLocalization("command.veinminer.set.auto", "Veinminer activation: Using client keybind");
         LanguageRegistry.instance().addStringLocalization("command.veinminer.set.sneak", "Veinminer activation: When sneaking");
         LanguageRegistry.instance().addStringLocalization("command.veinminer.set.nosneak", "Veinminer activation: When not sneaking");
+        LanguageRegistry.instance().addStringLocalization("command.veinminer.help", "Sub-commands available:\n'enable': change veinminer activation modes");
+        LanguageRegistry.instance().addStringLocalization("command.veinminer.help.enable", "Available activation modes:\n"
+                + "'disable': Completely disable\n"
+                + "'auto': Activate on keybind (useless without mod on client)\n"
+                + "'sneak': Activate while sneaking\n"
+                + "'no_sneak': Activate while not sneaking");
 
         ServerCommandManager serverCommandManger = (ServerCommandManager) MinecraftServer.getServer().getCommandManager();
         serverCommandManger.registerCommand(new MinerCommand());
