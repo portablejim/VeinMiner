@@ -17,7 +17,6 @@
 
 package portablejim.veinminer.server;
 
-import cpw.mods.fml.common.registry.LanguageRegistry;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
@@ -77,11 +76,11 @@ public class MinerCommand extends CommandBase {
             else if(astring[0].equals(commands[1])) {
                 if(astring.length > 1) {
                     if(astring[1].equals(commands[0])) {
-                        icommandsender.sendChatToPlayer(LanguageRegistry.instance().getStringLocalization("command.veinminer.help.enable"));
+                        icommandsender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("command.veinminer.help.enable"));
                     }
                 }
                 else {
-                    icommandsender.sendChatToPlayer(LanguageRegistry.instance().getStringLocalization("command.veinminer.help"));
+                    icommandsender.sendChatToPlayer(ChatMessageComponent.createFromTranslationKey("command.veinminer.help"));
                 }
             }
         }
