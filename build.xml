@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project>
-<project name="VeinMiner" default="build">
+<project name="VeinMiner" default="build-dev">
     <description>Generic ForgeMod Builder</description>
 
     <target name="init">
         <!-- load properties from files -->
         <property file="ant/build.properties"/>
         <property file="ant/mod.properties"/>
-        <property name="version" value="${version.build}"/>
+        <property file="dev.properties"/>
 
         <!-- base dirs -->
         <property name="dev.home" location="${dir.project}"/>
         <property name="mcp.home" location="${dir.mcp}"/>
         <property name="release.home" location="${dev.home}/release"/>
-        <property name="release.jar" value="${mod.id}.${version}_MC${version.minecraft}.jar"/>
 
         <!-- setup python -->
         <property name="python.win" location="${mcp.home}/runtime/bin/python/python_mcp"/>
@@ -37,16 +36,29 @@
         <property name="mcp.bin" location="${mcp.home}/reobf/minecraft"/>
     </target>
 
+    <target name="init-release">
+        <property name="version"  value="${version.build}"/>
+        <property name="release.jar" value="${mod.id}.${version}_MC${version.minecraft}.jar"/>
+    </target>
+
+    <target name="init-dev">
+        <propertyfile file="dev.properties">
+            <entry key="version.devbuild" type="int" operation="+" default="1" />
+        </propertyfile>
+        <property name="version"  value="${version.build}-dev-${version.devbuild}"/>
+        <property name="release.jar" value="${mod.id}.${version}.jar"/>
+    </target>
+
     <target name="clean">
         <!-- clean minecraft sources -->
-        <delete verbose="true" failonerror="false">
+        <delete verbose="true" failonerror="false" includeemptydirs="true">
             <fileset dir="${mcp.src.minecraft}">
                 <present present="both" targetdir="${dev.src}"/>
             </fileset>
         </delete>
 
         <!-- clean classes -->
-        <delete verbose="true" failonerror="false">
+        <delete verbose="true" failonerror="false" includeemptydirs="true">
             <fileset dir="${mcp.bin}"/>
         </delete>
     </target>
@@ -57,10 +69,10 @@
             <fileset dir="${dev.src}" includes="**/*.java"/>
         </copy>
         <copy todir="${dev.package}/replaced" overwrite="true" verbose="true">
-            <fileset dir="${dev.package}" excludes="replaced" />
+            <fileset dir="${dev.package}" excludes="replaced/" />
         </copy>
     </target>
-    
+
     <target name="renumber">
         <replace dir="${dev.home}" value="${version.build}">
             <include name="package/replaced/mcmod.info" />
@@ -87,23 +99,41 @@
         </exec>
     </target>
 
-    <target name="build-Forge-jar">
+    <target name="build-Forge-jar-release" depends="init-release">
         <!-- build the jar -->
         <jar manifest="${dev.ant}/manifest/MANIFEST.MF" destfile="${release.home}/${release.jar}">
             <fileset dir="${mcp.bin}" includes="portablejim/veinminer/**/*.class"/>
-            <fileset dir="${dev.package}/replaced" />
+            <fileset dir="${dev.package}/replaced" includes="*" />
+        </jar>
+    </target>
+    <target name="build-Forge-jar-dev" depends="init-dev">
+        <!-- build the jar -->
+        <jar manifest="${dev.ant}/manifest/MANIFEST.MF" destfile="${release.home}/${release.jar}">
+            <fileset dir="${mcp.bin}" includes="portablejim/veinminer/**/*.class"/>
+            <fileset dir="${dev.package}/replaced" includes="*" />
         </jar>
     </target>
 
     <target name="build" depends="init">
-        <!-- build the project and clean up MCP after -->
         <antcall target="clean"/>
         <antcall target="merge-mod"/>
         <antcall target="renumber"/>
         <antcall target="recompile"/>
         <antcall target="reobfuscate"/>
-        <antcall target="build-Forge-jar"/>
 
+    </target>
+    <target name="build-dev" depends="init">
+        <!-- build the project and clean up MCP after -->
+        <antcall target="init-dev"/>
+        <antcall target="build"/>
+        <antcall target="build-Forge-jar-dev"/>
+        <antcall target="clean"/>
+    </target>
+    <target name="build-release" depends="init">
+        <!-- build the project and clean up MCP after -->
+        <antcall target="init-release"/>
+        <antcall target="build"/>
+        <antcall target="build-Forge-jar-release"/>
         <antcall target="clean"/>
     </target>
 </project>
