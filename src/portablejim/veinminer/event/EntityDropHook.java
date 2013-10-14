@@ -25,8 +25,6 @@ import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import portablejim.veinminer.server.MinerServer;
 
-import java.util.Arrays;
-
 /**
  * Hooks into the entity that are dropped into the world to stop entities that
  * are dropped from the VeinMiner process from being dropped normally, instead

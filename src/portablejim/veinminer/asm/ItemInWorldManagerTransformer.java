@@ -19,13 +19,15 @@ package portablejim.veinminer.asm;
 
 import cpw.mods.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
 import net.minecraft.launchwrapper.IClassTransformer;
-import org.objectweb.asm.*;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.LocalVariablesSorter;
 import org.objectweb.asm.tree.*;
 import portablejim.veinminer.util.BlockID;
 
 import java.util.HashMap;
-import java.util.Iterator;
 
 /**
  * Modifies ItemInWorldManager to add a call to VeinMiner.blockMined() to
