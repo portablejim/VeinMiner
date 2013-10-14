@@ -38,7 +38,7 @@ public class ModInfo {
     public static final String COREMOD_DESCRIPTION = "CoreMod for VeinMiner doing the needed ASM things.";
     public static final String COREMOD_CREDITS = "Made using code from bspkrs Blockbreaker mod.";
 
-    public static final String VALID_MC_VERSIONS = "[1.5,1.6)";
+    public static final String VALID_MC_VERSIONS = "[1.6,1.7)";
     public static final String PROXY_SERVER_CLASS = "portablejim.veinminer.proxy.ServerProxy";
     public static final String PROXY_CLIENT_CLASS = "portablejim.veinminer.proxy.ClientProxy";
     public static final String CHANNEL = "portablejim_vm";
