@@ -96,14 +96,14 @@
         <!-- build the jar -->
         <jar manifest="${dev.ant}/manifest/MANIFEST.MF" destfile="${release.home}/${release.jar}">
             <fileset dir="${mcp.bin}" includes="portablejim/veinminer/**/*.class"/>
-            <fileset dir="${dev.package}/" includes="*" />
+            <fileset dir="${dev.package}/" includes="**" />
         </jar>
     </target>
     <target name="build-Forge-jar-dev" depends="init-dev">
         <!-- build the jar -->
         <jar manifest="${dev.ant}/manifest/MANIFEST.MF" destfile="${release.home}/${release.jar}">
             <fileset dir="${mcp.bin}" includes="portablejim/veinminer/**/*.class"/>
-            <fileset dir="${dev.package}/" includes="*" />
+            <fileset dir="${dev.package}/" includes="**" />
         </jar>
     </target>
 
