@@ -91,9 +91,12 @@ public class VeinMiner {
     }
 
     public void blockMined(World world, EntityPlayerMP player, int x, int y, int z, boolean harvestBlockSuccess, BlockID blockId) {
-        String output = String.format("Block mined at %d,%d,%d, result %b, block id is %d:%d", x, y, z, harvestBlockSuccess, blockId.id, blockId.metadata);
         MinerInstance ins = new MinerInstance(world, player, x, y, z, blockId, MinerServer.instance);
         ins.mineVein(x, y, z);
-        FMLLog.getLogger().info(output);
+
+        if(ModInfo.DEBUG_MODE) {
+            String output = String.format("Block mined at %d,%d,%d, result %b, block id is %d:%d", x, y, z, harvestBlockSuccess, blockId.id, blockId.metadata);
+            FMLLog.getLogger().info(output);
+        }
     }
 }
