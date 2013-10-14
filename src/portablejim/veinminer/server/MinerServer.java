@@ -28,7 +28,6 @@ import portablejim.veinminer.util.Point;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 
 /**
  * Singleton class that co-ordinates various actions. It allows the current

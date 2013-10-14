@@ -17,17 +17,16 @@
 
 package portablejim.veinminer.asm;
 
-import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
+
+import java.util.HashMap;
 
 /**
  * Common class that includes shared methods to handle deobfuscation of class
  * methods.
  */
-
-import java.util.HashMap;
 
 public abstract class GenericTransformer {
     public static HashMap<String, String> srgMappings;

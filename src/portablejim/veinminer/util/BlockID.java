@@ -18,11 +18,7 @@
 package portablejim.veinminer.util;
 
 import net.minecraft.block.Block;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.world.World;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Stores the block ID and metadata of a block. Allows having no metadata value
