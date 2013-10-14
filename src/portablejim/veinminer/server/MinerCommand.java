@@ -39,8 +39,8 @@ public class MinerCommand extends CommandBase {
     }
 
     @Override
-    public int getRequiredPermissionLevel() {
-        return 0;
+    public boolean canCommandSenderUseCommand(ICommandSender par1ICommandSender) {
+        return par1ICommandSender instanceof EntityPlayerMP;
     }
 
     @Override

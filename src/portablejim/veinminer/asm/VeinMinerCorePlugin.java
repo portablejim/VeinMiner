@@ -17,7 +17,6 @@
 
 package portablejim.veinminer.asm;
 
-import cpw.mods.fml.relauncher.IClassTransformer;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 
 import java.util.Map;
@@ -38,8 +37,7 @@ public class VeinMinerCorePlugin implements IFMLLoadingPlugin {
 
     @Override
     public String[] getASMTransformerClass() {
-        return new String[] { "portablejim.veinminer.asm.ItemInWorldManagerTransformer",
-            "portablejim.veinminer.asm.EntityPlayerMPTransformer"};
+        return new String[] { "portablejim.veinminer.asm.ItemInWorldManagerTransformer" };
     }
 
     @Override
