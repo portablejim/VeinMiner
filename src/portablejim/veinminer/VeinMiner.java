@@ -28,7 +28,6 @@ import cpw.mods.fml.common.ModMetadata;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.network.NetworkMod;
-import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.common.versioning.ArtifactVersion;
 import cpw.mods.fml.common.versioning.DefaultArtifactVersion;
 import net.minecraft.command.ServerCommandManager;
@@ -101,14 +100,8 @@ public class VeinMiner {
     }
 
     @EventHandler
-    public void init(FMLInitializationEvent event) {
+    public void init(@SuppressWarnings("UnusedParameters") FMLInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(new EntityDropHook());
-
-    }
-
-    @EventHandler
-    public void postInit(FMLPostInitializationEvent event) {
-
     }
 
     @EventHandler
@@ -119,6 +112,7 @@ public class VeinMiner {
         serverCommandManger.registerCommand(new MinerCommand());
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     public void blockMined(World world, EntityPlayerMP player, int x, int y, int z, boolean harvestBlockSuccess, BlockID blockId) {
         MinerInstance ins = new MinerInstance(world, player, x, y, z, blockId, MinerServer.instance);
         ins.mineVein(x, y, z);
