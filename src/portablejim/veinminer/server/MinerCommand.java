@@ -17,10 +17,11 @@
 
 package portablejim.veinminer.server;
 
-import cpw.mods.fml.common.registry.LanguageRegistry;
 import net.minecraft.command.CommandBase;
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
+import net.minecraft.entity.player.EntityPlayerMP;
 
 import java.util.List;
 
@@ -44,6 +45,16 @@ public class MinerCommand extends CommandBase {
 
     @Override
     public void processCommand(ICommandSender icommandsender, String[] astring) {
+        EntityPlayerMP senderPlayer = null;
+        if(icommandsender instanceof EntityPlayerMP) {
+            senderPlayer = (EntityPlayerMP) icommandsender;
+        }
+        else {
+            throw new CommandException("Non-players cannot use veinminer commands", icommandsender);
+        }
+
+        assert(senderPlayer != null);
+
         if(astring.length > 0) {
             String player = icommandsender.getCommandSenderName();
             MinerServer minerServer = MinerServer.instance;
@@ -53,7 +64,7 @@ public class MinerCommand extends CommandBase {
                 }
                 else if(astring[1].equals(modes[0])) {
                     minerServer.setPlayerStatus(player, PlayerStatus.DISABLED);
-                    icommandsender.sendChatToPlayer(LanguageRegistry.instance().getStringLocalization("command.veinminer.set.disable"));
+                    senderPlayer.addChatMessage("command.veinminer.set.disable");
                 }
                 else if(astring[1].equals(modes[1])) {
                     if(minerServer.playerHasClient(player)) {
@@ -62,25 +73,25 @@ public class MinerCommand extends CommandBase {
                     else {
                         minerServer.setPlayerStatus(player, PlayerStatus.DISABLED);
                     }
-                    icommandsender.sendChatToPlayer(LanguageRegistry.instance().getStringLocalization("command.veinminer.set.auto"));
+                    senderPlayer.addChatMessage("command.veinminer.set.auto");
                 }
                 else if(astring[1].equals(modes[2])) {
                     minerServer.setPlayerStatus(player, PlayerStatus.SNEAK_ACTIVE);
-                    icommandsender.sendChatToPlayer(LanguageRegistry.instance().getStringLocalization("command.veinminer.set.sneak"));
+                    senderPlayer.addChatMessage("command.veinminer.set.sneak");
                 }
                 else if(astring[1].equals(modes[3])) {
                     minerServer.setPlayerStatus(player, PlayerStatus.SNEAK_INACTIVE);
-                    icommandsender.sendChatToPlayer(LanguageRegistry.instance().getStringLocalization("command.veinminer.set.nosneak"));
+                    senderPlayer.addChatMessage("command.veinminer.set.nosneak");
                 }
             }
             else if(astring[0].equals(commands[1])) {
                 if(astring.length > 1) {
                     if(astring[1].equals(commands[0])) {
-                        icommandsender.sendChatToPlayer(LanguageRegistry.instance().getStringLocalization("command.veinminer.help.enable"));
+                        senderPlayer.addChatMessage("command.veinminer.help.enable");
                     }
                 }
                 else {
-                    icommandsender.sendChatToPlayer(LanguageRegistry.instance().getStringLocalization("command.veinminer.help"));
+                    senderPlayer.addChatMessage("command.veinminer.help");
                 }
             }
         }
@@ -88,7 +99,7 @@ public class MinerCommand extends CommandBase {
         {
             throw new WrongUsageException("command.veinminer");
         }
-        //To change body of implemented methods use File | Settings | File Templates.
+        // change body of implemented methods use File | Settings | File Templates.
     }
 
     public List addTabCompletionOptions(ICommandSender par1ICommandSender, String[] arguments) {

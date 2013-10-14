@@ -66,15 +66,15 @@ public class PacketClientPresent extends PacketVeinMiner {
             switch (preferredMode) {
                 case PreferredMode.AUTO:
                     // Already set to auto
-                    thePlayer.sendChatToPlayer("VeinMiner set to use keybind ('auto')");
+                    thePlayer.addChatMessage("mod.veinminer.preferredmode.auto");
                     break;
                 case PreferredMode.SNEAK:
                     MinerServer.instance.setPlayerStatus(playerName, PlayerStatus.SNEAK_ACTIVE);
-                    thePlayer.sendChatToPlayer("Veinminer set to activate on sneak.");
+                    thePlayer.addChatMessage("mod.veinminer.preferredmode.sneak");
                     break;
                 case PreferredMode.NO_SNEAK:
                     MinerServer.instance.setPlayerStatus(playerName, PlayerStatus.SNEAK_INACTIVE);
-                    thePlayer.sendChatToPlayer("Veinminer set to deactivate on sneak.");
+                    thePlayer.addChatMessage("mod.veinminer.preferredmode.nosneak");
             }
         }
     }

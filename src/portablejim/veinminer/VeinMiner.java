@@ -19,24 +19,15 @@ package portablejim.veinminer;
 
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.Mod.PreInit;
-import cpw.mods.fml.common.Mod.Init;
-import cpw.mods.fml.common.Mod.PostInit;
-import cpw.mods.fml.common.Mod.ServerStarted;
+import cpw.mods.fml.common.Mod.*;
 import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerStartedEvent;
+import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.LanguageRegistry;
-import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
-import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
 import portablejim.veinminer.configuration.ConfigurationValues;
 import portablejim.veinminer.core.MinerInstance;
@@ -47,7 +38,6 @@ import portablejim.veinminer.network.PacketHandler;
 import portablejim.veinminer.proxy.CommonProxy;
 import portablejim.veinminer.server.MinerCommand;
 import portablejim.veinminer.server.MinerServer;
-import portablejim.veinminer.server.PlayerStatus;
 import portablejim.veinminer.util.BlockID;
 
 /**
@@ -73,6 +63,8 @@ public class VeinMiner {
         configurationValues = new ConfigurationValues(event.getSuggestedConfigurationFile());
         proxy.setupConfig(configurationValues);
         proxy.registerKeybind();
+
+        LanguageRegistry.instance().loadLocalization("/assets/veinminer/lang/en_US.lang", "en_US", false);
     }
 
     @Init
@@ -86,22 +78,13 @@ public class VeinMiner {
 
     }
 
+    @Mod.ServerStarting
+    public void serverStarting(FMLServerStartingEvent event) {
+    }
+
     @ServerStarted
     public void serverStarted(FMLServerStartedEvent event) {
         new MinerServer(configurationValues);
-
-        LanguageRegistry.instance().addStringLocalization("command.veinminer", "/veinminer enable");
-        LanguageRegistry.instance().addStringLocalization("command.veinminer.enable", "/veinminer enable disable/auto/sneak/no_sneak");
-        LanguageRegistry.instance().addStringLocalization("command.veinminer.set.disable", "Veinminer activation: disabled");
-        LanguageRegistry.instance().addStringLocalization("command.veinminer.set.auto", "Veinminer activation: Using client keybind");
-        LanguageRegistry.instance().addStringLocalization("command.veinminer.set.sneak", "Veinminer activation: When sneaking");
-        LanguageRegistry.instance().addStringLocalization("command.veinminer.set.nosneak", "Veinminer activation: When not sneaking");
-        LanguageRegistry.instance().addStringLocalization("command.veinminer.help", "Sub-commands available:\n'enable': change veinminer activation modes");
-        LanguageRegistry.instance().addStringLocalization("command.veinminer.help.enable", "Available activation modes:\n"
-                + "'disable': Completely disable\n"
-                + "'auto': Activate on keybind (useless without mod on client)\n"
-                + "'sneak': Activate while sneaking\n"
-                + "'no_sneak': Activate while not sneaking");
 
         ServerCommandManager serverCommandManger = (ServerCommandManager) MinecraftServer.getServer().getCommandManager();
         serverCommandManger.registerCommand(new MinerCommand());
