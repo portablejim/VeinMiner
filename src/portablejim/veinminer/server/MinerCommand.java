@@ -17,6 +17,7 @@
 
 package portablejim.veinminer.server;
 
+import cpw.mods.fml.common.registry.LanguageRegistry;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -45,15 +46,13 @@ public class MinerCommand extends CommandBase {
 
     @Override
     public void processCommand(ICommandSender icommandsender, String[] astring) {
-        EntityPlayerMP senderPlayer = null;
+        EntityPlayerMP senderPlayer;
         if(icommandsender instanceof EntityPlayerMP) {
             senderPlayer = (EntityPlayerMP) icommandsender;
         }
         else {
             throw new CommandException("Non-players cannot use veinminer commands", icommandsender);
         }
-
-        assert(senderPlayer != null);
 
         if(astring.length > 0) {
             String player = icommandsender.getCommandSenderName();
@@ -119,6 +118,6 @@ public class MinerCommand extends CommandBase {
 
     @Override
     public String getCommandUsage(ICommandSender par1ICommandSender) {
-        return par1ICommandSender.translateString("command.veinminer");
+        return LanguageRegistry.instance().getStringLocalization("command.veinminer");
     }
 }
