@@ -42,7 +42,7 @@ public class VeinMinerCorePlugin implements IFMLLoadingPlugin {
 
     @Override
     public String getModContainerClass() {
-        return null;
+        return "portablejim.veinminer.asm.VeinMinerCoreContainer";
     }
 
     @Override
