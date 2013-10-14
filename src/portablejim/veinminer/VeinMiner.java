@@ -19,8 +19,11 @@ package portablejim.veinminer;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import cpw.mods.fml.common.*;
+import cpw.mods.fml.common.FMLLog;
+import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.*;
+import cpw.mods.fml.common.ModMetadata;
+import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.LanguageRegistry;
@@ -31,7 +34,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import portablejim.veinminer.asm.VeinMinerCoreContainer;
 import portablejim.veinminer.configuration.ConfigurationValues;
 import portablejim.veinminer.core.MinerInstance;
 import portablejim.veinminer.event.EntityDropHook;
@@ -99,18 +101,8 @@ public class VeinMiner {
     }
 
     @Init
-    public void init(FMLInitializationEvent event) {
+    public void init(@SuppressWarnings("UnusedParameters") FMLInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(new EntityDropHook());
-
-    }
-
-    @PostInit
-    public void postInit(FMLPostInitializationEvent event) {
-
-    }
-
-    @Mod.ServerStarting
-    public void serverStarting(FMLServerStartingEvent event) {
     }
 
     @ServerStarted
@@ -121,6 +113,7 @@ public class VeinMiner {
         serverCommandManger.registerCommand(new MinerCommand());
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     public void blockMined(World world, EntityPlayerMP player, int x, int y, int z, boolean harvestBlockSuccess, BlockID blockId) {
         MinerInstance ins = new MinerInstance(world, player, x, y, z, blockId, MinerServer.instance);
         ins.mineVein(x, y, z);

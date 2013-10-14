@@ -37,13 +37,14 @@ import java.util.HashMap;
  * a block was successful) and uses it as an argument to blockMined().
  */
 
+@SuppressWarnings("UnusedDeclaration")
 public class ItemInWorldManagerTransformer extends GenericTransformer implements IClassTransformer {
 
-    private final String targetClassName = "portablejim/veinminer/VeinMiner";
-    private final String targetClassType = "Lportablejim/veinminer/VeinMiner;";
-    private final String targetMethodName = "blockMined";
-    private final String targetMethodType = "(%s%sIIIZ%s)V";
-    private final String blockIdClassName = "portablejim/veinminer/util/BlockID";
+    final String targetClassName = "portablejim/veinminer/VeinMiner";
+    final String targetClassType = "Lportablejim/veinminer/VeinMiner;";
+    final String targetMethodName = "blockMined";
+    final String targetMethodType = "(%s%sIIIZ%s)V";
+    final String blockIdClassName = "portablejim/veinminer/util/BlockID";
 
     public  ItemInWorldManagerTransformer() {
         super();
