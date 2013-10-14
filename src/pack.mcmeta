@@ -1,12 +1,1 @@
-{
-    "pack": {
-        "pack_format": 1,
-        "description": "VeinMiner Files"
-    },
-      "language": {
-         "en_US": {
-            "name": "English",
-            "region": "United States"
-         }
-      }
-}
+../package/pack.mcmeta
