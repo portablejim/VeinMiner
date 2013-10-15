@@ -32,7 +32,7 @@ import java.util.List;
 
 public class MinerCommand extends CommandBase {
     private static final String[] commands = new String[]{"enable", "help"};
-    private static final String[] modes = new String[] {"disable", "auto", "sneak", "nosneak"};
+    private static final String[] modes = new String[] {"disable", "auto", "sneak", "no_sneak"};
 
     @Override
     public String getCommandName() {

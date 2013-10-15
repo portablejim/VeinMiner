@@ -80,12 +80,15 @@ public class MinerInstance {
 
     private boolean shouldContinue() {
         // Item equipped
-        if(!serverInstance.getConfigurationSettings().getEnableAllTools() &&
-                (player.getCurrentEquippedItem() == null || !player.getCurrentEquippedItem().isItemEqual(usedItem))) {
+        if(!serverInstance.getConfigurationSettings().getEnableAllTools()) {
             this.finished = true;
         }
 
         this.finished = serverInstance.getUpdateToolAllowed(this.finished, player);
+
+        if(player.getCurrentEquippedItem() == null || !player.getCurrentEquippedItem().isItemEqual(usedItem)) {
+            this.finished = true;
+        }
 
         // Not hungry
         FoodStats food = player.getFoodStats();
