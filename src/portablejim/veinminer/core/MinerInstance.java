@@ -80,13 +80,13 @@ public class MinerInstance {
 
     private boolean shouldContinue() {
         // Item equipped
-        if(!serverInstance.getConfigurationSettings().getEnableAllTools()) {
+        if(!serverInstance.getConfigurationSettings().getEnableAllTools() && player.getCurrentEquippedItem() == null) {
             this.finished = true;
         }
 
         this.finished = serverInstance.getUpdateToolAllowed(this.finished, player);
 
-        if(player.getCurrentEquippedItem() == null || !player.getCurrentEquippedItem().isItemEqual(usedItem)) {
+        if(!player.getCurrentEquippedItem().isItemEqual(usedItem)) {
             this.finished = true;
         }
 
