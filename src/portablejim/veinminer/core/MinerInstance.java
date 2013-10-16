@@ -86,7 +86,7 @@ public class MinerInstance {
 
         this.finished = serverInstance.getUpdateToolAllowed(this.finished, player);
 
-        if(player.getCurrentEquippedItem() == null && !player.getCurrentEquippedItem().isItemEqual(usedItem)) {
+        if(player.getCurrentEquippedItem() == null || !player.getCurrentEquippedItem().isItemEqual(usedItem)) {
             this.finished = true;
         }
 
