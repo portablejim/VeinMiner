@@ -109,7 +109,8 @@ public class MinerInstance {
         }
 
         // Within mined block limits
-        if(numBlocksMined < serverInstance.getConfigurationSettings().getBlockLimit()) {
+        int blockLimit = serverInstance.getConfigurationSettings().getBlockLimit();
+        if(numBlocksMined < blockLimit || blockLimit == -1) {
             numBlocksMined++;
         }
         else {
@@ -171,7 +172,8 @@ public class MinerInstance {
                         continue;
                     }
 
-                    if(!newBlockPos.isWithinRange(initalBlock, configSettings.getRadiusLimit())) {
+                    int radiusLimit = configSettings.getRadiusLimit();
+                    if(!newBlockPos.isWithinRange(initalBlock, radiusLimit) && radiusLimit > 0) {
                         continue;
                     }
 

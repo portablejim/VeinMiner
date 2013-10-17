@@ -240,6 +240,9 @@ public class ConfigurationSettings {
     }
 
     void setBlockLimit(int blockLimit) {
+        if(blockLimit < -1) {
+            radiusLimit = -1;
+        }
         this.blockLimit = blockLimit;
     }
 
