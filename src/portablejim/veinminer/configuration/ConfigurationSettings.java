@@ -136,6 +136,14 @@ public class ConfigurationSettings {
         }
     }
 
+    public void addBlockToWhitelist(ToolType tool, BlockID block) {
+        blockWhitelist[tool.ordinal()].add(block);
+    }
+
+    public void removeBlockFromWhitelist(ToolType tool, BlockID block) {
+        blockWhitelist[tool.ordinal()].remove(block);
+    }
+
     public void clearBlockWhitelist() {
         for (ToolType tool : ToolType.values()) {
             blockWhitelist[tool.ordinal()].clear();

@@ -1,12 +1,19 @@
 # Command usage/error
-command.veinminer=/veinminer mode/help
+command.veinminer=/veinminer mode/blocklist/help
 command.veinminer.enable=/veinminer mode disable/auto/sneak/no_sneak
+command.veinminer.blocklist=/veinminer blocklist pickaxe/axe/shovel add/remove <block id>:<metadata>
 
 # Command result/Mode status
 command.veinminer.set.disable=Veinminer activation: disabled
 command.veinminer.set.auto=Veinminer activation: Using client keybind
 command.veinminer.set.sneak=Veinminer activation: When sneaking
 command.veinminer.set.nosneak=Veinminer activation: When not sneaking
+
+# Command blocklist
+command.veinminer.blocklist.actionerror=/veinminer blocklist %s add/remove <block id>:<metadata>
+command.veinminer.blocklist.itemerror=/veinminer blocklist %s %s <block id>:<metadata>
+command.veinminer.blocklist.add=Added %d:%d to the %s block whitelist
+command.veinminer.blocklist.remove=Removed %d:%d from the %s block whitelist
 
 # Preferred mode confirmation
 mod.veinminer.preferredmode.auto=Veinminer set to use keybind ('auto')
