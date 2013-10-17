@@ -239,6 +239,14 @@ public class ConfigurationSettings {
         }
     }
 
+    public void addTool(ToolType tool, int id) {
+        toolIds[tool.ordinal()].add(id);
+    }
+
+    public void removeTool(ToolType tool, int id) {
+        toolIds[tool.ordinal()].remove(id);
+    }
+
     public Set<Integer>[] getToolIds() {
         return toolIds;
     }
