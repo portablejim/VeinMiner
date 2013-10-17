@@ -31,7 +31,7 @@ import java.util.List;
  */
 
 public class MinerCommand extends CommandBase {
-    private static final String[] commands = new String[]{"enable", "help"};
+    private static final String[] commands = new String[]{"mode", "help"};
     private static final String[] modes = new String[] {"disable", "auto", "sneak", "no_sneak"};
 
     @Override
@@ -57,7 +57,7 @@ public class MinerCommand extends CommandBase {
         if(astring.length > 0) {
             String player = icommandsender.getCommandSenderName();
             MinerServer minerServer = MinerServer.instance;
-            if(astring[0].equals("enable")) {
+            if(astring[0].equals(commands[0])) {
                 if(astring.length == 1) {
                     throw new WrongUsageException("command.veinminer.enable");
                 }

@@ -1,6 +1,6 @@
 # Command usage/error
-command.veinminer=/veinminer enable
-command.veinminer.enable=/veinminer enable disable/auto/sneak/no_sneak
+command.veinminer=/veinminer mode/help
+command.veinminer.enable=/veinminer mode disable/auto/sneak/no_sneak
 
 # Command result/Mode status
 command.veinminer.set.disable=Veinminer activation: disabled
@@ -14,5 +14,5 @@ mod.veinminer.preferredmode.sneak=Veinminer set to activate on sneak.
 mod.veinminer.preferredmode.nosneak=Veinminer set to deactivate on sneak.
 
 # Command help.
-command.veinminer.help=Sub-commands available:\n'enable': change veinminer activation modes
+command.veinminer.help=Sub-commands available:\n'mode': change veinminer activation modes
 command.veinminer.help.enable=Available activation modes:\n 'disable': Completely disable\n 'auto': Activate on keybind (useless without mod on client)\n 'sneak': Activate while sneaking\n 'no_sneak': Activate while not sneaking
