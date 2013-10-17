@@ -150,6 +150,8 @@ public class MinerInstance {
             return;
         }
 
+        player.addExhaustion(0.01F);
+
         byte d = 1;
         for (int dx = -d; dx <= d; dx++) {
             for (int dy = -d; dy <= d; dy++) {
