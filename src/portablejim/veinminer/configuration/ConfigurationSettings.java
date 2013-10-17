@@ -274,7 +274,7 @@ public class ConfigurationSettings {
     }
 
     public boolean toolIsOfType(ItemStack tool, ToolType type) {
-        return this.toolIds[type.ordinal()].contains(tool.itemID);
+        return tool == null || this.toolIds[type.ordinal()].contains(tool.itemID);
     }
 
     /**
