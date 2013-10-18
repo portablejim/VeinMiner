@@ -255,7 +255,7 @@ public class ConfigurationSettings {
         return blockLimit;
     }
 
-    void setBlockLimit(int blockLimit) {
+    public void setBlockLimit(int blockLimit) {
         if(blockLimit < -1) {
             radiusLimit = -1;
         }
@@ -266,7 +266,7 @@ public class ConfigurationSettings {
         return radiusLimit;
     }
 
-    void setRadiusLimit(int radiusLimit) {
+    public void setRadiusLimit(int radiusLimit) {
         if (radiusLimit < -1) {
             radiusLimit = -1;
         }
@@ -281,7 +281,7 @@ public class ConfigurationSettings {
         return blocksPerTick;
     }
 
-    void setBlocksPerTick(int blocksPerTick) {
+    public void setBlocksPerTick(int blocksPerTick) {
         if (blocksPerTick < -1) {
             blocksPerTick = -1;
         }

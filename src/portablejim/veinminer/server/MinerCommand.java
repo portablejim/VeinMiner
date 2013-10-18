@@ -23,8 +23,6 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayerMP;
-import portablejim.veinminer.VeinMiner;
-import portablejim.veinminer.configuration.ConfigurationSettings;
 import portablejim.veinminer.util.BlockID;
 
 import java.util.List;
@@ -36,7 +34,14 @@ import static portablejim.veinminer.configuration.ConfigurationSettings.ToolType
  */
 
 public class MinerCommand extends CommandBase {
-    private static final String[] commands = new String[]{"mode", "blocklist", "toollist", "help"};
+    public static final int COMMAND_MODE = 0;
+    public static final int COMMAND_BLOCKLIST = 1;
+    public static final int COMMAND_TOOLLIST = 2;
+    public static final int COMMAND_BLOCKLIMIT = 3;
+    public static final int COMMAND_RANGE = 4;
+    public static final int COMMAND_PER_TICK = 5;
+    public static final int COMMAND_HELP = 6;
+    private static final String[] commands = new String[]{"mode", "blocklist", "toollist", "blocklimit", "radius", "per_tick", "help"};
     private static final String[] modes = new String[] {"disable", "auto", "sneak", "no_sneak"};
 
     @Override
@@ -92,7 +97,7 @@ public class MinerCommand extends CommandBase {
         if(astring.length > 0) {
             String player = icommandsender.getCommandSenderName();
             MinerServer minerServer = MinerServer.instance;
-            if(astring[0].equals(commands[0])) {
+            if(astring[0].equals(commands[COMMAND_MODE])) {
                 if(astring.length == 1) {
                     throw new WrongUsageException("command.veinminer.enable");
                 }
@@ -118,7 +123,7 @@ public class MinerCommand extends CommandBase {
                     senderPlayer.addChatMessage("command.veinminer.set.nosneak");
                 }
             }
-            else if(astring[0].equals(commands[1])) {
+            else if(astring[0].equals(commands[COMMAND_BLOCKLIST])) {
                 ToolType tool = commandTool(astring, "blocklist");
                 String toolString = astring[1];
 
@@ -146,7 +151,7 @@ public class MinerCommand extends CommandBase {
                     senderPlayer.addChatMessage(String.format(message, blockID.id, blockID.metadata, toolString));
                 }
             }
-            else if(astring[0].equals(commands[2])) {
+            else if(astring[0].equals(commands[COMMAND_TOOLLIST])) {
                 ToolType tool = commandTool(astring, "toollist");
                 String toolString = astring[1];
 
@@ -181,9 +186,66 @@ public class MinerCommand extends CommandBase {
                     senderPlayer.addChatMessage(String.format(message, toolId, toolString));
                 }
             }
-            else if(astring[0].equals(commands[3])) {
+            else if(astring[0].equals(commands[COMMAND_BLOCKLIMIT])) {
+                if(astring.length == 1) {
+                    throw new WrongUsageException("command.veinminer.blocklimit");
+                }
+
+                int newBlockPerTick;
+                try {
+                    newBlockPerTick = Integer.parseInt(astring[1]);
+                }
+                catch (NumberFormatException e) {
+                    throw new WrongUsageException("command.veinminer.blocklimit");
+                }
+
+                MinerServer.instance.getConfigurationSettings().setBlockLimit(newBlockPerTick);
+
+                int actualBlockPerTick = MinerServer.instance.getConfigurationSettings().getBlockLimit();
+                String message = LanguageRegistry.instance().getStringLocalization("command.veinminer.blocklimit.set");
+                senderPlayer.addChatMessage(String.format(message, actualBlockPerTick));
+            }
+            else if(astring[0].equals(commands[COMMAND_RANGE])) {
+                if(astring.length == 1) {
+                    throw new WrongUsageException("command.veinminer.range");
+                }
+
+                int newRange;
+                try {
+                    newRange = Integer.parseInt(astring[1]);
+                }
+                catch (NumberFormatException e) {
+                    throw new WrongUsageException("command.veinminer.range");
+                }
+
+                MinerServer.instance.getConfigurationSettings().setRadiusLimit(newRange);
+
+                int actualRange = MinerServer.instance.getConfigurationSettings().getRadiusLimit();
+                String message = LanguageRegistry.instance().getStringLocalization("command.veinminer.range.set");
+                senderPlayer.addChatMessage(String.format(message, actualRange));
+            }
+            else if(astring[0].equals(commands[COMMAND_PER_TICK])) {
+                if(astring.length == 1) {
+                    throw new WrongUsageException("command.veinminer.pertick");
+                }
+
+                int newRate;
+                try {
+                    newRate = Integer.parseInt(astring[1]);
+                }
+                catch (NumberFormatException e) {
+                    throw new WrongUsageException("command.veinminer.pertick");
+                }
+
+                MinerServer.instance.getConfigurationSettings().setRadiusLimit(newRate);
+
+                int actualRate = MinerServer.instance.getConfigurationSettings().getRadiusLimit();
+                String message = LanguageRegistry.instance().getStringLocalization("command.veinminer.pertick.set");
+                senderPlayer.addChatMessage(String.format(message, actualRate));
+            }
+            else if(astring[0].equals(commands[COMMAND_HELP])) {
                 if(astring.length > 1) {
-                    if(astring[1].equals(commands[0])) {
+                    if(astring[1].equals(commands[COMMAND_MODE])) {
                         senderPlayer.addChatMessage("command.veinminer.help.enable");
                     }
                 }
@@ -204,19 +266,19 @@ public class MinerCommand extends CommandBase {
             case 1:
                 return getListOfStringsMatchingLastWord(arguments, commands);
             case 2:
-                if(arguments[0].equals(commands[0])) {
+                if(arguments[0].equals(commands[COMMAND_MODE])) {
                     return getListOfStringsMatchingLastWord(arguments, modes);
                 }
-                else if(arguments[0].equals(commands[1]) || arguments[0].equals(commands[2])) {
+                else if(arguments[0].equals(commands[COMMAND_BLOCKLIST]) || arguments[0].equals(commands[COMMAND_TOOLLIST])) {
                     String[] tools = { "pickaxe", "axe", "shovel" };
 
                     return getListOfStringsMatchingLastWord(arguments, tools);
                 }
-                else if(arguments[0].equals(commands[2])) {
+                else if(arguments[0].equals(commands[COMMAND_TOOLLIST])) {
                     return getListOfStringsMatchingLastWord(arguments, commands);
                 }
             case 3:
-                if(arguments[0].equals(commands[1]) || arguments[0].equals(commands[2])) {
+                if(arguments[0].equals(commands[COMMAND_BLOCKLIST]) || arguments[0].equals(commands[COMMAND_TOOLLIST])) {
                     String[] actions = { "add", "remove" };
 
                     return getListOfStringsMatchingLastWord(arguments, actions);
