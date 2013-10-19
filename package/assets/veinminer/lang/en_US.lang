@@ -31,6 +31,8 @@ command.veinminer.rate.set=Set to destroy %d blocks per tick
 
 command.veinminer.saveconfig=Saved settings to config file
 
+command.veinminer.permissionDenied=You don't have permission to use this sub-command
+
 # Preferred mode confirmation
 mod.veinminer.preferredmode.auto=Veinminer set to use keybind ('auto')
 mod.veinminer.preferredmode.sneak=Veinminer set to activate on sneak.

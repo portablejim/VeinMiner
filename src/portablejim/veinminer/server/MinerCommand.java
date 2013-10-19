@@ -23,6 +23,7 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
 import portablejim.veinminer.configuration.ConfigurationSettings;
 import portablejim.veinminer.util.BlockID;
 
@@ -99,21 +100,27 @@ public class MinerCommand extends CommandBase {
                 runCommandMode(senderPlayer, astring);
             }
             else if(astring[0].equals(commands[COMMAND_BLOCKLIST])) {
+                needAdmin(senderPlayer);
                 runCommandBlocklist(senderPlayer, astring);
             }
             else if(astring[0].equals(commands[COMMAND_TOOLLIST])) {
+                needAdmin(senderPlayer);
                 runCommandToollist(senderPlayer, astring);
             }
             else if(astring[0].equals(commands[COMMAND_BLOCKLIMIT])) {
+                needAdmin(senderPlayer);
                 runCommandBlocklimit(senderPlayer, astring);
             }
             else if(astring[0].equals(commands[COMMAND_RANGE])) {
+                needAdmin(senderPlayer);
                 runCommandRange(senderPlayer, astring);
             }
             else if(astring[0].equals(commands[COMMAND_PER_TICK])) {
+                needAdmin(senderPlayer);
                 runCommandPerTick(senderPlayer, astring);
             }
             else if(astring[0].equals(commands[COMMAND_SAVE])) {
+                needAdmin(senderPlayer);
                 runCommandSave(senderPlayer, astring);
             }
             else if(astring[0].equals(commands[COMMAND_HELP])) {
@@ -153,6 +160,18 @@ public class MinerCommand extends CommandBase {
             message = String.format(message, params);
         }
         throw new WrongUsageException(message);
+    }
+
+    private void needAdmin(EntityPlayerMP player) {
+        MinecraftServer server = player.mcServer;
+        if(server.isDedicatedServer() && !server.getConfigurationManager().areCommandsAllowed(player.getCommandSenderName())) {
+            boolean playerNoClient = !MinerServer.instance.playerHasClient(player.getEntityName());
+            String message = "command.veinminer.permissionDenied";
+            if(playerNoClient) {
+                message = LanguageRegistry.instance().getStringLocalization(message);
+            }
+            throw new CommandException(message);
+        }
     }
 
     private void runCommandMode(EntityPlayerMP senderPlayer, String[] astring) throws WrongUsageException {
