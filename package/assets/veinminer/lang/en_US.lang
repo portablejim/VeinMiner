@@ -35,5 +35,16 @@ mod.veinminer.preferredmode.sneak=Veinminer set to activate on sneak.
 mod.veinminer.preferredmode.nosneak=Veinminer set to deactivate on sneak.
 
 # Command help.
-command.veinminer.help=Sub-commands available:\n'mode': change veinminer activation modes\n'blocklist': Add or remove blocks from the VeinMiner whitelist\n'toollist': Add ore remove tools to use with VeinMiner\n'blocklimit': Set the limit on the number of blocks that can be destroyed at once by VeinMiner\n'radius': Set the maximum distance Veinminer will collect blocks from the first block destroyed\n'per_tick': Set the rate at which blocks are destroyed by VeinMiner\n'help': This text
-command.veinminer.help.enable=Available activation modes:\n 'disable': Completely disable\n 'auto': Activate on keybind (useless without mod on client)\n 'sneak': Activate while sneaking\n 'no_sneak': Activate while not sneaking
+command.veinminer.help1=Sub-commands available:
+command.veinminer.help2='mode': change VeinMiner activation modes
+command.veinminer.help3='blocklist': Add or remove blocks from the VeinMiner whitelist
+command.veinminer.help4='toollist': Add ore remove tools to use with VeinMiner
+command.veinminer.help5='blocklimit': Set the limit on the number of blocks that can be destroyed at once by VeinMiner
+command.veinminer.help6='radius': Set the maximum distance Veinminer will collect blocks from the first block destroyed
+command.veinminer.help7='per_tick': Set the rate at which blocks are destroyed by VeinMiner
+command.veinminer.help8='help': This text
+command.veinminer.help.enable1=Available activation modes:
+command.veinminer.help.enable2='disable': Completely disable
+command.veinminer.help.enable3='auto': Activate on keybind (useless without mod on client)
+command.veinminer.help.enable4='sneak': Activate while sneaking
+command.veinminer.help.enable5='no_sneak': Activate while not sneaking
