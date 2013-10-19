@@ -69,7 +69,7 @@ public class MinerInstance {
         finished = false;
         serverInstance = server;
         usedItem = player.getCurrentEquippedItem();
-        numBlocksMined = 0;
+        numBlocksMined = 1;
         initalBlock = new Point(x, y, z);
         cleanedUp = false;
 
@@ -111,7 +111,6 @@ public class MinerInstance {
         // Within mined block limits
         int blockLimit = serverInstance.getConfigurationSettings().getBlockLimit();
         if(numBlocksMined < blockLimit || blockLimit == -1) {
-            numBlocksMined++;
         }
         else {
             this.finished = true;
@@ -133,6 +132,7 @@ public class MinerInstance {
         Point newPoint = new Point(x, y, z);
         awaitingEntityDrop.add(newPoint);
         boolean success = player.theItemInWorldManager.tryHarvestBlock(x, y, z);
+        numBlocksMined++;
         // Only go ahead if block was destroyed. Stops mining through protected areas.
         if(success) {
             destroyQueue.add(newPoint);
@@ -184,8 +184,16 @@ public class MinerInstance {
                         continue;
                     }
 
+                    int blockLimit = serverInstance.getConfigurationSettings().getBlockLimit();
+                    if(numBlocksMined < blockLimit || blockLimit == -1) {
+                    }
+                    else {
+                        continue;
+                    }
+
                     if(configSettings.getEnableAllBlocks() || toolAllowedForBlock(usedItem, newBlock)) {
                         mineBlock(x + dx, y + dy, z + dz);
+                        //numBlocksMined++;
                     }
                 }
             }
