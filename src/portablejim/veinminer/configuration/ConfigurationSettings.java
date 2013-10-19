@@ -17,6 +17,7 @@
 
 package portablejim.veinminer.configuration;
 
+import com.google.common.base.Joiner;
 import net.minecraft.item.ItemStack;
 import portablejim.veinminer.util.BlockID;
 import portablejim.veinminer.util.PreferredMode;
@@ -150,8 +151,8 @@ public class ConfigurationSettings {
         }
     }
 
-    public List<BlockID> getBlockWhitelist(ToolType tool) {
-        return blockWhitelist[tool.ordinal()];
+    public String getBlockWhitelist(ToolType tool) {
+        return Joiner.on(',').join(blockWhitelist[tool.ordinal()]);
     }
 
     public boolean whiteListHasBlockId(ToolType tool, BlockID targetBlock) {
@@ -199,8 +200,12 @@ public class ConfigurationSettings {
         }
     }
 
-    public ArrayList<Set<BlockID>> getBlockCongruenceList() {
-        return blockCongruenceList;
+    public String getBlockCongruenceList() {
+        ArrayList<String> congruenceGroups = new ArrayList<String>();
+        for(Set<BlockID> group : blockCongruenceList) {
+            congruenceGroups.add(Joiner.on('-').join(group));
+        }
+        return Joiner.on(',').join(congruenceGroups);
     }
 
     public HashMap<BlockID, Integer> getBlockCongruenceMap() {
@@ -247,8 +252,8 @@ public class ConfigurationSettings {
         toolIds[tool.ordinal()].remove(id);
     }
 
-    public Set<Integer>[] getToolIds() {
-        return toolIds;
+    public String getToolIds(ToolType tool) {
+        return Joiner.on(',').join(toolIds[tool.ordinal()]);
     }
 
     public int getBlockLimit() {
@@ -329,6 +334,40 @@ public class ConfigurationSettings {
      * @return One of PreferredMode.AUTO, PreferredMode.SNEAK, PreferredMode.NO_SNEAK
      */
     public int getPreferredMode() {
-        return this.preferredMode;
+        return preferredMode;
+    }
+
+    public String getPreferredModeString() {
+        switch (preferredMode) {
+            case PreferredMode.AUTO:
+                return "auto";
+            case PreferredMode.SNEAK:
+                return "sneak";
+            case PreferredMode.NO_SNEAK:
+                return "no_sneak";
+        }
+        return "";
+    }
+
+    public void saveConfigs() {
+        configValues.AXE_BLOCK_ID_LIST = getBlockWhitelist(ToolType.AXE);
+        configValues.PICKAXE_BLOCK_ID_LIST = getBlockWhitelist(ToolType.PICKAXE);
+        configValues.SHOVEL_BLOCK_ID_LIST = getBlockWhitelist(ToolType.SHOVEL);
+        configValues.AXE_ID_LIST = getToolIds(ToolType.AXE);
+        configValues.PICKAXE_ID_LIST = getToolIds(ToolType.PICKAXE);
+        configValues.SHOVEL_ID_LIST = getToolIds(ToolType.SHOVEL);
+
+        configValues.BLOCK_LIMIT = getBlockLimit();
+        configValues.BLOCKS_PER_TICK = getBlocksPerTick();
+        configValues.RADIUS_LIMIT = getRadiusLimit();
+
+        configValues.BLOCK_EQUIVALENCY_LIST = getBlockCongruenceList();
+
+        configValues.ENABLE_ALL_BLOCKS = getEnableAllBlocks();
+        configValues.ENABLE_ALL_TOOLS = getEnableAllTools();
+
+        configValues.CLIENT_PREFERRED_MODE = getPreferredModeString();
+
+        configValues.saveConfigFile();
     }
 }

@@ -41,8 +41,9 @@ public class MinerCommand extends CommandBase {
     public static final int COMMAND_BLOCKLIMIT = 3;
     public static final int COMMAND_RANGE = 4;
     public static final int COMMAND_PER_TICK = 5;
-    public static final int COMMAND_HELP = 6;
-    private static final String[] commands = new String[]{"mode", "blocklist", "toollist", "blocklimit", "radius", "per_tick", "help"};
+    public static final int COMMAND_SAVE = 6;
+    public static final int COMMAND_HELP = 7;
+    private static final String[] commands = new String[]{"mode", "blocklist", "toollist", "blocklimit", "radius", "per_tick", "saveconfig", "help"};
     private static final String[] modes = new String[] {"disable", "auto", "sneak", "no_sneak"};
 
     @Override
@@ -111,6 +112,9 @@ public class MinerCommand extends CommandBase {
             }
             else if(astring[0].equals(commands[COMMAND_PER_TICK])) {
                 runCommandPerTick(senderPlayer, astring);
+            }
+            else if(astring[0].equals(commands[COMMAND_SAVE])) {
+                runCommandSave(senderPlayer, astring);
             }
             else if(astring[0].equals(commands[COMMAND_HELP])) {
                 runCommandHelp(senderPlayer, astring);
@@ -309,6 +313,11 @@ public class MinerCommand extends CommandBase {
         sendProperChatToPlayer(senderPlayer, message, actualRate);
     }
 
+    private void runCommandSave(EntityPlayerMP senderPlayer, String[] astring) {
+        MinerServer.instance.getConfigurationSettings().saveConfigs();
+        sendProperChatToPlayer(senderPlayer, "command.veinminer.saveconfig");
+    }
+
     private void runCommandHelp(EntityPlayerMP senderPlayer, String[] astring) {
         if(astring.length > 1) {
             if(astring[1].equals(commands[COMMAND_MODE])) {
@@ -328,6 +337,7 @@ public class MinerCommand extends CommandBase {
             sendProperChatToPlayer(senderPlayer, "command.veinminer.help6");
             sendProperChatToPlayer(senderPlayer, "command.veinminer.help7");
             sendProperChatToPlayer(senderPlayer, "command.veinminer.help8");
+            sendProperChatToPlayer(senderPlayer, "command.veinminer.help9");
         }
     }
 

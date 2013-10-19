@@ -31,9 +31,9 @@ public class ConfigurationValues {
 
     private Configuration configFile;
 
-    public static final String CONFIG_BLOCKLIST = "blockList";
+    public static final String CONFIG_BLOCKLIST = "blocklist";
     public static final String CONFIG_BLOCKLIST_COMMENT = "IDs of blocks to auto-mine. Separate ids with ',' and metadata from ID with ':'.";
-    public static final String CONFIG_ITEMLIST = "itemList";
+    public static final String CONFIG_ITEMLIST = "itemlist";
     public static final String CONFIG_ITEMLIST_COMMENT = "Tools to use to auto-mine with. Separate ids with ',' and metadata from ID with ':'.";
     public static final String CONFIG_LIMITS = "limit";
     public static final String CONFIG_MISC = "misc";
@@ -136,5 +136,31 @@ public class ConfigurationValues {
         CLIENT_PREFERRED_MODE = configFile.get(CONFIG_CLIENT, CLIENT_PREFERRED_MODE_CONFIGNAME, CLIENT_PREFERRED_MODE_DEFAULT, CLIENT_PREFERRED_MODE_DESCRIPTION).getString();
 
         configFile.save();
+    }
+
+    public void saveConfigFile() {
+        //configFile.load();
+
+        configFile.getCategory(CONFIG_BLOCKLIST).get(PICKAXE_BLOCK_ID_LIST_CONFIGNAME).set(PICKAXE_BLOCK_ID_LIST);
+        configFile.getCategory(CONFIG_BLOCKLIST).get(SHOVEL_BLOCK_ID_LIST_CONFIGNAME).set(SHOVEL_BLOCK_ID_LIST);
+        configFile.getCategory(CONFIG_BLOCKLIST).get(AXE_BLOCK_ID_LIST_CONFIGNAME).set(AXE_BLOCK_ID_LIST);
+        configFile.getCategory(CONFIG_ITEMLIST).get(PICKAXE_ID_LIST_CONFIGNAME).set(PICKAXE_ID_LIST);
+        configFile.getCategory(CONFIG_ITEMLIST).get(SHOVEL_ID_LIST_CONFIGNAME).set(SHOVEL_ID_LIST);
+        configFile.getCategory(CONFIG_ITEMLIST).get(AXE_ID_LIST_CONFIGNAME).set(AXE_ID_LIST);
+
+        configFile.getCategory(CONFIG_LIMITS).get(BLOCK_LIMIT_CONFIGNAME).set(BLOCK_LIMIT);
+        configFile.getCategory(CONFIG_LIMITS).get(RADIUS_LIMIT_CONFIGNAME).set(RADIUS_LIMIT);
+        configFile.getCategory(CONFIG_LIMITS).get(BLOCKS_PER_TICK_CONFIGNAME).set(BLOCKS_PER_TICK);
+
+        configFile.getCategory(CONFIG_MISC).get(BLOCK_EQUIVALENCY_LIST_CONFIGNAME).set(BLOCK_EQUIVALENCY_LIST);
+
+        configFile.getCategory(CONFIG_OVERRIDE).get(ENABLE_ALL_BLOCKS_CONFIGNAME).set(ENABLE_ALL_BLOCKS);
+        configFile.getCategory(CONFIG_OVERRIDE).get(ENABLE_ALL_TOOLS_CONFIGNAME).set(ENABLE_ALL_TOOLS);
+
+        configFile.getCategory(CONFIG_CLIENT).get(CLIENT_PREFERRED_MODE_CONFIGNAME).set(CLIENT_PREFERRED_MODE);
+
+        if(configFile.hasChanged()) {
+            configFile.save();
+        }
     }
 }
