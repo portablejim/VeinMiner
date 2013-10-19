@@ -109,7 +109,8 @@ public class MinerInstance {
         }
 
         // Within mined block limits
-        if(numBlocksMined < serverInstance.getConfigurationSettings().getBlockLimit()) {
+        int blockLimit = serverInstance.getConfigurationSettings().getBlockLimit();
+        if(numBlocksMined < blockLimit || blockLimit == -1) {
             numBlocksMined++;
         }
         else {
@@ -149,6 +150,8 @@ public class MinerInstance {
             return;
         }
 
+        player.addExhaustion(0.01F);
+
         byte d = 1;
         for (int dx = -d; dx <= d; dx++) {
             for (int dy = -d; dy <= d; dy++) {
@@ -171,7 +174,8 @@ public class MinerInstance {
                         continue;
                     }
 
-                    if(!newBlockPos.isWithinRange(initalBlock, configSettings.getRadiusLimit())) {
+                    int radiusLimit = configSettings.getRadiusLimit();
+                    if(!newBlockPos.isWithinRange(initalBlock, radiusLimit) && radiusLimit > 0) {
                         continue;
                     }
 

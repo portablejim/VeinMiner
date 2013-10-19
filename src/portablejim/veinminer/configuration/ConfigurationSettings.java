@@ -136,6 +136,14 @@ public class ConfigurationSettings {
         }
     }
 
+    public void addBlockToWhitelist(ToolType tool, BlockID block) {
+        blockWhitelist[tool.ordinal()].add(block);
+    }
+
+    public void removeBlockFromWhitelist(ToolType tool, BlockID block) {
+        blockWhitelist[tool.ordinal()].remove(block);
+    }
+
     public void clearBlockWhitelist() {
         for (ToolType tool : ToolType.values()) {
             blockWhitelist[tool.ordinal()].clear();
@@ -231,6 +239,14 @@ public class ConfigurationSettings {
         }
     }
 
+    public void addTool(ToolType tool, int id) {
+        toolIds[tool.ordinal()].add(id);
+    }
+
+    public void removeTool(ToolType tool, int id) {
+        toolIds[tool.ordinal()].remove(id);
+    }
+
     public Set<Integer>[] getToolIds() {
         return toolIds;
     }
@@ -239,7 +255,10 @@ public class ConfigurationSettings {
         return blockLimit;
     }
 
-    void setBlockLimit(int blockLimit) {
+    public void setBlockLimit(int blockLimit) {
+        if(blockLimit < -1) {
+            radiusLimit = -1;
+        }
         this.blockLimit = blockLimit;
     }
 
@@ -247,7 +266,7 @@ public class ConfigurationSettings {
         return radiusLimit;
     }
 
-    void setRadiusLimit(int radiusLimit) {
+    public void setRadiusLimit(int radiusLimit) {
         if (radiusLimit < -1) {
             radiusLimit = -1;
         }
@@ -262,7 +281,7 @@ public class ConfigurationSettings {
         return blocksPerTick;
     }
 
-    void setBlocksPerTick(int blocksPerTick) {
+    public void setBlocksPerTick(int blocksPerTick) {
         if (blocksPerTick < -1) {
             blocksPerTick = -1;
         }
