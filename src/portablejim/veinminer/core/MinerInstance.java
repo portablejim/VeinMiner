@@ -55,7 +55,6 @@ public class MinerInstance {
     private ItemStack usedItem;
     private int numBlocksMined;
     private Point initalBlock;
-    private boolean cleanedUp;
 
     private static final int MIN_HUNGER = 1;
 
@@ -71,7 +70,6 @@ public class MinerInstance {
         usedItem = player.getCurrentEquippedItem();
         numBlocksMined = 1;
         initalBlock = new Point(x, y, z);
-        cleanedUp = false;
 
         serverInstance.addInstance(this);
 
@@ -110,9 +108,7 @@ public class MinerInstance {
 
         // Within mined block limits
         int blockLimit = serverInstance.getConfigurationSettings().getBlockLimit();
-        if(numBlocksMined < blockLimit || blockLimit == -1) {
-        }
-        else {
+        if (numBlocksMined >= blockLimit && blockLimit != -1) {
             this.finished = true;
         }
 
@@ -142,6 +138,7 @@ public class MinerInstance {
         }
     }
 
+    @SuppressWarnings("ConstantConditions")
     public synchronized void mineVein(int x, int y, int z) {
         if(this.world == null || this.player == null || this.targetBlock == null) {
             finished = true;
@@ -185,9 +182,7 @@ public class MinerInstance {
                     }
 
                     int blockLimit = serverInstance.getConfigurationSettings().getBlockLimit();
-                    if(numBlocksMined < blockLimit || blockLimit == -1) {
-                    }
-                    else {
+                    if (numBlocksMined >= blockLimit && blockLimit != -1) {
                         continue;
                     }
 
@@ -211,7 +206,6 @@ public class MinerInstance {
                 // All blocks have been mined. This is done last.
                 serverInstance.removeInstance(this);
                 spawnDrops();
-                cleanedUp = true;
                 return;
             }
         }
