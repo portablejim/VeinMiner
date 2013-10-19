@@ -133,6 +133,7 @@ public class MinerCommand extends CommandBase {
     private void sendProperChatToPlayer(EntityPlayerMP player, String incomingMessage, Object... params) {
         boolean playerNoClient = !MinerServer.instance.playerHasClient(player.getEntityName());
         String message = incomingMessage;
+        playerNoClient = params.length > 0; // Can't do client-side message formatting.
         if(playerNoClient) {
             message = LanguageRegistry.instance().getStringLocalization(incomingMessage);
             message = String.format(message, params);
@@ -205,13 +206,11 @@ public class MinerCommand extends CommandBase {
 
         if("add".equals(action)) {
             configSettings.addBlockToWhitelist(tool, blockID);
-            String message = LanguageRegistry.instance().getStringLocalization("command.veinminer.blocklist.add");
-            sendProperChatToPlayer(senderPlayer, message, blockID.id, blockID.metadata, toolString);
+            sendProperChatToPlayer(senderPlayer, "command.veinminer.blocklist.add", blockID.id, blockID.metadata, toolString);
         }
         else if("remove".equals(action)) {
             configSettings.removeBlockFromWhitelist(tool, blockID);
-            String message = LanguageRegistry.instance().getStringLocalization("command.veinminer.blocklist.remove");
-            sendProperChatToPlayer(senderPlayer, message, blockID.id, blockID.metadata, toolString);
+            sendProperChatToPlayer(senderPlayer, "command.veinminer.blocklist.remove", blockID.id, blockID.metadata, toolString);
         }
     }
 
@@ -243,13 +242,11 @@ public class MinerCommand extends CommandBase {
 
         if("add".equals(action)) {
             configSettings.addTool(tool, toolId);
-            String message = LanguageRegistry.instance().getStringLocalization("command.veinminer.toollist.add");
-            sendProperChatToPlayer(senderPlayer, message, toolId, toolString);
+            sendProperChatToPlayer(senderPlayer, "command.veinminer.toollist.add", toolId, toolString);
         }
         else if("remove".equals(action)) {
             configSettings.removeTool(tool, toolId);
-            String message = LanguageRegistry.instance().getStringLocalization("command.veinminer.toollist.remove");
-            sendProperChatToPlayer(senderPlayer, message, toolId, toolString);
+            sendProperChatToPlayer(senderPlayer, "command.veinminer.toollist.remove", toolId, toolString);
         }
     }
 
@@ -269,8 +266,7 @@ public class MinerCommand extends CommandBase {
         MinerServer.instance.getConfigurationSettings().setBlockLimit(newBlockPerTick);
 
         int actualBlockPerTick = MinerServer.instance.getConfigurationSettings().getBlockLimit();
-        String message = LanguageRegistry.instance().getStringLocalization("command.veinminer.blocklimit.set");
-        sendProperChatToPlayer(senderPlayer, message, actualBlockPerTick);
+        sendProperChatToPlayer(senderPlayer, "command.veinminer.blocklimit.set", actualBlockPerTick);
     }
 
     private void runCommandRange(EntityPlayerMP senderPlayer, String[] astring) {
@@ -289,8 +285,7 @@ public class MinerCommand extends CommandBase {
         MinerServer.instance.getConfigurationSettings().setRadiusLimit(newRange);
 
         int actualRange = MinerServer.instance.getConfigurationSettings().getRadiusLimit();
-        String message = LanguageRegistry.instance().getStringLocalization("command.veinminer.range.set");
-        sendProperChatToPlayer(senderPlayer, message, actualRange);
+        sendProperChatToPlayer(senderPlayer, "command.veinminer.range.set", actualRange);
     }
 
     private void runCommandPerTick(EntityPlayerMP senderPlayer, String[] astring) {
@@ -309,8 +304,7 @@ public class MinerCommand extends CommandBase {
         MinerServer.instance.getConfigurationSettings().setRadiusLimit(newRate);
 
         int actualRate = MinerServer.instance.getConfigurationSettings().getRadiusLimit();
-        String message = LanguageRegistry.instance().getStringLocalization("command.veinminer.pertick.set");
-        sendProperChatToPlayer(senderPlayer, message, actualRate);
+        sendProperChatToPlayer(senderPlayer, "command.veinminer.pertick.set", actualRate);
     }
 
     private void runCommandSave(EntityPlayerMP senderPlayer, String[] astring) {
