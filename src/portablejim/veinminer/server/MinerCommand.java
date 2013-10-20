@@ -23,15 +23,28 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
+import portablejim.veinminer.configuration.ConfigurationSettings;
+import portablejim.veinminer.util.BlockID;
 
 import java.util.List;
+
+import static portablejim.veinminer.configuration.ConfigurationSettings.ToolType;
 
 /**
  * Command so that clients can control VeinMiner settings for their player.
  */
 
 public class MinerCommand extends CommandBase {
-    private static final String[] commands = new String[]{"enable", "help"};
+    public static final int COMMAND_MODE = 0;
+    public static final int COMMAND_BLOCKLIST = 1;
+    public static final int COMMAND_TOOLLIST = 2;
+    public static final int COMMAND_BLOCKLIMIT = 3;
+    public static final int COMMAND_RANGE = 4;
+    public static final int COMMAND_PER_TICK = 5;
+    public static final int COMMAND_SAVE = 6;
+    public static final int COMMAND_HELP = 7;
+    private static final String[] commands = new String[]{"mode", "blocklist", "toollist", "blocklimit", "radius", "per_tick", "saveconfig", "help"};
     private static final String[] modes = new String[] {"disable", "auto", "sneak", "no_sneak"};
 
     @Override
@@ -42,6 +55,34 @@ public class MinerCommand extends CommandBase {
     @Override
     public boolean canCommandSenderUseCommand(ICommandSender par1ICommandSender) {
         return par1ICommandSender instanceof EntityPlayerMP;
+    }
+
+    private ToolType commandTool(String[] commandString, String commandName) {
+        if(commandString.length == 1) {
+            throw new WrongUsageException("command.veinminer." + commandName);
+        }
+
+        ToolType tool;
+        if("pickaxe".equals(commandString[1])) {
+            tool = ToolType.PICKAXE;
+        }
+        else if("axe".equals(commandString[1])) {
+            tool = ToolType.AXE;
+        }
+        else if("shovel".equals(commandString[1])) {
+            tool = ToolType.SHOVEL;
+        }
+        else {
+            throw new WrongUsageException("command.veinminer." + commandName);
+        }
+
+        return tool;
+    }
+
+    private void commandAction(String[] commandString, String commandName) {
+        if (commandString.length < 3 || (!"add".equals(commandString[2]) && !"remove".equals(commandString[2]))) {
+            throw new WrongUsageException("command.veinminer." + commandName + ".actionerror", commandString[1]);
+        }
     }
 
     @Override
@@ -55,50 +96,262 @@ public class MinerCommand extends CommandBase {
         }
 
         if(astring.length > 0) {
-            String player = icommandsender.getCommandSenderName();
-            MinerServer minerServer = MinerServer.instance;
-            if(astring[0].equals("enable")) {
-                if(astring.length == 1) {
-                    throw new WrongUsageException("command.veinminer.enable");
-                }
-                else if(astring[1].equals(modes[0])) {
-                    minerServer.setPlayerStatus(player, PlayerStatus.DISABLED);
-                    senderPlayer.addChatMessage("command.veinminer.set.disable");
-                }
-                else if(astring[1].equals(modes[1])) {
-                    if(minerServer.playerHasClient(player)) {
-                        minerServer.setPlayerStatus(player, PlayerStatus.INACTIVE);
-                    }
-                    else {
-                        minerServer.setPlayerStatus(player, PlayerStatus.DISABLED);
-                    }
-                    senderPlayer.addChatMessage("command.veinminer.set.auto");
-                }
-                else if(astring[1].equals(modes[2])) {
-                    minerServer.setPlayerStatus(player, PlayerStatus.SNEAK_ACTIVE);
-                    senderPlayer.addChatMessage("command.veinminer.set.sneak");
-                }
-                else if(astring[1].equals(modes[3])) {
-                    minerServer.setPlayerStatus(player, PlayerStatus.SNEAK_INACTIVE);
-                    senderPlayer.addChatMessage("command.veinminer.set.nosneak");
-                }
+            if(astring[0].equals(commands[COMMAND_MODE])) {
+                runCommandMode(senderPlayer, astring);
             }
-            else if(astring[0].equals(commands[1])) {
-                if(astring.length > 1) {
-                    if(astring[1].equals(commands[0])) {
-                        senderPlayer.addChatMessage("command.veinminer.help.enable");
-                    }
-                }
-                else {
-                    senderPlayer.addChatMessage("command.veinminer.help");
-                }
+            else if(astring[0].equals(commands[COMMAND_BLOCKLIST])) {
+                needAdmin(senderPlayer);
+                runCommandBlocklist(senderPlayer, astring);
+            }
+            else if(astring[0].equals(commands[COMMAND_TOOLLIST])) {
+                needAdmin(senderPlayer);
+                runCommandToollist(senderPlayer, astring);
+            }
+            else if(astring[0].equals(commands[COMMAND_BLOCKLIMIT])) {
+                needAdmin(senderPlayer);
+                runCommandBlocklimit(senderPlayer, astring);
+            }
+            else if(astring[0].equals(commands[COMMAND_RANGE])) {
+                needAdmin(senderPlayer);
+                runCommandRange(senderPlayer, astring);
+            }
+            else if(astring[0].equals(commands[COMMAND_PER_TICK])) {
+                needAdmin(senderPlayer);
+                runCommandPerTick(senderPlayer, astring);
+            }
+            else if(astring[0].equals(commands[COMMAND_SAVE])) {
+                needAdmin(senderPlayer);
+                runCommandSave(senderPlayer, astring);
+            }
+            else if(astring[0].equals(commands[COMMAND_HELP])) {
+                runCommandHelp(senderPlayer, astring);
             }
         }
         else
         {
             throw new WrongUsageException("command.veinminer");
         }
-        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    private void sendProperChatToPlayer(EntityPlayerMP player, String incomingMessage) {
+        sendProperChatToPlayer(player, incomingMessage, new Object[]{});
+    }
+
+    private void sendProperChatToPlayer(EntityPlayerMP player, String incomingMessage, Object... params) {
+        boolean playerNoClient = !MinerServer.instance.playerHasClient(player.getEntityName());
+        String message = incomingMessage;
+        playerNoClient = params.length > 0; // Can't do client-side message formatting.
+        if(playerNoClient) {
+            message = LanguageRegistry.instance().getStringLocalization(incomingMessage);
+            message = String.format(message, params);
+        }
+        player.addChatMessage(message);
+    }
+
+    private void showUsageError(EntityPlayerMP player, String errorKey) throws WrongUsageException {
+        showUsageError(player, errorKey, new Object[]{});
+    }
+
+    private void showUsageError(EntityPlayerMP player, String errorKey, Object... params) {
+        boolean playerNoClient = !MinerServer.instance.playerHasClient(player.getEntityName());
+        String message = errorKey;
+        if(playerNoClient) {
+            message = LanguageRegistry.instance().getStringLocalization(errorKey);
+            message = String.format(message, params);
+        }
+        throw new WrongUsageException(message);
+    }
+
+    private void needAdmin(EntityPlayerMP player) {
+        MinecraftServer server = player.mcServer;
+        if(server.isDedicatedServer() && !server.getConfigurationManager().areCommandsAllowed(player.getCommandSenderName())) {
+            boolean playerNoClient = !MinerServer.instance.playerHasClient(player.getEntityName());
+            String message = "command.veinminer.permissionDenied";
+            if(playerNoClient) {
+                message = LanguageRegistry.instance().getStringLocalization(message);
+            }
+            throw new CommandException(message);
+        }
+    }
+
+    private void runCommandMode(EntityPlayerMP senderPlayer, String[] astring) throws WrongUsageException {
+        MinerServer minerServer = MinerServer.instance;
+        String player = senderPlayer.getCommandSenderName();
+
+        if(astring.length == 1) {
+            showUsageError(senderPlayer, "command.veinminer.enable");
+        }
+        else if(astring[1].equals(modes[0])) {
+            minerServer.setPlayerStatus(player, PlayerStatus.DISABLED);
+            sendProperChatToPlayer(senderPlayer, "command.veinminer.set.disable");
+        }
+        else if(astring[1].equals(modes[1])) {
+            if(minerServer.playerHasClient(player)) {
+                minerServer.setPlayerStatus(player, PlayerStatus.INACTIVE);
+            }
+            else {
+                minerServer.setPlayerStatus(player, PlayerStatus.DISABLED);
+            }
+            sendProperChatToPlayer(senderPlayer, "command.veinminer.set.auto");
+        }
+        else if(astring[1].equals(modes[2])) {
+            minerServer.setPlayerStatus(player, PlayerStatus.SNEAK_ACTIVE);
+            sendProperChatToPlayer(senderPlayer, "command.veinminer.set.sneak");
+        }
+        else if(astring[1].equals(modes[3])) {
+            minerServer.setPlayerStatus(player, PlayerStatus.SNEAK_INACTIVE);
+            sendProperChatToPlayer(senderPlayer, "command.veinminer.set.nosneak");
+        }
+    }
+
+    private void runCommandBlocklist(EntityPlayerMP senderPlayer, String[] astring) {
+        ConfigurationSettings configSettings = MinerServer.instance.getConfigurationSettings();
+
+        ToolType tool = commandTool(astring, "blocklist");
+        String toolString = astring[1];
+
+        commandAction(astring, "blockList");
+        String action = astring[2];
+
+        if(astring.length < 4) {
+            showUsageError(senderPlayer, "command.veinminer.blocklist.itemerror", toolString, action);
+        }
+
+        BlockID blockID = new BlockID(astring[3], ":", -1);
+        if(blockID.id <= 0) {
+            // String is not in proper format
+            showUsageError(senderPlayer, "command.veinminer.blocklist.itemerror", toolString, action);
+        }
+
+        if("add".equals(action)) {
+            configSettings.addBlockToWhitelist(tool, blockID);
+            sendProperChatToPlayer(senderPlayer, "command.veinminer.blocklist.add", blockID.id, blockID.metadata, toolString);
+        }
+        else if("remove".equals(action)) {
+            configSettings.removeBlockFromWhitelist(tool, blockID);
+            sendProperChatToPlayer(senderPlayer, "command.veinminer.blocklist.remove", blockID.id, blockID.metadata, toolString);
+        }
+    }
+
+    private void runCommandToollist(EntityPlayerMP senderPlayer, String[] astring) {
+        ConfigurationSettings configSettings = MinerServer.instance.getConfigurationSettings();
+
+        ToolType tool = commandTool(astring, "toollist");
+        String toolString = astring[1];
+
+        commandAction(astring, "toollist");
+        String action = astring[2];
+
+        if(astring.length < 4) {
+            showUsageError(senderPlayer, "command.veinminer.toollist.itemerror", toolString, action);
+        }
+
+        int toolId;
+        try{
+            toolId = Integer.parseInt(astring[3]);
+        }
+        catch(NumberFormatException e) {
+            toolId = -1;
+        }
+
+        if(toolId <= 0) {
+            // String is not in proper format
+            showUsageError(senderPlayer, "command.veinminer.toollist.itemerror", toolString, action);
+        }
+
+        if("add".equals(action)) {
+            configSettings.addTool(tool, toolId);
+            sendProperChatToPlayer(senderPlayer, "command.veinminer.toollist.add", toolId, toolString);
+        }
+        else if("remove".equals(action)) {
+            configSettings.removeTool(tool, toolId);
+            sendProperChatToPlayer(senderPlayer, "command.veinminer.toollist.remove", toolId, toolString);
+        }
+    }
+
+    private void runCommandBlocklimit(EntityPlayerMP senderPlayer, String[] astring) {
+        if(astring.length == 1) {
+            showUsageError(senderPlayer, "command.veinminer.blocklimit");
+        }
+
+        int newBlockPerTick = 0;
+        try {
+            newBlockPerTick = Integer.parseInt(astring[1]);
+        }
+        catch (NumberFormatException e) {
+            showUsageError(senderPlayer, "command.veinminer.blocklimit");
+        }
+
+        MinerServer.instance.getConfigurationSettings().setBlockLimit(newBlockPerTick);
+
+        int actualBlockPerTick = MinerServer.instance.getConfigurationSettings().getBlockLimit();
+        sendProperChatToPlayer(senderPlayer, "command.veinminer.blocklimit.set", actualBlockPerTick);
+    }
+
+    private void runCommandRange(EntityPlayerMP senderPlayer, String[] astring) {
+        if(astring.length == 1) {
+            showUsageError(senderPlayer, "command.veinminer.range");
+        }
+
+        int newRange = 0;
+        try {
+            newRange = Integer.parseInt(astring[1]);
+        }
+        catch (NumberFormatException e) {
+            showUsageError(senderPlayer, "command.veinminer.range");
+        }
+
+        MinerServer.instance.getConfigurationSettings().setRadiusLimit(newRange);
+
+        int actualRange = MinerServer.instance.getConfigurationSettings().getRadiusLimit();
+        sendProperChatToPlayer(senderPlayer, "command.veinminer.range.set", actualRange);
+    }
+
+    private void runCommandPerTick(EntityPlayerMP senderPlayer, String[] astring) {
+        if(astring.length == 1) {
+            showUsageError(senderPlayer, "command.veinminer.pertick");
+        }
+
+        int newRate = 0;
+        try {
+            newRate = Integer.parseInt(astring[1]);
+        }
+        catch (NumberFormatException e) {
+            showUsageError(senderPlayer, "command.veinminer.pertick");
+        }
+
+        MinerServer.instance.getConfigurationSettings().setRadiusLimit(newRate);
+
+        int actualRate = MinerServer.instance.getConfigurationSettings().getRadiusLimit();
+        sendProperChatToPlayer(senderPlayer, "command.veinminer.pertick.set", actualRate);
+    }
+
+    private void runCommandSave(EntityPlayerMP senderPlayer, String[] astring) {
+        MinerServer.instance.getConfigurationSettings().saveConfigs();
+        sendProperChatToPlayer(senderPlayer, "command.veinminer.saveconfig");
+    }
+
+    private void runCommandHelp(EntityPlayerMP senderPlayer, String[] astring) {
+        if(astring.length > 1) {
+            if(astring[1].equals(commands[COMMAND_MODE])) {
+                sendProperChatToPlayer(senderPlayer, "command.veinminer.help.enable1");
+                sendProperChatToPlayer(senderPlayer, "command.veinminer.help.enable2");
+                sendProperChatToPlayer(senderPlayer, "command.veinminer.help.enable3");
+                sendProperChatToPlayer(senderPlayer, "command.veinminer.help.enable4");
+                sendProperChatToPlayer(senderPlayer, "command.veinminer.help.enable5");
+            }
+        }
+        else {
+            sendProperChatToPlayer(senderPlayer, "command.veinminer.help1");
+            sendProperChatToPlayer(senderPlayer, "command.veinminer.help2");
+            sendProperChatToPlayer(senderPlayer, "command.veinminer.help3");
+            sendProperChatToPlayer(senderPlayer, "command.veinminer.help4");
+            sendProperChatToPlayer(senderPlayer, "command.veinminer.help5");
+            sendProperChatToPlayer(senderPlayer, "command.veinminer.help6");
+            sendProperChatToPlayer(senderPlayer, "command.veinminer.help7");
+            sendProperChatToPlayer(senderPlayer, "command.veinminer.help8");
+            sendProperChatToPlayer(senderPlayer, "command.veinminer.help9");
+        }
     }
 
     public List addTabCompletionOptions(ICommandSender par1ICommandSender, String[] arguments) {
@@ -106,11 +359,22 @@ public class MinerCommand extends CommandBase {
             case 1:
                 return getListOfStringsMatchingLastWord(arguments, commands);
             case 2:
-                if(arguments[1].equals(commands[0])) {
+                if(arguments[0].equals(commands[COMMAND_MODE])) {
                     return getListOfStringsMatchingLastWord(arguments, modes);
                 }
-                else if(arguments[1].equals(commands[1])) {
+                else if(arguments[0].equals(commands[COMMAND_BLOCKLIST]) || arguments[0].equals(commands[COMMAND_TOOLLIST])) {
+                    String[] tools = { "pickaxe", "axe", "shovel" };
+
+                    return getListOfStringsMatchingLastWord(arguments, tools);
+                }
+                else if(arguments[0].equals(commands[COMMAND_TOOLLIST])) {
                     return getListOfStringsMatchingLastWord(arguments, commands);
+                }
+            case 3:
+                if(arguments[0].equals(commands[COMMAND_BLOCKLIST]) || arguments[0].equals(commands[COMMAND_TOOLLIST])) {
+                    String[] actions = { "add", "remove" };
+
+                    return getListOfStringsMatchingLastWord(arguments, actions);
                 }
         }
         return null;

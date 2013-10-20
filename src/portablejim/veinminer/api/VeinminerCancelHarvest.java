@@ -18,16 +18,26 @@
 package portablejim.veinminer.api;
 
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.event.Cancelable;
+import net.minecraftforge.event.Event;
 
 /**
- * API Class that dependant mods can use to override whether tools are
- * allowed to be used with VeinMiner. This is so that mods with complex
- * rules as to block breaking behaviour (e.g. You can mine blocks with
- * Dartcraft armour when you have nothing in your hand.)
+ * Cancelable event that fires when VeinMiner is about to cancel an event
+ * because tryHarvestBlock returned false;
  *
- * Register the implementing class with MinerServer.instance.addToolOverride().
+ * Cancel this event to allow VeinMiner to continue.
  */
 
-public interface IToolOverride {
-    public void updateToolAllowed(Boolean toolAllowed, EntityPlayerMP player);
+@Cancelable
+public class VeinminerCancelHarvest extends Event {
+    public final EntityPlayerMP player;
+    public final int blockId;
+    public final int blockMetadata;
+
+    public VeinminerCancelHarvest(EntityPlayerMP player, int blockId, int blockMetadata) {
+        super();
+        this.player = player;
+        this.blockId = blockId;
+        this.blockMetadata = blockMetadata;
+    }
 }

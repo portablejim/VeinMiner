@@ -19,8 +19,6 @@ package portablejim.veinminer.server;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayerMP;
-import portablejim.veinminer.api.IToolOverride;
 import portablejim.veinminer.configuration.ConfigurationSettings;
 import portablejim.veinminer.configuration.ConfigurationValues;
 import portablejim.veinminer.core.MinerInstance;
@@ -43,7 +41,6 @@ public class MinerServer {
     private HashSet<String> clientPlayers;
     private HashMap<String, PlayerStatus> players;
     private ConfigurationSettings settings;
-    private HashSet<IToolOverride> toolOverrides;
 
     public MinerServer(ConfigurationValues configValues) {
         instance = this;
@@ -51,7 +48,6 @@ public class MinerServer {
         clientPlayers = new HashSet<String>();
         players = new HashMap<String, PlayerStatus>();
         settings = new ConfigurationSettings(configValues);
-        toolOverrides = new HashSet<IToolOverride>();
     }
 
     public void setPlayerStatus(String player, PlayerStatus status) {
@@ -141,21 +137,5 @@ public class MinerServer {
 
     public void setClientPlayers(HashSet<String> clientPlayers) {
         this.clientPlayers = clientPlayers;
-    }
-
-    public void addToolOverride(IToolOverride instance) {
-        toolOverrides.add(instance);
-    }
-
-    public void removeToolOverride(IToolOverride instance) {
-        toolOverrides.remove(instance);
-    }
-
-    public boolean getUpdateToolAllowed(boolean toolAllowed, EntityPlayerMP player) {
-        Boolean allowed = toolAllowed;
-        for (IToolOverride toolOverride : toolOverrides) {
-            toolOverride.updateToolAllowed(allowed, player);
-        }
-        return allowed;
     }
 }

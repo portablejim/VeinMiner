@@ -7,6 +7,7 @@
         <!-- load properties from files -->
         <property file="ant/build.properties"/>
         <property file="ant/mod.properties"/>
+        <property file="ant/minecraft.properties"/>
         <property file="dev.properties"/>
 
         <!-- base dirs -->
@@ -73,6 +74,10 @@
     <target name="renumber">
         <replace dir="${mcp.src.minecraft}" value="${version.build}">
             <include name="portablejim/veinminer/lib/ModInfo.java" />
+            <replacetoken>@@@DEV@@@</replacetoken>
+        </replace>
+        <replace dir="${mcp.src.minecraft}" value="${version.range}">
+            <include name="portablejim/veinminer/VeinMiner.java" />
             <replacetoken>@@@DEV@@@</replacetoken>
         </replace>
     </target>

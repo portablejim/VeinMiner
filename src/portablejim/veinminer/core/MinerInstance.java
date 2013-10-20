@@ -17,6 +17,7 @@
 
 package portablejim.veinminer.core;
 
+import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 import net.minecraft.block.Block;
@@ -25,6 +26,8 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.FoodStats;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
+import portablejim.veinminer.api.VeinminerCancelToolIncorrect;
 import portablejim.veinminer.configuration.ConfigurationSettings;
 import portablejim.veinminer.event.InstanceTicker;
 import portablejim.veinminer.server.MinerServer;
@@ -55,7 +58,6 @@ public class MinerInstance {
     private ItemStack usedItem;
     private int numBlocksMined;
     private Point initalBlock;
-    private boolean cleanedUp;
 
     private static final int MIN_HUNGER = 1;
 
@@ -69,9 +71,8 @@ public class MinerInstance {
         finished = false;
         serverInstance = server;
         usedItem = player.getCurrentEquippedItem();
-        numBlocksMined = 0;
+        numBlocksMined = 1;
         initalBlock = new Point(x, y, z);
-        cleanedUp = false;
 
         serverInstance.addInstance(this);
 
@@ -80,13 +81,12 @@ public class MinerInstance {
 
     private boolean shouldContinue() {
         // Item equipped
-        if(!serverInstance.getConfigurationSettings().getEnableAllTools() && player.getCurrentEquippedItem() == null) {
+        if(!serverInstance.getConfigurationSettings().getEnableAllTools() && player.getCurrentEquippedItem() == null &&
+                !MinecraftForge.EVENT_BUS.post(new VeinminerCancelToolIncorrect(player))) {
             this.finished = true;
         }
 
-        this.finished = serverInstance.getUpdateToolAllowed(this.finished, player);
-
-        if(player.getCurrentEquippedItem() == null || !player.getCurrentEquippedItem().isItemEqual(usedItem)) {
+        if(player.getCurrentEquippedItem() != null && !player.getCurrentEquippedItem().isItemEqual(usedItem)) {
             this.finished = true;
         }
 
@@ -94,6 +94,14 @@ public class MinerInstance {
         FoodStats food = player.getFoodStats();
         if(food.getFoodLevel() < MIN_HUNGER) {
             this.finished = true;
+
+            String problem = "mod.veinminer.finished.tooHungry";
+            if(serverInstance.playerHasClient(player.getEntityName())) {
+                player.addChatMessage(problem);
+            }
+            else {
+                player.addChatMessage(LanguageRegistry.instance().getStringLocalization(problem));
+            }
         }
 
         // Player exists and is in correct status (correct button held)
@@ -109,10 +117,8 @@ public class MinerInstance {
         }
 
         // Within mined block limits
-        if(numBlocksMined < serverInstance.getConfigurationSettings().getBlockLimit()) {
-            numBlocksMined++;
-        }
-        else {
+        int blockLimit = serverInstance.getConfigurationSettings().getBlockLimit();
+        if (numBlocksMined >= blockLimit && blockLimit != -1) {
             this.finished = true;
         }
 
@@ -132,6 +138,7 @@ public class MinerInstance {
         Point newPoint = new Point(x, y, z);
         awaitingEntityDrop.add(newPoint);
         boolean success = player.theItemInWorldManager.tryHarvestBlock(x, y, z);
+        numBlocksMined++;
         // Only go ahead if block was destroyed. Stops mining through protected areas.
         if(success) {
             destroyQueue.add(newPoint);
@@ -141,6 +148,7 @@ public class MinerInstance {
         }
     }
 
+    @SuppressWarnings("ConstantConditions")
     public synchronized void mineVein(int x, int y, int z) {
         if(this.world == null || this.player == null || this.targetBlock == null) {
             finished = true;
@@ -148,6 +156,8 @@ public class MinerInstance {
         if(finished || !shouldContinue()) {
             return;
         }
+
+        player.addExhaustion(0.02F);
 
         byte d = 1;
         for (int dx = -d; dx <= d; dx++) {
@@ -171,7 +181,8 @@ public class MinerInstance {
                         continue;
                     }
 
-                    if(!newBlockPos.isWithinRange(initalBlock, configSettings.getRadiusLimit())) {
+                    int radiusLimit = configSettings.getRadiusLimit();
+                    if(!newBlockPos.isWithinRange(initalBlock, radiusLimit) && radiusLimit > 0) {
                         continue;
                     }
 
@@ -180,8 +191,14 @@ public class MinerInstance {
                         continue;
                     }
 
+                    int blockLimit = serverInstance.getConfigurationSettings().getBlockLimit();
+                    if (numBlocksMined >= blockLimit && blockLimit != -1) {
+                        continue;
+                    }
+
                     if(configSettings.getEnableAllBlocks() || toolAllowedForBlock(usedItem, newBlock)) {
                         mineBlock(x + dx, y + dy, z + dz);
+                        //numBlocksMined++;
                     }
                 }
             }
@@ -199,7 +216,6 @@ public class MinerInstance {
                 // All blocks have been mined. This is done last.
                 serverInstance.removeInstance(this);
                 spawnDrops();
-                cleanedUp = true;
                 return;
             }
         }
