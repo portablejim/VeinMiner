@@ -60,10 +60,10 @@ public class MinerCommand extends CommandBase {
 
     private ToolType commandTool(String[] commandString, String commandName) {
         if(commandString.length == 1) {
-            throw new WrongUsageException("command.veinminer." + commandName);
+            showUsageError("command.veinminer." + commandName);
         }
 
-        ToolType tool;
+        ToolType tool = ToolType.PICKAXE;
         if("pickaxe".equals(commandString[1])) {
             tool = ToolType.PICKAXE;
         }
@@ -74,7 +74,7 @@ public class MinerCommand extends CommandBase {
             tool = ToolType.SHOVEL;
         }
         else {
-            throw new WrongUsageException("command.veinminer." + commandName);
+            showUsageError("command.veinminer." + commandName);
         }
 
         return tool;
