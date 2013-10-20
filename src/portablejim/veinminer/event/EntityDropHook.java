@@ -59,6 +59,10 @@ public class EntityDropHook {
             return;
         }
 
+        if(entityItem.getEntityItem().hasTagCompound()) {
+            return;
+        }
+
         boolean isBlock = false;
         boolean isItem = false;
 
