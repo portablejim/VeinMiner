@@ -76,6 +76,10 @@
             <include name="portablejim/veinminer/lib/ModInfo.java" />
             <replacetoken>@@@DEV@@@</replacetoken>
         </replace>
+        <replace dir="${mcp.src.minecraft}" value="${version.range}">
+            <include name="portablejim/veinminer/VeinMiner.java" />
+            <replacetoken>@@@DEV@@@</replacetoken>
+        </replace>
     </target>
 
     <target name="recompile">
