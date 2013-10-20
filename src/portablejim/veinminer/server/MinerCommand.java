@@ -80,12 +80,6 @@ public class MinerCommand extends CommandBase {
         return tool;
     }
 
-    private void commandAction(String[] commandString, String commandName) {
-        if (commandString.length < 3 || (!"add".equals(commandString[2]) && !"remove".equals(commandString[2]))) {
-            throw new WrongUsageException("command.veinminer." + commandName + ".actionerror", commandString[1]);
-        }
-    }
-
     @Override
     public void processCommand(ICommandSender icommandsender, String[] astring) {
         EntityPlayerMP senderPlayer;
@@ -168,6 +162,12 @@ public class MinerCommand extends CommandBase {
                 message = LanguageRegistry.instance().getStringLocalization(message);
             }
             throw new CommandException(message);
+        }
+    }
+
+    private void commandAction(String[] commandString, String commandName) {
+        if (commandString.length < 3 || (!"add".equals(commandString[2]) && !"remove".equals(commandString[2]))) {
+            showUsageError("command.veinminer." + commandName + ".actionerror", commandString[1]);
         }
     }
 
