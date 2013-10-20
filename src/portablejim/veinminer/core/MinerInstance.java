@@ -17,6 +17,7 @@
 
 package portablejim.veinminer.core;
 
+import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 import net.minecraft.block.Block;
@@ -93,6 +94,14 @@ public class MinerInstance {
         FoodStats food = player.getFoodStats();
         if(food.getFoodLevel() < MIN_HUNGER) {
             this.finished = true;
+
+            String problem = "mod.veinminer.finished.tooHungry";
+            if(serverInstance.playerHasClient(player.getEntityName())) {
+                player.addChatMessage(problem);
+            }
+            else {
+                player.addChatMessage(LanguageRegistry.instance().getStringLocalization(problem));
+            }
         }
 
         // Player exists and is in correct status (correct button held)

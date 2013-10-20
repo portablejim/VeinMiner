@@ -38,6 +38,8 @@ mod.veinminer.preferredmode.auto=Veinminer set to use keybind ('auto')
 mod.veinminer.preferredmode.sneak=Veinminer set to activate on sneak.
 mod.veinminer.preferredmode.nosneak=Veinminer set to deactivate on sneak.
 
+mod.veinminer.finished.tooHungry=You are too hungry to use VeinMiner.
+
 # Command help.
 command.veinminer.help1=Sub-commands available:
 command.veinminer.help2='mode': change VeinMiner activation modes
