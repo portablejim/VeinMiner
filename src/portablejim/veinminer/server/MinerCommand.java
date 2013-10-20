@@ -24,6 +24,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.StatCollector;
 import portablejim.veinminer.configuration.ConfigurationSettings;
 import portablejim.veinminer.util.BlockID;
 
@@ -92,7 +93,8 @@ public class MinerCommand extends CommandBase {
             senderPlayer = (EntityPlayerMP) icommandsender;
         }
         else {
-            throw new CommandException("Non-players cannot use veinminer commands", icommandsender);
+            String message = StatCollector.translateToLocal("command.veinminer.cannotuse");
+            throw new CommandException(message);
         }
 
         if(astring.length > 0) {
@@ -126,39 +128,34 @@ public class MinerCommand extends CommandBase {
             else if(astring[0].equals(commands[COMMAND_HELP])) {
                 runCommandHelp(senderPlayer, astring);
             }
+            else
+            {
+                showUsageError(senderPlayer, "command.veinminer");
+            }
         }
         else
         {
-            throw new WrongUsageException("command.veinminer");
+            showUsageError(senderPlayer, "command.veinminer");
         }
     }
 
     private void sendProperChatToPlayer(EntityPlayerMP player, String incomingMessage) {
-        sendProperChatToPlayer(player, incomingMessage, new Object[]{});
+        String message = StatCollector.translateToLocal(incomingMessage);
+        player.addChatMessage(message);
     }
 
     private void sendProperChatToPlayer(EntityPlayerMP player, String incomingMessage, Object... params) {
-        boolean playerNoClient = !MinerServer.instance.playerHasClient(player.getEntityName());
-        String message = incomingMessage;
-        playerNoClient = params.length > 0; // Can't do client-side message formatting.
-        if(playerNoClient) {
-            message = LanguageRegistry.instance().getStringLocalization(incomingMessage);
-            message = String.format(message, params);
-        }
+        String message = StatCollector.translateToLocalFormatted(incomingMessage, params);
         player.addChatMessage(message);
     }
 
     private void showUsageError(EntityPlayerMP player, String errorKey) throws WrongUsageException {
-        showUsageError(player, errorKey, new Object[]{});
+        String message = StatCollector.translateToLocal(errorKey);
+        throw new WrongUsageException(message);
     }
 
     private void showUsageError(EntityPlayerMP player, String errorKey, Object... params) {
-        boolean playerNoClient = !MinerServer.instance.playerHasClient(player.getEntityName());
-        String message = errorKey;
-        if(playerNoClient) {
-            message = LanguageRegistry.instance().getStringLocalization(errorKey);
-            message = String.format(message, params);
-        }
+        String message = StatCollector.translateToLocalFormatted(errorKey, params);
         throw new WrongUsageException(message);
     }
 

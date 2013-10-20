@@ -31,6 +31,7 @@ command.veinminer.pertick.set=Set to destroy %d blocks per tick
 
 command.veinminer.saveconfig=Saved settings to config file
 
+command.veinminer.cannotuse=Non-players cannot use veinminer commands
 command.veinminer.permissionDenied=You don't have permission to use this sub-command
 
 # Preferred mode confirmation
