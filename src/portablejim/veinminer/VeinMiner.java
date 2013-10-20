@@ -34,6 +34,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import portablejim.veinminer.api.VeinminerCancelHarvest;
 import portablejim.veinminer.configuration.ConfigurationValues;
 import portablejim.veinminer.core.MinerInstance;
 import portablejim.veinminer.event.EntityDropHook;
@@ -117,6 +118,10 @@ public class VeinMiner {
     public void blockMined(World world, EntityPlayerMP player, int x, int y, int z, boolean harvestBlockSuccess, BlockID blockId) {
         MinerInstance ins = new MinerInstance(world, player, x, y, z, blockId, MinerServer.instance);
         ins.mineVein(x, y, z);
+
+        if(!harvestBlockSuccess && !MinecraftForge.EVENT_BUS.post(new VeinminerCancelHarvest(player, blockId.id, blockId.metadata))) {
+            return;
+        }
 
         if(ModInfo.DEBUG_MODE) {
             String output = String.format("Block mined at %d,%d,%d, result %b, block id is %d:%d", x, y, z, harvestBlockSuccess, blockId.id, blockId.metadata);

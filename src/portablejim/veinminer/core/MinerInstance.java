@@ -25,6 +25,8 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.FoodStats;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
+import portablejim.veinminer.api.VeinminerCancelToolIncorrect;
 import portablejim.veinminer.configuration.ConfigurationSettings;
 import portablejim.veinminer.event.InstanceTicker;
 import portablejim.veinminer.server.MinerServer;
@@ -78,13 +80,12 @@ public class MinerInstance {
 
     private boolean shouldContinue() {
         // Item equipped
-        if(!serverInstance.getConfigurationSettings().getEnableAllTools() && player.getCurrentEquippedItem() == null) {
+        if(!serverInstance.getConfigurationSettings().getEnableAllTools() && player.getCurrentEquippedItem() == null &&
+                !MinecraftForge.EVENT_BUS.post(new VeinminerCancelToolIncorrect(player))) {
             this.finished = true;
         }
 
-        this.finished = serverInstance.getUpdateToolAllowed(this.finished, player);
-
-        if(player.getCurrentEquippedItem() == null || !player.getCurrentEquippedItem().isItemEqual(usedItem)) {
+        if(player.getCurrentEquippedItem() != null && !player.getCurrentEquippedItem().isItemEqual(usedItem)) {
             this.finished = true;
         }
 
