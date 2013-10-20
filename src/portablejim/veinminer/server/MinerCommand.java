@@ -123,19 +123,19 @@ public class MinerCommand extends CommandBase {
             }
             else if(astring[0].equals(commands[COMMAND_SAVE])) {
                 needAdmin(senderPlayer);
-                runCommandSave(senderPlayer, astring);
+                runCommandSave(senderPlayer);
             }
             else if(astring[0].equals(commands[COMMAND_HELP])) {
                 runCommandHelp(senderPlayer, astring);
             }
             else
             {
-                showUsageError(senderPlayer, "command.veinminer");
+                showUsageError("command.veinminer");
             }
         }
         else
         {
-            showUsageError(senderPlayer, "command.veinminer");
+            showUsageError("command.veinminer");
         }
     }
 
@@ -149,12 +149,12 @@ public class MinerCommand extends CommandBase {
         player.addChatMessage(message);
     }
 
-    private void showUsageError(EntityPlayerMP player, String errorKey) throws WrongUsageException {
+    private void showUsageError(String errorKey) throws WrongUsageException {
         String message = StatCollector.translateToLocal(errorKey);
         throw new WrongUsageException(message);
     }
 
-    private void showUsageError(EntityPlayerMP player, String errorKey, Object... params) {
+    private void showUsageError(String errorKey, Object... params) {
         String message = StatCollector.translateToLocalFormatted(errorKey, params);
         throw new WrongUsageException(message);
     }
@@ -176,7 +176,7 @@ public class MinerCommand extends CommandBase {
         String player = senderPlayer.getCommandSenderName();
 
         if(astring.length == 1) {
-            showUsageError(senderPlayer, "command.veinminer.enable");
+            showUsageError("command.veinminer.enable");
         }
         else if(astring[1].equals(modes[0])) {
             minerServer.setPlayerStatus(player, PlayerStatus.DISABLED);
@@ -211,13 +211,13 @@ public class MinerCommand extends CommandBase {
         String action = astring[2];
 
         if(astring.length < 4) {
-            showUsageError(senderPlayer, "command.veinminer.blocklist.itemerror", toolString, action);
+            showUsageError("command.veinminer.blocklist.itemerror", toolString, action);
         }
 
         BlockID blockID = new BlockID(astring[3], ":", -1);
         if(blockID.id <= 0) {
             // String is not in proper format
-            showUsageError(senderPlayer, "command.veinminer.blocklist.itemerror", toolString, action);
+            showUsageError("command.veinminer.blocklist.itemerror", toolString, action);
         }
 
         if("add".equals(action)) {
@@ -240,7 +240,7 @@ public class MinerCommand extends CommandBase {
         String action = astring[2];
 
         if(astring.length < 4) {
-            showUsageError(senderPlayer, "command.veinminer.toollist.itemerror", toolString, action);
+            showUsageError("command.veinminer.toollist.itemerror", toolString, action);
         }
 
         int toolId;
@@ -253,7 +253,7 @@ public class MinerCommand extends CommandBase {
 
         if(toolId <= 0) {
             // String is not in proper format
-            showUsageError(senderPlayer, "command.veinminer.toollist.itemerror", toolString, action);
+            showUsageError("command.veinminer.toollist.itemerror", toolString, action);
         }
 
         if("add".equals(action)) {
@@ -268,7 +268,7 @@ public class MinerCommand extends CommandBase {
 
     private void runCommandBlocklimit(EntityPlayerMP senderPlayer, String[] astring) {
         if(astring.length == 1) {
-            showUsageError(senderPlayer, "command.veinminer.blocklimit");
+            showUsageError("command.veinminer.blocklimit");
         }
 
         int newBlockPerTick = 0;
@@ -276,7 +276,7 @@ public class MinerCommand extends CommandBase {
             newBlockPerTick = Integer.parseInt(astring[1]);
         }
         catch (NumberFormatException e) {
-            showUsageError(senderPlayer, "command.veinminer.blocklimit");
+            showUsageError("command.veinminer.blocklimit");
         }
 
         MinerServer.instance.getConfigurationSettings().setBlockLimit(newBlockPerTick);
@@ -287,7 +287,7 @@ public class MinerCommand extends CommandBase {
 
     private void runCommandRange(EntityPlayerMP senderPlayer, String[] astring) {
         if(astring.length == 1) {
-            showUsageError(senderPlayer, "command.veinminer.range");
+            showUsageError("command.veinminer.range");
         }
 
         int newRange = 0;
@@ -295,7 +295,7 @@ public class MinerCommand extends CommandBase {
             newRange = Integer.parseInt(astring[1]);
         }
         catch (NumberFormatException e) {
-            showUsageError(senderPlayer, "command.veinminer.range");
+            showUsageError("command.veinminer.range");
         }
 
         MinerServer.instance.getConfigurationSettings().setRadiusLimit(newRange);
@@ -306,7 +306,7 @@ public class MinerCommand extends CommandBase {
 
     private void runCommandPerTick(EntityPlayerMP senderPlayer, String[] astring) {
         if(astring.length == 1) {
-            showUsageError(senderPlayer, "command.veinminer.pertick");
+            showUsageError("command.veinminer.pertick");
         }
 
         int newRate = 0;
@@ -314,7 +314,7 @@ public class MinerCommand extends CommandBase {
             newRate = Integer.parseInt(astring[1]);
         }
         catch (NumberFormatException e) {
-            showUsageError(senderPlayer, "command.veinminer.pertick");
+            showUsageError("command.veinminer.pertick");
         }
 
         MinerServer.instance.getConfigurationSettings().setRadiusLimit(newRate);
@@ -323,7 +323,7 @@ public class MinerCommand extends CommandBase {
         sendProperChatToPlayer(senderPlayer, "command.veinminer.pertick.set", actualRate);
     }
 
-    private void runCommandSave(EntityPlayerMP senderPlayer, String[] astring) {
+    private void runCommandSave(EntityPlayerMP senderPlayer) {
         MinerServer.instance.getConfigurationSettings().saveConfigs();
         sendProperChatToPlayer(senderPlayer, "command.veinminer.saveconfig");
     }
