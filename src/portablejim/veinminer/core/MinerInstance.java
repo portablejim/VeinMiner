@@ -86,7 +86,8 @@ public class MinerInstance {
             this.finished = true;
         }
 
-        if(player.getCurrentEquippedItem() != null && !player.getCurrentEquippedItem().isItemEqual(usedItem)) {
+        if(player.getCurrentEquippedItem() != null && usedItem != null &&
+                !player.getCurrentEquippedItem().isItemEqual(usedItem)) {
             this.finished = true;
         }
 
