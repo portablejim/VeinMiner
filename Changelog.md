@@ -1,6 +1,14 @@
 Changelog
 =========
 
+0.7.2
+-----
+Change:
+* Improve support for tools.
+
+Fixes:
+* Fix API to work properly. (hopefully)
+
 0.7.1
 -----
 Fix:
