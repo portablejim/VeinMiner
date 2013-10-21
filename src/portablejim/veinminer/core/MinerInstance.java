@@ -42,6 +42,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import static net.minecraftforge.event.entity.player.PlayerEvent.HarvestCheck;
+
 /**
  * Main class that performs the work of VeinMiner. It is initialised when a
  * block is mined and then is finished after the vein is mined.
@@ -84,7 +86,14 @@ public class MinerInstance {
         // Item equipped
         if(!serverInstance.getConfigurationSettings().getEnableAllTools() && player.getCurrentEquippedItem() == null &&
                 !MinecraftForge.EVENT_BUS.post(new VeinminerCancelToolIncorrect(player))) {
-            this.finished = true;
+
+            // Test to see if the player can mine stone.
+            // If they can, they have other assistance and so should be
+            // considered a tool.
+            Block testBlock = Block.stone;
+            HarvestCheck event = new HarvestCheck(player, testBlock, false);
+            MinecraftForge.EVENT_BUS.post(event);
+            this.finished = event.success;
         }
 
         if(player.getCurrentEquippedItem() != null && usedItem != null &&
