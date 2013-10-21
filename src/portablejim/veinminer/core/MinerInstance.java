@@ -27,6 +27,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.FoodStats;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import portablejim.veinminer.api.VeinminerCancelHarvest;
 import portablejim.veinminer.api.VeinminerCancelToolIncorrect;
 import portablejim.veinminer.configuration.ConfigurationSettings;
 import portablejim.veinminer.event.InstanceTicker;
@@ -141,7 +142,7 @@ public class MinerInstance {
         boolean success = player.theItemInWorldManager.tryHarvestBlock(x, y, z);
         numBlocksMined++;
         // Only go ahead if block was destroyed. Stops mining through protected areas.
-        if(success) {
+        if(success || !MinecraftForge.EVENT_BUS.post(new VeinminerCancelHarvest(player, targetBlock.id, targetBlock.metadata))) {
             destroyQueue.add(newPoint);
         }
         else {
