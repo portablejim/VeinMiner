@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.7.1
+-----
+Fix:
+* Fix (another) crash on mining with no tool.
+
 0.7.0
 -----
 Changes:
