@@ -19,7 +19,7 @@ sourceSets {
 minecraft {
     minecraftVersion = '1.5.2'
 }
-generalMinecraftVersion = '1.5'
+ext.generalMinecraftVersion = '1.5'
 
 processResources {
     from(sourceSets.main.resources.srcDirs) {
@@ -35,7 +35,7 @@ processResources {
 }
 
 jar {
-    appendix = 'universal'
+    appendix = 'MC' + generalMinecraftVersion
     manifest {
         attributes 'FMLCorePlugin' : 'portablejim.veinminer.asm.VeinMinerCorePlugin'
         attributes 'FMLCorePluginContainsFMLMod' : 'true'
