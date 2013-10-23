@@ -1,6 +1,10 @@
 Changelog
 =========
 
+0.7.3
+-----
+* Fix logic problem with API.
+
 0.7.2
 -----
 Change:
