@@ -5,8 +5,12 @@ buildscript {
 
 apply plugin: "gmcp"
 
+Properties props = new Properties()
+File propsFile = new File('version.properties')
+props.load(propsFile.newDataInputStream())
+
 group = 'portablejim.veinminer'
-version = "0.7.3"
+version = props.getProperty('mod.version')
 archivesBaseName = 'VeinMiner'
 
 sourceSets {
