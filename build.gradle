@@ -1,0 +1,50 @@
+buildscript {
+    repositories { mavenCentral() }
+    dependencies { classpath 'com.github.abrarsyed.gmcp:GMCP:latest.integration' }
+}
+
+apply plugin: "gmcp"
+
+group = 'portablejim.veinminer'
+version = "0.7.3"
+archivesBaseName = 'VeinMiner'
+
+sourceSets {
+    main {
+        java { srcDir 'src' }
+        resources { srcDir 'package' }
+    }
+}
+
+minecraft {
+    minecraftVersion = '1.5.2'
+}
+generalMinecraftVersion = '1.5'
+
+processResources {
+    from(sourceSets.main.resources.srcDirs) {
+        include '**/*.lang'
+        include '**/*.info'
+        expand version: version, mcversion: minecraft.minecraftVersion
+    }
+
+    from(sourceSets.main.resources.srcDirs) {
+        exclude '**/*.lang'
+        exclude '**/*.info'
+    }
+}
+
+jar {
+    appendix = 'universal'
+    manifest {
+        attributes 'MCVersion' : project.minecraft.minecraftVersion
+        attributes 'Version' : project.version
+        attributes 'FMLCorePlugin' : 'portablejim.veinminer.asm.VeinMinerCorePlugin'
+        attributes 'FMLCorePluginContainsFMLMod' : 'true'
+    }
+}
+
+task devJar(type: Jar) {
+    appendix = 'dev'
+}
+
