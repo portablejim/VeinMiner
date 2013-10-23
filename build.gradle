@@ -43,6 +43,6 @@ jar {
 }
 
 task devJar(type: Jar) {
-    appendix = 'dev'
+    appendix = 'MC + generalMinecraftVersion + '-dev'
 }
 
