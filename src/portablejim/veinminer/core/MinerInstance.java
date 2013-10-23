@@ -151,7 +151,7 @@ public class MinerInstance {
         boolean success = player.theItemInWorldManager.tryHarvestBlock(x, y, z);
         numBlocksMined++;
         // Only go ahead if block was destroyed. Stops mining through protected areas.
-        if(success || !MinecraftForge.EVENT_BUS.post(new VeinminerCancelHarvest(player, targetBlock.id, targetBlock.metadata))) {
+        if(success || MinecraftForge.EVENT_BUS.post(new VeinminerCancelHarvest(player, targetBlock.id, targetBlock.metadata))) {
             destroyQueue.add(newPoint);
         }
         else {
