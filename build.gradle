@@ -37,8 +37,6 @@ processResources {
 jar {
     appendix = 'universal'
     manifest {
-        attributes 'MCVersion' : project.minecraft.minecraftVersion
-        attributes 'Version' : project.version
         attributes 'FMLCorePlugin' : 'portablejim.veinminer.asm.VeinMinerCorePlugin'
         attributes 'FMLCorePluginContainsFMLMod' : 'true'
     }
