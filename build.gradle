@@ -17,6 +17,7 @@ sourceSets {
 }
 
 minecraft {
+    baseDir = "../../gmcp"
     minecraftVersion = '1.5.2'
 }
 ext.generalMinecraftVersion = '1.5'
