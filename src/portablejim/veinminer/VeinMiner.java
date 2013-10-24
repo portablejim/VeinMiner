@@ -31,6 +31,7 @@ import cpw.mods.fml.common.versioning.ArtifactVersion;
 import cpw.mods.fml.common.versioning.DefaultArtifactVersion;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.INetworkManager;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
@@ -69,6 +70,22 @@ public class VeinMiner {
 
     @SidedProxy(clientSide = ModInfo.PROXY_CLIENT_CLASS, serverSide = ModInfo.PROXY_SERVER_CLASS)
     public static CommonProxy proxy;
+
+    @NetworkMod.VersionCheckHandler
+    public boolean checkVersion(String candidate, INetworkManager manager) {
+        try {
+            String[] ourVersionParts = ModInfo.VERSION.split(".");
+            int ourMajor = Integer.parseInt(ourVersionParts[0]);
+            int ourMinor = Integer.parseInt(ourVersionParts[1]);
+            String[] theirVersionParts = candidate.split(".");
+            int theirMajor = Integer.parseInt(theirVersionParts[0]);
+            int theirMinor = Integer.parseInt(theirVersionParts[1]);
+            return ourMajor == theirMajor && ourMinor == theirMinor;
+        }
+        catch (NumberFormatException e) { }
+
+        return ModInfo.VERSION.equals(candidate);
+    }
 
     @PreInit
     public void preInit(FMLPreInitializationEvent event) {
