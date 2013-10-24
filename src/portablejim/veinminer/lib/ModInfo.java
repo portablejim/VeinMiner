@@ -17,6 +17,11 @@
 
 package portablejim.veinminer.lib;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Properties;
+
 /**
  * Class to store various constants relating to VeinMiner.
  */
@@ -27,7 +32,7 @@ public class ModInfo {
     public static final String MOD_ID = "VeinMiner";
     public static final String MOD_NAME = "Vein Miner";
     public static final String DESCRIPTION = "When a configured block is harvested a chain reaction is initiated to break connected blocks of the same type. Takes durability and health for each block mined.";
-    public static final String VERSION = "@@@DEV@@@";
+    public static final String VERSION = readProperties("../version.properties").getProperty("version");
     public static final String URL = "http://minecraft.curseforge.com/mc-mods/veinminer/";
     public static final String UPDATE_URL = "";
     public static final String AUTHOR = "portablejim";
@@ -42,4 +47,26 @@ public class ModInfo {
     public static final String PROXY_SERVER_CLASS = "portablejim.veinminer.proxy.ServerProxy";
     public static final String PROXY_CLIENT_CLASS = "portablejim.veinminer.proxy.ClientProxy";
     public static final String CHANNEL = "portablejim_vm";
+
+    private static Properties readProperties(String filename) {
+       Properties prop = new Properties();
+
+        FileReader fr = null;
+        try {
+            fr = new FileReader(filename);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        try {
+            prop.load(fr);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return prop;
+    }
+
+    public String returnVersion() {
+        return "";
+    }
 }

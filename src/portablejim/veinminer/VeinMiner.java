@@ -53,12 +53,10 @@ import portablejim.veinminer.util.BlockID;
 
 @Mod(modid = ModInfo.MOD_ID,
         name = ModInfo.MOD_NAME,
-        version = ModInfo.VERSION,
         acceptedMinecraftVersions = ModInfo.VALID_MC_VERSIONS,
         certificateFingerprint = "ad915af2d8bfa7bff330f4bb5a0a4551ef9e0aed")
 @NetworkMod(clientSideRequired = false, serverSideRequired = false, channels = { ModInfo.CHANNEL },
-        packetHandler = PacketHandler.class, connectionHandler = ConnectionHandler.class,
-        versionBounds = "@@@DEV@@@")
+        packetHandler = PacketHandler.class, connectionHandler = ConnectionHandler.class)
 public class VeinMiner {
 
     ConfigurationValues configurationValues;
