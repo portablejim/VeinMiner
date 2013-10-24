@@ -71,6 +71,7 @@ public class VeinMiner {
     @SidedProxy(clientSide = ModInfo.PROXY_CLIENT_CLASS, serverSide = ModInfo.PROXY_SERVER_CLASS)
     public static CommonProxy proxy;
 
+    @SuppressWarnings({"UnusedParameters", "UnusedDeclaration"})
     @NetworkMod.VersionCheckHandler
     public boolean checkVersion(String candidate, INetworkManager manager) {
         try {
@@ -82,7 +83,7 @@ public class VeinMiner {
             int theirMinor = Integer.parseInt(theirVersionParts[1]);
             return ourMajor == theirMajor && ourMinor == theirMinor;
         }
-        catch (NumberFormatException e) { }
+        catch (NumberFormatException ignored) { }
 
         return ModInfo.VERSION.equals(candidate);
     }
