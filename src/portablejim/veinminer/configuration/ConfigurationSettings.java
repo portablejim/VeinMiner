@@ -174,11 +174,11 @@ public class ConfigurationSettings {
             //List<BlockID> newCongruentBlocks = new ArrayList<BlockID>();
             Set<BlockID> newCongruentBlocks = new HashSet<BlockID>();
 
-            if (!congruentBlocks.contains("-")) {
+            if (!congruentBlocks.contains("=")) {
                  continue;
             }
 
-            for (String blockString : congruentBlocks.split("-")) {
+            for (String blockString : congruentBlocks.split("=")) {
                 BlockID newBlockId = new BlockID(blockString);
 
                 newCongruentBlocks.add(newBlockId);
