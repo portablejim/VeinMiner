@@ -82,16 +82,22 @@ public class ItemInWorldManagerTransformer extends GenericTransformer implements
         return blockIdFunctionCall;
     }
 
-    private void transformUncheckedTryHarvestBlock(MethodNode curMethod, String obfuscatedClassName) {
+    private void insertCallAfterTryHarvestBlockFunction(MethodNode curMethod, String obfuscatedClassName) {
         LocalVariablesSorter varSorter = new LocalVariablesSorter(curMethod.access, curMethod.desc, curMethod);
         int index = 0;
 
         String worldType = typemap.get(getCorrectName("theWorld"));
         String playerType = typemap.get(getCorrectName("thisPlayerMP"));
 
-        while(!isMethodWithName(curMethod.instructions.get(index), "destroyBlockInWorldPartially")) {
+        while(!isMethodWithName(curMethod.instructions.get(index), "tryHarvestBlock")) {
             ++index;
         }
+
+        do {
+            --index;
+        }
+        while(curMethod.instructions.get(index).getType() == AbstractInsnNode.VAR_INSN);
+
 
         int blockVarIndex = varSorter.newLocal(Type.getType(BlockID.class));
         curMethod.instructions.insert(curMethod.instructions.get(index), buildBlockIdFunctionCall(obfuscatedClassName, worldType, blockVarIndex));
@@ -150,7 +156,7 @@ public class ItemInWorldManagerTransformer extends GenericTransformer implements
             String srgFunctionName = FMLDeobfuscatingRemapper.INSTANCE.mapMethodName(obfuscatedClassName, curMethod.name, curMethod.desc);
 
             if (getCorrectName("uncheckedTryHarvestBlock").equals(srgFunctionName)) {
-                transformUncheckedTryHarvestBlock(curMethod, obfuscatedClassName);
+                insertCallAfterTryHarvestBlockFunction(curMethod, obfuscatedClassName);
             }
         }
 
