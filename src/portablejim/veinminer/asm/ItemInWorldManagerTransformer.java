@@ -158,6 +158,9 @@ public class ItemInWorldManagerTransformer extends GenericTransformer implements
             if (getCorrectName("uncheckedTryHarvestBlock").equals(srgFunctionName)) {
                 insertCallAfterTryHarvestBlockFunction(curMethod, obfuscatedClassName);
             }
+            else if (getCorrectName("onBlockClicked").equals(srgFunctionName)) {
+                insertCallAfterTryHarvestBlockFunction(curMethod, obfuscatedClassName);
+            }
         }
 
         ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
