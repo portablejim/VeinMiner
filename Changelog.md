@@ -1,6 +1,14 @@
 Changelog
 =========
 
+0.8.0
+------
+* Re-write API. NOTE: YOU NEED A NEW VERSION OF VEINMINER MOD SUPPORT.
+* Improve format in config file. NOTE: YOU NEED TO DELETE YOUR CONFIG FILE SO A NEW ONE GENERATES.
+* Allow VeinMiner to mine 'insta-break' blocks, such as long grass.
+* Fix bug with being able to use VeinMiner with blocks you cannot harvest.
+* Change the font back to the default font.
+
 0.7.3
 -----
 * Fix logic problem with API.
