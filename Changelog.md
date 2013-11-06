@@ -7,6 +7,7 @@ Changelog
 * Improve format in config file. NOTE: YOU NEED TO DELETE YOUR CONFIG FILE SO A NEW ONE GENERATES.
 * Allow VeinMiner to mine 'insta-break' blocks, such as long grass.
 * Fix bug with being able to use VeinMiner with blocks you cannot harvest.
+* Change the font back to the default font.
 
 0.7.3
 -----
