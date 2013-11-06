@@ -29,6 +29,7 @@ import net.minecraftforge.event.Event;
  */
 
 @Cancelable
+@Deprecated
 public class VeinminerCancelHarvest extends Event {
     public final EntityPlayerMP player;
     public final int blockId;

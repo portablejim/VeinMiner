@@ -27,8 +27,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.FoodStats;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import portablejim.veinminer.api.VeinminerCancelHarvest;
-import portablejim.veinminer.api.VeinminerCancelToolIncorrect;
+import portablejim.veinminer.api.VeinminerPostUseTool;
+import portablejim.veinminer.api.VeinminerStartCheck;
+import portablejim.veinminer.api.VeinminerToolCheck;
 import portablejim.veinminer.configuration.ConfigurationSettings;
 import portablejim.veinminer.event.InstanceTicker;
 import portablejim.veinminer.server.MinerServer;
@@ -84,16 +85,22 @@ public class MinerInstance {
 
     private boolean shouldContinue() {
         // Item equipped
-        if(!serverInstance.getConfigurationSettings().getEnableAllTools() && player.getCurrentEquippedItem() == null &&
-                !MinecraftForge.EVENT_BUS.post(new VeinminerCancelToolIncorrect(player))) {
+        if(!serverInstance.getConfigurationSettings().getEnableAllTools() && player.getCurrentEquippedItem() == null) {
+            VeinminerToolCheck toolCheck = new VeinminerToolCheck(player);
+            MinecraftForge.EVENT_BUS.post(toolCheck);
 
-            // Test to see if the player can mine stone.
-            // If they can, they have other assistance and so should be
-            // considered a tool.
-            Block testBlock = Block.stone;
-            HarvestCheck event = new HarvestCheck(player, testBlock, false);
-            MinecraftForge.EVENT_BUS.post(event);
-            this.finished = event.success;
+            if(toolCheck.allowTool) {
+                this.finished = false;
+            }
+            else {
+                // Test to see if the player can mine stone.
+                // If they can, they have other assistance and so should be
+                // considered a tool.
+                Block testBlock = Block.stone;
+                HarvestCheck event = new HarvestCheck(player, testBlock, false);
+                MinecraftForge.EVENT_BUS.post(event);
+                this.finished = !event.success;
+            }
         }
 
         if(player.getCurrentEquippedItem() != null && usedItem != null &&
@@ -150,8 +157,14 @@ public class MinerInstance {
         awaitingEntityDrop.add(newPoint);
         boolean success = player.theItemInWorldManager.tryHarvestBlock(x, y, z);
         numBlocksMined++;
+
+        VeinminerPostUseTool toolUsedEvent = new VeinminerPostUseTool(player);
+        MinecraftForge.EVENT_BUS.post(toolUsedEvent);
+
         // Only go ahead if block was destroyed. Stops mining through protected areas.
-        if(success || MinecraftForge.EVENT_BUS.post(new VeinminerCancelHarvest(player, targetBlock.id, targetBlock.metadata))) {
+        VeinminerStartCheck continueCheck = new VeinminerStartCheck(player, targetBlock.id, targetBlock.metadata);
+        MinecraftForge.EVENT_BUS.post(continueCheck);
+        if(success || continueCheck.allowVeinminerStart) {
             destroyQueue.add(newPoint);
         }
         else {

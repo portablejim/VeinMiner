@@ -26,16 +26,20 @@ import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.Mod.Metadata;
 import cpw.mods.fml.common.ModMetadata;
 import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.*;
+import cpw.mods.fml.common.event.FMLFingerprintViolationEvent;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.versioning.ArtifactVersion;
 import cpw.mods.fml.common.versioning.DefaultArtifactVersion;
+import net.minecraft.block.Block;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import portablejim.veinminer.api.VeinminerCancelHarvest;
+import portablejim.veinminer.api.VeinminerStartCheck;
 import portablejim.veinminer.configuration.ConfigurationValues;
 import portablejim.veinminer.core.MinerInstance;
 import portablejim.veinminer.event.EntityDropHook;
@@ -121,8 +125,16 @@ public class VeinMiner {
             FMLLog.getLogger().info(output);
         }
 
-        if(!harvestBlockSuccess && !MinecraftForge.EVENT_BUS.post(new VeinminerCancelHarvest(player, blockId.id, blockId.metadata))) {
+        if(blockId.id > Block.blocksList.length  || !player.canHarvestBlock(Block.blocksList[blockId.id])) {
             return;
+        }
+
+        if(!harvestBlockSuccess) {
+            VeinminerStartCheck startEvent = new VeinminerStartCheck(player, blockId.id, blockId.metadata);
+            MinecraftForge.EVENT_BUS.post(startEvent);
+            if(!startEvent.allowVeinminerStart) {
+                return;
+            }
         }
 
         MinerInstance ins = new MinerInstance(world, player, x, y, z, blockId, MinerServer.instance);

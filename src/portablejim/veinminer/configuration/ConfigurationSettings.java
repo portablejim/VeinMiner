@@ -174,11 +174,11 @@ public class ConfigurationSettings {
             //List<BlockID> newCongruentBlocks = new ArrayList<BlockID>();
             Set<BlockID> newCongruentBlocks = new HashSet<BlockID>();
 
-            if (!congruentBlocks.contains("-")) {
+            if (!congruentBlocks.contains("=")) {
                  continue;
             }
 
-            for (String blockString : congruentBlocks.split("-")) {
+            for (String blockString : congruentBlocks.split("=")) {
                 BlockID newBlockId = new BlockID(blockString);
 
                 newCongruentBlocks.add(newBlockId);
@@ -218,12 +218,28 @@ public class ConfigurationSettings {
     }
 
     public boolean areBlocksCongruent(BlockID block1, BlockID block2) {
+        BlockID block1NoMeta = new BlockID(block1.id, block1.metadata);
+        block1NoMeta.metadata = -1;
+        BlockID block2NoMeta = new BlockID(block2.id, block2.metadata);
+        block2NoMeta.metadata = -1;
 
-        if (blockCongruenceMap.containsKey(block1) && blockCongruenceMap.containsKey(block2)) {
-            return blockCongruenceMap.get(block1).equals(blockCongruenceMap.get(block2));
+        int targetBlock1;
+        int targetBlock2;
+
+        if(blockCongruenceMap.containsKey(block1) || blockCongruenceMap.containsKey(block1NoMeta)) {
+            targetBlock1 = blockCongruenceMap.containsKey(block1) ? blockCongruenceMap.get(block1) : blockCongruenceMap.get(block1NoMeta);
+        }
+        else {
+            return false;
+        }
+        if(blockCongruenceMap.containsKey(block2) || blockCongruenceMap.containsKey(block2NoMeta)) {
+            targetBlock2 = blockCongruenceMap.containsKey(block2) ? blockCongruenceMap.get(block2) : blockCongruenceMap.get(block2NoMeta);
+        }
+        else {
+            return false;
         }
 
-        return false;
+        return targetBlock1 == targetBlock2;
     }
 
     void setToolIds(ToolType tool, String ids) {

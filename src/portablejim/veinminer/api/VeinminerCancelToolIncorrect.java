@@ -30,6 +30,7 @@ import net.minecraftforge.event.Event;
  */
 
 @Cancelable
+@Deprecated
 public class VeinminerCancelToolIncorrect extends Event {
     public final EntityPlayerMP player;
 
