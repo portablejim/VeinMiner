@@ -22,9 +22,9 @@ command.veinminer.toollist.itemerror=/veinminer toollist %s %s <tool id>
 command.veinminer.toollist.add=Added %d to the %s tool list
 command.veinminer.toollist.remove=Removed %d from the %s tool list
 
-command.veinminer.blocklimit=/veinminer blocklimit [-1 – 2147483647]
+command.veinminer.blocklimit=/veinminer blocklimit [-1 - 2147483647]
 command.veinminer.blocklimit.set=Set block limit to %d blocks
-command.veinminer.range=/veinminer radius [-1 – 1000]
+command.veinminer.range=/veinminer radius [-1 - 1000]
 command.veinminer.range.set=Set radius limit to %d blocks away
 command.veinminer.pertick=/veinminer per_tick <# blocks to destroy each tick>
 command.veinminer.pertick.set=Set to destroy %d blocks per tick
