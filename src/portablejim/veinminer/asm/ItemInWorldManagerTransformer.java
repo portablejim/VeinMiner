@@ -17,6 +17,7 @@
 
 package portablejim.veinminer.asm;
 
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
 import net.minecraft.launchwrapper.IClassTransformer;
 import org.objectweb.asm.ClassReader;
@@ -25,9 +26,11 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.LocalVariablesSorter;
 import org.objectweb.asm.tree.*;
+import portablejim.veinminer.lib.ModInfo;
 import portablejim.veinminer.util.BlockID;
 
 import java.util.HashMap;
+import java.util.logging.Level;
 
 /**
  * Modifies ItemInWorldManager to add a call to VeinMiner.blockMined() to
@@ -82,36 +85,39 @@ public class ItemInWorldManagerTransformer extends GenericTransformer implements
         return blockIdFunctionCall;
     }
 
-    private void insertCallAfterTryHarvestBlockFunction(MethodNode curMethod, String obfuscatedClassName) {
+    private int insertCallAfterTryHarvestBlockFunction(MethodNode curMethod, String obfuscatedClassName) throws IndexOutOfBoundsException {
+        return insertCallAfterTryHarvestBlockFunction(curMethod, obfuscatedClassName, 0);
+    }
+
+    private int insertCallAfterTryHarvestBlockFunction(MethodNode curMethod, String obfuscatedClassName, int startIndex) throws IndexOutOfBoundsException {
         LocalVariablesSorter varSorter = new LocalVariablesSorter(curMethod.access, curMethod.desc, curMethod);
-        int index = 0;
 
         String worldType = typemap.get(getCorrectName("theWorld"));
         String playerType = typemap.get(getCorrectName("thisPlayerMP"));
 
-        while(!isMethodWithName(curMethod.instructions.get(index), "tryHarvestBlock")) {
-            ++index;
+        while(!isMethodWithName(curMethod.instructions.get(startIndex), "tryHarvestBlock")) {
+            ++startIndex;
         }
 
         do {
-            --index;
+            --startIndex;
         }
-        while(curMethod.instructions.get(index).getType() == AbstractInsnNode.VAR_INSN);
+        while(curMethod.instructions.get(startIndex).getType() == AbstractInsnNode.VAR_INSN);
 
 
         int blockVarIndex = varSorter.newLocal(Type.getType(BlockID.class));
-        curMethod.instructions.insert(curMethod.instructions.get(index), buildBlockIdFunctionCall(obfuscatedClassName, worldType, blockVarIndex));
-        ++index;
+        curMethod.instructions.insert(curMethod.instructions.get(startIndex), buildBlockIdFunctionCall(obfuscatedClassName, worldType, blockVarIndex));
+        ++startIndex;
 
-        while(!isMethodWithName(curMethod.instructions.get(index), "tryHarvestBlock")) {
-            ++index;
+        while(!isMethodWithName(curMethod.instructions.get(startIndex), "tryHarvestBlock")) {
+            ++startIndex;
         }
 
         // Add variable to store result
         int newVarIndex = varSorter.newLocal(Type.BOOLEAN_TYPE);
         VarInsnNode newVar = new VarInsnNode(Opcodes.ISTORE, newVarIndex);
-        curMethod.instructions.insert(curMethod.instructions.get(index), newVar);
-        ++index;
+        curMethod.instructions.insert(curMethod.instructions.get(startIndex), newVar);
+        ++startIndex;
 
         // Add in function call to call function
         InsnList veinMinerFunctionCall = new InsnList();
@@ -128,14 +134,16 @@ public class ItemInWorldManagerTransformer extends GenericTransformer implements
 
         String blockIdClassType = String.format("L%s;", blockIdClassName);
         veinMinerFunctionCall.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, targetClassName, targetMethodName, String.format(targetMethodType, worldType, playerType, blockIdClassType)));
-        curMethod.instructions.insert(curMethod.instructions.get(index), veinMinerFunctionCall);
-        ++index;
+        curMethod.instructions.insert(curMethod.instructions.get(startIndex), veinMinerFunctionCall);
+        ++startIndex;
 
         // Get rid of un-needed POP.
-        while (curMethod.instructions.get(index).getOpcode() != Opcodes.POP) {
-            ++index;
+        while (curMethod.instructions.get(startIndex).getOpcode() != Opcodes.POP) {
+            ++startIndex;
         }
-        curMethod.instructions.remove(curMethod.instructions.get(index));
+        curMethod.instructions.remove(curMethod.instructions.get(startIndex));
+
+        return startIndex;
     }
 
     public byte[] transformItemInWorldManager(String obfuscatedClassName, byte[] bytes) {
@@ -152,15 +160,22 @@ public class ItemInWorldManagerTransformer extends GenericTransformer implements
             }
         }
 
-        for (MethodNode curMethod : classNode.methods) {
-            String srgFunctionName = FMLDeobfuscatingRemapper.INSTANCE.mapMethodName(obfuscatedClassName, curMethod.name, curMethod.desc);
+        try {
+            for (MethodNode curMethod : classNode.methods) {
+                String srgFunctionName = FMLDeobfuscatingRemapper.INSTANCE.mapMethodName(obfuscatedClassName, curMethod.name, curMethod.desc);
 
-            if (getCorrectName("uncheckedTryHarvestBlock").equals(srgFunctionName)) {
-                insertCallAfterTryHarvestBlockFunction(curMethod, obfuscatedClassName);
+                if (getCorrectName("uncheckedTryHarvestBlock").equals(srgFunctionName)) {
+                    insertCallAfterTryHarvestBlockFunction(curMethod, obfuscatedClassName);
+                }
+                else if (getCorrectName("onBlockClicked").equals(srgFunctionName)) {
+                    int afterFirst = insertCallAfterTryHarvestBlockFunction(curMethod, obfuscatedClassName);
+                    insertCallAfterTryHarvestBlockFunction(curMethod, obfuscatedClassName, afterFirst);
+
+                }
             }
-            else if (getCorrectName("onBlockClicked").equals(srgFunctionName)) {
-                insertCallAfterTryHarvestBlockFunction(curMethod, obfuscatedClassName);
-            }
+        }
+        catch(IndexOutOfBoundsException e) {
+            FMLLog.getLogger().log(Level.WARNING, "[%s] Problem inserting all required code. This mod may not function correctly. Please report a bug.", ModInfo.MOD_NAME);
         }
 
         ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);

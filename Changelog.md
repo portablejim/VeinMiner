@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.8.1
+------
+Change:
+* Increase hunger usage
+* Fix bug with mining 'insta-break' blocks. In 0.8.0 it only worked in creative mode.
+
 0.8.0
 ------
 * Re-write API. NOTE: YOU NEED A NEW VERSION OF VEINMINER MOD SUPPORT.
