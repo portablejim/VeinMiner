@@ -82,36 +82,39 @@ public class ItemInWorldManagerTransformer extends GenericTransformer implements
         return blockIdFunctionCall;
     }
 
-    private void insertCallAfterTryHarvestBlockFunction(MethodNode curMethod, String obfuscatedClassName) {
+    private int insertCallAfterTryHarvestBlockFunction(MethodNode curMethod, String obfuscatedClassName) {
+        return insertCallAfterTryHarvestBlockFunction(curMethod, obfuscatedClassName, 0);
+    }
+
+    private int insertCallAfterTryHarvestBlockFunction(MethodNode curMethod, String obfuscatedClassName, int startIndex) {
         LocalVariablesSorter varSorter = new LocalVariablesSorter(curMethod.access, curMethod.desc, curMethod);
-        int index = 0;
 
         String worldType = typemap.get(getCorrectName("theWorld"));
         String playerType = typemap.get(getCorrectName("thisPlayerMP"));
 
-        while(!isMethodWithName(curMethod.instructions.get(index), "tryHarvestBlock")) {
-            ++index;
+        while(!isMethodWithName(curMethod.instructions.get(startIndex), "tryHarvestBlock")) {
+            ++startIndex;
         }
 
         do {
-            --index;
+            --startIndex;
         }
-        while(curMethod.instructions.get(index).getType() == AbstractInsnNode.VAR_INSN);
+        while(curMethod.instructions.get(startIndex).getType() == AbstractInsnNode.VAR_INSN);
 
 
         int blockVarIndex = varSorter.newLocal(Type.getType(BlockID.class));
-        curMethod.instructions.insert(curMethod.instructions.get(index), buildBlockIdFunctionCall(obfuscatedClassName, worldType, blockVarIndex));
-        ++index;
+        curMethod.instructions.insert(curMethod.instructions.get(startIndex), buildBlockIdFunctionCall(obfuscatedClassName, worldType, blockVarIndex));
+        ++startIndex;
 
-        while(!isMethodWithName(curMethod.instructions.get(index), "tryHarvestBlock")) {
-            ++index;
+        while(!isMethodWithName(curMethod.instructions.get(startIndex), "tryHarvestBlock")) {
+            ++startIndex;
         }
 
         // Add variable to store result
         int newVarIndex = varSorter.newLocal(Type.BOOLEAN_TYPE);
         VarInsnNode newVar = new VarInsnNode(Opcodes.ISTORE, newVarIndex);
-        curMethod.instructions.insert(curMethod.instructions.get(index), newVar);
-        ++index;
+        curMethod.instructions.insert(curMethod.instructions.get(startIndex), newVar);
+        ++startIndex;
 
         // Add in function call to call function
         InsnList veinMinerFunctionCall = new InsnList();
@@ -128,14 +131,16 @@ public class ItemInWorldManagerTransformer extends GenericTransformer implements
 
         String blockIdClassType = String.format("L%s;", blockIdClassName);
         veinMinerFunctionCall.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, targetClassName, targetMethodName, String.format(targetMethodType, worldType, playerType, blockIdClassType)));
-        curMethod.instructions.insert(curMethod.instructions.get(index), veinMinerFunctionCall);
-        ++index;
+        curMethod.instructions.insert(curMethod.instructions.get(startIndex), veinMinerFunctionCall);
+        ++startIndex;
 
         // Get rid of un-needed POP.
-        while (curMethod.instructions.get(index).getOpcode() != Opcodes.POP) {
-            ++index;
+        while (curMethod.instructions.get(startIndex).getOpcode() != Opcodes.POP) {
+            ++startIndex;
         }
-        curMethod.instructions.remove(curMethod.instructions.get(index));
+        curMethod.instructions.remove(curMethod.instructions.get(startIndex));
+
+        return startIndex;
     }
 
     public byte[] transformItemInWorldManager(String obfuscatedClassName, byte[] bytes) {
@@ -159,7 +164,9 @@ public class ItemInWorldManagerTransformer extends GenericTransformer implements
                 insertCallAfterTryHarvestBlockFunction(curMethod, obfuscatedClassName);
             }
             else if (getCorrectName("onBlockClicked").equals(srgFunctionName)) {
-                insertCallAfterTryHarvestBlockFunction(curMethod, obfuscatedClassName);
+                int afterFirst = insertCallAfterTryHarvestBlockFunction(curMethod, obfuscatedClassName);
+                insertCallAfterTryHarvestBlockFunction(curMethod, obfuscatedClassName, afterFirst);
+
             }
         }
 
