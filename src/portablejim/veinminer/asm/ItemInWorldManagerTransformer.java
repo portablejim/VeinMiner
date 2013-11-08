@@ -17,6 +17,7 @@
 
 package portablejim.veinminer.asm;
 
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
 import cpw.mods.fml.relauncher.IClassTransformer;
 import org.objectweb.asm.ClassReader;
@@ -25,9 +26,11 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.LocalVariablesSorter;
 import org.objectweb.asm.tree.*;
+import portablejim.veinminer.lib.ModInfo;
 import portablejim.veinminer.util.BlockID;
 
 import java.util.HashMap;
+import java.util.logging.Level;
 
 /**
  * Modifies ItemInWorldManager to add a call to VeinMiner.blockMined() to
@@ -82,11 +85,11 @@ public class ItemInWorldManagerTransformer extends GenericTransformer implements
         return blockIdFunctionCall;
     }
 
-    private int insertCallAfterTryHarvestBlockFunction(MethodNode curMethod, String obfuscatedClassName) {
+    private int insertCallAfterTryHarvestBlockFunction(MethodNode curMethod, String obfuscatedClassName) throws IndexOutOfBoundsException {
         return insertCallAfterTryHarvestBlockFunction(curMethod, obfuscatedClassName, 0);
     }
 
-    private int insertCallAfterTryHarvestBlockFunction(MethodNode curMethod, String obfuscatedClassName, int startIndex) {
+    private int insertCallAfterTryHarvestBlockFunction(MethodNode curMethod, String obfuscatedClassName, int startIndex) throws IndexOutOfBoundsException {
         LocalVariablesSorter varSorter = new LocalVariablesSorter(curMethod.access, curMethod.desc, curMethod);
 
         String worldType = typemap.get(getCorrectName("theWorld"));
@@ -157,17 +160,22 @@ public class ItemInWorldManagerTransformer extends GenericTransformer implements
             }
         }
 
-        for (MethodNode curMethod : classNode.methods) {
-            String srgFunctionName = FMLDeobfuscatingRemapper.INSTANCE.mapMethodName(obfuscatedClassName, curMethod.name, curMethod.desc);
+        try {
+            for (MethodNode curMethod : classNode.methods) {
+                String srgFunctionName = FMLDeobfuscatingRemapper.INSTANCE.mapMethodName(obfuscatedClassName, curMethod.name, curMethod.desc);
 
-            if (getCorrectName("uncheckedTryHarvestBlock").equals(srgFunctionName)) {
-                insertCallAfterTryHarvestBlockFunction(curMethod, obfuscatedClassName);
-            }
-            else if (getCorrectName("onBlockClicked").equals(srgFunctionName)) {
-                int afterFirst = insertCallAfterTryHarvestBlockFunction(curMethod, obfuscatedClassName);
-                insertCallAfterTryHarvestBlockFunction(curMethod, obfuscatedClassName, afterFirst);
+                if (getCorrectName("uncheckedTryHarvestBlock").equals(srgFunctionName)) {
+                    insertCallAfterTryHarvestBlockFunction(curMethod, obfuscatedClassName);
+                }
+                else if (getCorrectName("onBlockClicked").equals(srgFunctionName)) {
+                    int afterFirst = insertCallAfterTryHarvestBlockFunction(curMethod, obfuscatedClassName);
+                    insertCallAfterTryHarvestBlockFunction(curMethod, obfuscatedClassName, afterFirst);
 
+                }
             }
+        }
+        catch(IndexOutOfBoundsException e) {
+            FMLLog.getLogger().log(Level.WARNING, "[%s] Problem inserting all required code. This mod may not function correctly. Please report a bug.", ModInfo.MOD_NAME);
         }
 
         ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
