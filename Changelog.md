@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.8.2
+------
+Fix:
+* Actually fix mining of 'insta-break' blocks.
+
 0.8.1
 ------
 Change:

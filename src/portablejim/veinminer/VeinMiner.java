@@ -19,13 +19,8 @@ package portablejim.veinminer;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import cpw.mods.fml.common.FMLLog;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.Mod.Metadata;
-import cpw.mods.fml.common.ModMetadata;
-import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.*;
+import cpw.mods.fml.common.Mod.*;
 import cpw.mods.fml.common.event.FMLFingerprintViolationEvent;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -43,6 +38,7 @@ import portablejim.veinminer.api.VeinminerStartCheck;
 import portablejim.veinminer.configuration.ConfigurationValues;
 import portablejim.veinminer.core.MinerInstance;
 import portablejim.veinminer.event.EntityDropHook;
+import portablejim.veinminer.lib.Logger;
 import portablejim.veinminer.lib.ModInfo;
 import portablejim.veinminer.network.ConnectionHandler;
 import portablejim.veinminer.network.PacketHandler;
@@ -108,6 +104,15 @@ public class VeinMiner {
     @EventHandler
     public void init(@SuppressWarnings("UnusedParameters") FMLInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(new EntityDropHook());
+
+        ModContainer thisMod = Loader.instance().getIndexedModList().get(ModInfo.MOD_ID);
+        if(thisMod != null) {
+            String fileName = thisMod.getSource().getName();
+            if(fileName.contains("-dev") || !fileName.contains(".jar")) {
+                ModInfo.DEBUG_MODE = true;
+                Logger.debug("Enabling debug mode");
+            }
+        }
     }
 
     @EventHandler
@@ -120,10 +125,7 @@ public class VeinMiner {
 
     @SuppressWarnings("UnusedDeclaration")
     public void blockMined(World world, EntityPlayerMP player, int x, int y, int z, boolean harvestBlockSuccess, BlockID blockId) {
-        if(ModInfo.DEBUG_MODE) {
-            String output = String.format("Block mined at %d,%d,%d, result %b, block id is %d:%d", x, y, z, harvestBlockSuccess, blockId.id, blockId.metadata);
-            FMLLog.getLogger().info(output);
-        }
+         Logger.debug("Block mined at %d,%d,%d, result %b, block id is %d:%d", x, y, z, harvestBlockSuccess, blockId.id, blockId.metadata);
 
         if(blockId.id > Block.blocksList.length  || !player.canHarvestBlock(Block.blocksList[blockId.id])) {
             return;
