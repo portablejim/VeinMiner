@@ -22,7 +22,7 @@ package portablejim.veinminer.lib;
  */
 
 public class ModInfo {
-    public static final boolean DEBUG_MODE = false;
+    public static boolean DEBUG_MODE = false;
 
     public static final String MOD_ID = "VeinMiner";
     public static final String MOD_NAME = "Vein Miner";
