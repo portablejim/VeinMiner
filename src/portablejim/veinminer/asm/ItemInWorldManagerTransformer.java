@@ -57,6 +57,7 @@ public class ItemInWorldManagerTransformer extends GenericTransformer implements
         srgMappings.put("theWorld", "field_73092_a");
         srgMappings.put("thisPlayerMP", "field_73090_b");
         srgMappings.put("destroyBlockInWorldPartially", "func_72888_f");
+        srgMappings.put("onBlockClicked", "func_73074_a");
     }
 
     @Override
