@@ -26,6 +26,7 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.LocalVariablesSorter;
 import org.objectweb.asm.tree.*;
+import portablejim.veinminer.lib.Logger;
 import portablejim.veinminer.lib.ModInfo;
 import portablejim.veinminer.util.BlockID;
 
@@ -166,9 +167,11 @@ public class ItemInWorldManagerTransformer extends GenericTransformer implements
                 String srgFunctionName = FMLDeobfuscatingRemapper.INSTANCE.mapMethodName(obfuscatedClassName, curMethod.name, curMethod.desc);
 
                 if (getCorrectName("uncheckedTryHarvestBlock").equals(srgFunctionName)) {
+                    Logger.debug("Inserting call to uncheckedTryHarvestBlock (%s)", srgFunctionName);
                     insertCallAfterTryHarvestBlockFunction(curMethod, obfuscatedClassName);
                 }
                 else if (getCorrectName("onBlockClicked").equals(srgFunctionName)) {
+                    Logger.debug("Inserting call to onBlockClicked (%s)", srgFunctionName);
                     int afterFirst = insertCallAfterTryHarvestBlockFunction(curMethod, obfuscatedClassName);
                     insertCallAfterTryHarvestBlockFunction(curMethod, obfuscatedClassName, afterFirst);
 

@@ -113,6 +113,7 @@ public class VeinMiner {
             String fileName = thisMod.getSource().getName();
             if(fileName.contains("-dev") || !fileName.contains(".jar")) {
                 ModInfo.DEBUG_MODE = true;
+                Logger.debug("Enabling debug mode");
             }
         }
     }
