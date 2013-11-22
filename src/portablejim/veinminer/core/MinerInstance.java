@@ -103,8 +103,12 @@ public class MinerInstance {
             }
         }
 
-        if(player.getCurrentEquippedItem() != null && usedItem != null &&
-                !player.getCurrentEquippedItem().isItemEqual(usedItem)) {
+        if(usedItem == null) {
+            if(player.getCurrentEquippedItem() != null) {
+                this.finished = true;
+            }
+        }
+        else if(player.getCurrentEquippedItem() == null || !player.getCurrentEquippedItem().isItemEqual(usedItem)) {
             this.finished = true;
         }
 

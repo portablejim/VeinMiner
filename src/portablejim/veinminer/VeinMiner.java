@@ -127,7 +127,7 @@ public class VeinMiner {
     public void blockMined(World world, EntityPlayerMP player, int x, int y, int z, boolean harvestBlockSuccess, BlockID blockId) {
          Logger.debug("Block mined at %d,%d,%d, result %b, block id is %d:%d", x, y, z, harvestBlockSuccess, blockId.id, blockId.metadata);
 
-        if(blockId.id > Block.blocksList.length  || !player.canHarvestBlock(Block.blocksList[blockId.id])) {
+        if(blockId.id > Block.blocksList.length || Block.blocksList[blockId.id] == null  || !player.canHarvestBlock(Block.blocksList[blockId.id])) {
             return;
         }
 

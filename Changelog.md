@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.8.3
+------
+Fixes:
+* Fix null pointer that is possibly encountered in creative mode.
+* Fix continuing to mine if tool runs out.
+
 0.8.2
 ------
 Fix:
