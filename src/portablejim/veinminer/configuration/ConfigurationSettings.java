@@ -203,7 +203,7 @@ public class ConfigurationSettings {
     public String getBlockCongruenceList() {
         ArrayList<String> congruenceGroups = new ArrayList<String>();
         for(Set<BlockID> group : blockCongruenceList) {
-            congruenceGroups.add(Joiner.on('-').join(group));
+            congruenceGroups.add(Joiner.on('=').join(group));
         }
         return Joiner.on(',').join(congruenceGroups);
     }
