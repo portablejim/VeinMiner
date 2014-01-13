@@ -31,6 +31,8 @@ public class ConfigurationValues {
 
     private Configuration configFile;
 
+    public static final String CONFIG_AUTODETECT = "autodetect";
+    public static final String CONFIG_AUTODETECT_COMMENT = "Autodetect items and blocks during game start-up.";
     public static final String CONFIG_BLOCKLIST = "blocklist";
     public static final String CONFIG_BLOCKLIST_COMMENT = "IDs of blocks to auto-mine. Separate ids with ',' and metadata from ID with ':'.";
     public static final String CONFIG_ITEMLIST = "itemlist";
@@ -41,10 +43,46 @@ public class ConfigurationValues {
     public static final String CONFIG_CLIENT = "client";
     public static final String CONFIG_CLIENT_COMMENT = "These settings are used client side, so they have no impact on servers.";
 
+    public boolean AUTODETECT_TOOLS_TOGGLE;
+    public static final boolean AUTODETECT_TOOLS_TOGGLE_DEFAULT = true;
+    public static final String AUTODETECT_TOOLS_TOGGLE_CONFIGNAME = "autodetect.tools.enable";
+    public static final String AUTODETECT_TOOLS_TOGGLE_DESCRIPTION = "Autodetect tools on starting the game, adding the ids to the list.";
+
+    public boolean AUTODETECT_BLOCKS_PICKAXE_TOGGLE;
+    public static final boolean AUTODETECT_BLOCKS_PICKAXE_TOGGLE_DEFAULT = true;
+    public static final String AUTODETECT_BLOCKS_PICKAXE_TOGGLE_CONFIGNAME = "autodetect.blocks.pickaxe.enable";
+    public static final String AUTODETECT_BLOCKS_PICKAXE_TOGGLE_DESCRIPTION = "Autodetect blocks with the below prefixes in the ore dictionary, adding the ids to the pickaxe list. [default: true]";
+
+    public String AUTODETECT_BLOCKS_PICKAXE_LIST;
+    public static final String AUTODETECT_BLOCKS_PICKAXE_LIST_DEFAULT = "ore";
+    public static final String AUTODETECT_BLOCKS_PICKAXE_LIST_CONFIGNAME = "autodetect.blocks.pickaxe.prefixes";
+    public static final String AUTODETECT_BLOCKS_PICKAXE_LIST_DESCRIPTION = "List of prefixes to autodetect as blocks to be used with a pickaxe.\nSeparate with ',' [default: 'ore'] (i.e. every oredictionary entry starting with 'ore', such as oreIron, is added to the list.)";
+
+
+    public boolean AUTODETECT_BLOCKS_SHOVEL_TOGGLE;
+    public static final boolean AUTODETECT_BLOCKS_SHOVEL_TOGGLE_DEFAULT = true;
+    public static final String AUTODETECT_BLOCKS_SHOVEL_TOGGLE_CONFIGNAME = "autodetect.blocks.shovel.enable";
+    public static final String AUTODETECT_BLOCKS_SHOVEL_TOGGLE_DESCRIPTION = "Autodetect blocks with the below prefixes in the ore dictionary, adding the ids to the shovel list. [default: true]";
+
+    public String AUTODETECT_BLOCKS_SHOVEL_LIST;
+    public static final String AUTODETECT_BLOCKS_SHOVEL_LIST_DEFAULT = "";
+    public static final String AUTODETECT_BLOCKS_SHOVEL_LIST_CONFIGNAME = "autodetect.blocks.shovel.prefixes";
+    public static final String AUTODETECT_BLOCKS_SHOVEL_LIST_DESCRIPTION = "List of prefixes to autodetect as blocks to be used with a shovel.\nSeparate with ',' [default: '']";
+
+    public boolean AUTODETECT_BLOCKS_AXE_TOGGLE;
+    public static final boolean AUTODETECT_BLOCKS_AXE_TOGGLE_DEFAULT = true;
+    public static final String AUTODETECT_BLOCKS_AXE_TOGGLE_CONFIGNAME = "autodetect.blocks.axe.enable";
+    public static final String AUTODETECT_BLOCKS_AXE_TOGGLE_DESCRIPTION = "Autodetect blocks with the below prefixes in the ore dictionary, adding the ids to the axe list. [default: true]";
+
+    public String AUTODETECT_BLOCKS_AXE_LIST;
+    public static final String AUTODETECT_BLOCKS_AXE_LIST_DEFAULT = "log,treeLeaves";
+    public static final String AUTODETECT_BLOCKS_AXE_LIST_CONFIGNAME = "autodetect.blocks.axe.prefixes";
+    public static final String AUTODETECT_BLOCKS_AXE_LIST_DESCRIPTION = "List of prefixes to autodetect as blocks to be used with an axe.\nSeparate with ',' [default: 'log,treeLeaves'] (i.e. every oredictionary entry starting with 'log', such as logWood, is added to the list.)";
+
     public String PICKAXE_BLOCK_ID_LIST;
-    public static final String PICKAXE_BLOCK_ID_LIST_DEFAULT = "14,15,16,21,24,48,56,73,74,89,129";
+    public static final String PICKAXE_BLOCK_ID_LIST_DEFAULT = "14,15,16,21,24,48,56,73,74,89,129,153";
     public static final String PICKAXE_BLOCK_ID_LIST_CONFIGNAME = "blockList.pickaxe";
-    public static final String PICKAXE_BLOCK_ID_LIST_DESCRIPTION = "Block ids to auto-mine when using a configured pickaxe. [default: '14,15,16,21,24,48,56,73,74,89,129']";
+    public static final String PICKAXE_BLOCK_ID_LIST_DESCRIPTION = "Block ids to auto-mine when using a configured pickaxe. [default: '14,15,16,21,24,48,56,73,74,89,129,153']";
 
     public String SHOVEL_BLOCK_ID_LIST;
     public static final String SHOVEL_BLOCK_ID_LIST_DEFAULT = "82";
@@ -113,6 +151,15 @@ public class ConfigurationValues {
 
     public void loadConfigFile() {
         configFile.load();
+
+        configFile.addCustomCategoryComment(CONFIG_AUTODETECT, CONFIG_AUTODETECT_COMMENT);
+        AUTODETECT_TOOLS_TOGGLE = configFile.get(CONFIG_AUTODETECT, AUTODETECT_TOOLS_TOGGLE_CONFIGNAME, AUTODETECT_TOOLS_TOGGLE_DEFAULT, AUTODETECT_TOOLS_TOGGLE_DESCRIPTION).getBoolean(AUTODETECT_TOOLS_TOGGLE_DEFAULT);
+        AUTODETECT_BLOCKS_PICKAXE_TOGGLE = configFile.get(CONFIG_AUTODETECT, AUTODETECT_BLOCKS_PICKAXE_TOGGLE_CONFIGNAME, AUTODETECT_BLOCKS_PICKAXE_TOGGLE_DEFAULT, AUTODETECT_BLOCKS_PICKAXE_TOGGLE_DESCRIPTION).getBoolean(AUTODETECT_BLOCKS_PICKAXE_TOGGLE_DEFAULT);
+        AUTODETECT_BLOCKS_PICKAXE_LIST = configFile.get(CONFIG_AUTODETECT, AUTODETECT_BLOCKS_PICKAXE_LIST_CONFIGNAME, AUTODETECT_BLOCKS_PICKAXE_LIST_DEFAULT, AUTODETECT_BLOCKS_PICKAXE_LIST_DESCRIPTION).getString();
+        AUTODETECT_BLOCKS_SHOVEL_TOGGLE = configFile.get(CONFIG_AUTODETECT, AUTODETECT_BLOCKS_SHOVEL_TOGGLE_CONFIGNAME, AUTODETECT_BLOCKS_SHOVEL_TOGGLE_DEFAULT, AUTODETECT_BLOCKS_SHOVEL_TOGGLE_DESCRIPTION).getBoolean(AUTODETECT_BLOCKS_SHOVEL_TOGGLE_DEFAULT);
+        AUTODETECT_BLOCKS_SHOVEL_LIST = configFile.get(CONFIG_AUTODETECT, AUTODETECT_BLOCKS_SHOVEL_LIST_CONFIGNAME, AUTODETECT_BLOCKS_SHOVEL_LIST_DEFAULT, AUTODETECT_BLOCKS_SHOVEL_LIST_DESCRIPTION).getString();
+        AUTODETECT_BLOCKS_AXE_TOGGLE = configFile.get(CONFIG_AUTODETECT, AUTODETECT_BLOCKS_AXE_TOGGLE_CONFIGNAME, AUTODETECT_BLOCKS_AXE_TOGGLE_DEFAULT, AUTODETECT_BLOCKS_AXE_TOGGLE_DESCRIPTION).getBoolean(AUTODETECT_BLOCKS_AXE_TOGGLE_DEFAULT);
+        AUTODETECT_BLOCKS_AXE_LIST = configFile.get(CONFIG_AUTODETECT, AUTODETECT_BLOCKS_AXE_LIST_CONFIGNAME, AUTODETECT_BLOCKS_AXE_LIST_DEFAULT, AUTODETECT_BLOCKS_AXE_LIST_DESCRIPTION).getString();
 
         configFile.addCustomCategoryComment(CONFIG_BLOCKLIST, CONFIG_BLOCKLIST_COMMENT);
         PICKAXE_BLOCK_ID_LIST = configFile.get(CONFIG_BLOCKLIST, PICKAXE_BLOCK_ID_LIST_CONFIGNAME, PICKAXE_BLOCK_ID_LIST_DEFAULT, PICKAXE_BLOCK_ID_LIST_DESCRIPTION).getString();

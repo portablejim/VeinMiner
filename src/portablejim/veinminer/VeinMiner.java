@@ -23,6 +23,7 @@ import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.Mod.*;
 import cpw.mods.fml.common.event.FMLFingerprintViolationEvent;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.network.NetworkMod;
@@ -32,9 +33,12 @@ import cpw.mods.fml.common.versioning.DefaultArtifactVersion;
 import net.minecraft.block.Block;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.oredict.OreDictionary;
 import portablejim.veinminer.api.VeinminerStartCheck;
 import portablejim.veinminer.configuration.ConfigurationValues;
 import portablejim.veinminer.core.MinerInstance;
@@ -47,6 +51,11 @@ import portablejim.veinminer.proxy.CommonProxy;
 import portablejim.veinminer.server.MinerCommand;
 import portablejim.veinminer.server.MinerServer;
 import portablejim.veinminer.util.BlockID;
+
+import java.util.ArrayList;
+import java.util.Set;
+
+import static portablejim.veinminer.configuration.ConfigurationSettings.ToolType;
 
 /**
  * This class is the main mod class for Veinminer. It is loaded as a mod
@@ -116,6 +125,29 @@ public class VeinMiner {
                 Logger.debug("Enabling debug mode");
             }
         }
+    }
+
+    @PostInit
+    public void postInit(FMLPostInitializationEvent event) {
+        String[] oreDictList = OreDictionary.getOreNames();
+        for(ToolType toolType : ToolType.values()) {
+            Set<String> autodetectValues = proxy.getConfigSettings().getAutodetectBlocksList(toolType);
+            if(proxy.getConfigSettings().getAutodetectBlocksToggle(toolType)) {
+                for(String oreDictEntry : oreDictList) {
+                    for(String autodetectValue : autodetectValues) {
+                        if(!autodetectValue.isEmpty() && oreDictEntry.startsWith(autodetectValue)) {
+                            ArrayList<ItemStack> itemStacks = OreDictionary.getOres(oreDictEntry);
+                            for(ItemStack item : itemStacks) {
+                                if(item.getItem() instanceof ItemBlock) {
+                                    proxy.getConfigSettings().addBlockToWhitelist(toolType, new BlockID(item.itemID, item.getItemDamage()));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        proxy.getConfigSettings().saveConfigs();
     }
 
     @ServerStarted
