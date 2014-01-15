@@ -32,6 +32,7 @@ import portablejim.veinminer.api.VeinminerStartCheck;
 import portablejim.veinminer.api.VeinminerToolCheck;
 import portablejim.veinminer.configuration.ConfigurationSettings;
 import portablejim.veinminer.event.InstanceTicker;
+import portablejim.veinminer.lib.BlockLib;
 import portablejim.veinminer.server.MinerServer;
 import portablejim.veinminer.server.PlayerStatus;
 import portablejim.veinminer.util.BlockID;
@@ -205,7 +206,8 @@ public class MinerInstance {
 
                     ConfigurationSettings configSettings = serverInstance.getConfigurationSettings();
 
-                    if(!newBlock.equals(targetBlock) && !configSettings.areBlocksCongruent(newBlock, targetBlock)) {
+                    if(!newBlock.equals(targetBlock) && !configSettings.areBlocksCongruent(newBlock, targetBlock)
+                            && !BlockLib.arePickBlockEqual(newBlock, targetBlock)) {
                         continue;
                     }
 

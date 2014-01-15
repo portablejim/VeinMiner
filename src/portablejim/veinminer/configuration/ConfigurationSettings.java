@@ -19,6 +19,7 @@ package portablejim.veinminer.configuration;
 
 import com.google.common.base.Joiner;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
 import portablejim.veinminer.util.BlockID;
 import portablejim.veinminer.util.PreferredMode;
 
@@ -36,13 +37,20 @@ public class ConfigurationSettings {
 
     public ConfigurationSettings(ConfigurationValues configValues) {
         this.configValues = configValues;
+        //noinspection unchecked
         toolIds = new Set[ToolType.values().length];
         for (ToolType tool : ToolType.values()) {
             toolIds[tool.ordinal()] = new HashSet<Integer>();
         }
+        //noinspection unchecked
         blockWhitelist = new ArrayList[ToolType.values().length];
+        autoDetectBlocksToggle = new boolean[ToolType.values().length];
+        //noinspection unchecked
+        autoDetectBlocksList = new HashSet[ToolType.values().length];
         for (ToolType tool : ToolType.values()) {
             blockWhitelist[tool.ordinal()] = new ArrayList<BlockID>();
+            autoDetectBlocksToggle[tool.ordinal()] = false;
+            autoDetectBlocksList[tool.ordinal()] = new HashSet<String>();
         }
         blockCongruenceList = new ArrayList<Set<BlockID>>();
         blockCongruenceMap = new HashMap<BlockID, Integer>();
@@ -51,6 +59,13 @@ public class ConfigurationSettings {
     }
 
     private void parseConfigValues() {
+        setAutodetectBlocksToggle(ToolType.AXE, configValues.AUTODETECT_BLOCKS_AXE_TOGGLE);
+        setAutodetectBlocksToggle(ToolType.PICKAXE, configValues.AUTODETECT_BLOCKS_PICKAXE_TOGGLE);
+        setAutodetectBlocksToggle(ToolType.SHOVEL, configValues.AUTODETECT_BLOCKS_SHOVEL_TOGGLE);
+        setAutodetectBlocksList(ToolType.AXE, configValues.AUTODETECT_BLOCKS_AXE_LIST);
+        setAutodetectBlocksList(ToolType.PICKAXE, configValues.AUTODETECT_BLOCKS_PICKAXE_LIST);
+        setAutodetectBlocksList(ToolType.SHOVEL, configValues.AUTODETECT_BLOCKS_SHOVEL_LIST);
+
         setBlockWhitelist(ToolType.AXE, configValues.AXE_BLOCK_ID_LIST);
         setBlockWhitelist(ToolType.PICKAXE, configValues.PICKAXE_BLOCK_ID_LIST);
         setBlockWhitelist(ToolType.SHOVEL, configValues.SHOVEL_BLOCK_ID_LIST);
@@ -85,6 +100,9 @@ public class ConfigurationSettings {
     void setEnableAllTools(boolean enableAllTools) {
         this.enableAllTools = enableAllTools;
     }
+
+    private boolean[] autoDetectBlocksToggle;
+    private HashSet<String>[] autoDetectBlocksList;
 
     public enum ToolType { PICKAXE, SHOVEL, AXE  }
 
@@ -121,6 +139,28 @@ public class ConfigurationSettings {
 
     private int preferredMode;
 
+    void setAutodetectBlocksToggle(ToolType tool, boolean value) {
+        autoDetectBlocksToggle[tool.ordinal()] = value;
+    }
+
+    public boolean getAutodetectBlocksToggle(ToolType tool) {
+        return autoDetectBlocksToggle[tool.ordinal()];
+    }
+
+    void setAutodetectBlocksList(ToolType tool, String list) {
+        String[] parts = list.split(",");
+
+        for(String part : parts) {
+            if(!part.isEmpty()) {
+                autoDetectBlocksList[tool.ordinal()].add(part);
+            }
+        }
+    }
+
+    public Set<String> getAutodetectBlocksList(ToolType tool) {
+        return autoDetectBlocksList[tool.ordinal()];
+    }
+
     /**
      * Add the blocks mentioned in whitelist to the block whitelist for the specified tool.
      * @param whitelist String of blocks with metadata value to add to whitelist. Format is ':' to separate block id and
@@ -132,23 +172,24 @@ public class ConfigurationSettings {
         String[] blocksString = whitelist.split(",");
 
         for (String blockString : blocksString ) {
-            BlockID newBlock = new BlockID(blockString, ":");
-            blockWhitelist[tool.ordinal()].add(newBlock);
+            if(!blockString.isEmpty()) {
+                BlockID newBlock = new BlockID(blockString, ":");
+                blockWhitelist[tool.ordinal()].add(newBlock);
+            }
         }
     }
 
     public void addBlockToWhitelist(ToolType tool, BlockID block) {
-        blockWhitelist[tool.ordinal()].add(block);
+        if(block.id != 0) {
+            if(!blockWhitelist[tool.ordinal()].contains(block)) {
+                block.metadata = block.metadata == OreDictionary.WILDCARD_VALUE ? -1 : block.metadata;
+                blockWhitelist[tool.ordinal()].add(block);
+            }
+        }
     }
 
     public void removeBlockFromWhitelist(ToolType tool, BlockID block) {
         blockWhitelist[tool.ordinal()].remove(block);
-    }
-
-    public void clearBlockWhitelist() {
-        for (ToolType tool : ToolType.values()) {
-            blockWhitelist[tool.ordinal()].clear();
-        }
     }
 
     public String getBlockWhitelist(ToolType tool) {
@@ -203,13 +244,9 @@ public class ConfigurationSettings {
     public String getBlockCongruenceList() {
         ArrayList<String> congruenceGroups = new ArrayList<String>();
         for(Set<BlockID> group : blockCongruenceList) {
-            congruenceGroups.add(Joiner.on('-').join(group));
+            congruenceGroups.add(Joiner.on('=').join(group));
         }
         return Joiner.on(',').join(congruenceGroups);
-    }
-
-    public HashMap<BlockID, Integer> getBlockCongruenceMap() {
-        return  blockCongruenceMap;
     }
 
     public Set<BlockID> getCongruentBlocks(BlockID targetBlock) {
