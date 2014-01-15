@@ -112,7 +112,7 @@ public class ConfigurationValues {
     public String BLOCK_EQUIVALENCY_LIST;
     public static final String BLOCK_EQUIVALENCY_LIST_DEFAULT = "73:0=74:0,17:0=17:4=17:8,17:1=17:5=17:9,17:2=17:6=17:10,17:3=17:7=17:11";
     public static final String BLOCK_EQUIVALENCY_LIST_CONFIGNAME = "equalBlocks";
-    public static final String BLOCK_EQUIVALENCY_LIST_DESCRIPTION = "Block IDs (with metadata) to consider equivalent.\nSeparate block IDs from metadata with ':'. Separate blocks with '='. Separate groups with ','\n[default: '73:0-74:0,17:0-17:4-17:8,17:1-17:5-17:9,17:2-17:6-17:10,17:3-17:7-17:11']";
+    public static final String BLOCK_EQUIVALENCY_LIST_DESCRIPTION = "Block IDs (with metadata) to consider equivalent.\nSeparate block IDs from metadata with ':'. Separate blocks with '='. Separate groups with ','\n[default: '73:0=74:0,17:0=17:4=17:8,17:1=17:5=17:9,17:2=17:6=17:10,17:3=17:7=17:11']";
 
     public int BLOCK_LIMIT;
     public static final int BLOCK_LIMIT_DEFAULT = 800;
