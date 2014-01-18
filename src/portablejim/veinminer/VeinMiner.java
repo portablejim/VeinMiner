@@ -140,6 +140,7 @@ public class VeinMiner {
                             for(ItemStack item : itemStacks) {
                                 if(item.getItem() instanceof ItemBlock) {
                                     proxy.getConfigSettings().addBlockToWhitelist(toolType, new BlockID(item.itemID, item.getItemDamage()));
+                                    Logger.debug("Adding %d:%d (%s) to block whitelist for %s (%s:%s)", item.itemID, item.getItemDamage(), item.getDisplayName(), toolType.toString(), autodetectValue, oreDictEntry);
                                 }
                             }
                         }
