@@ -17,9 +17,6 @@
 
 package portablejim.veinminer.proxy;
 
-import portablejim.veinminer.configuration.ConfigurationSettings;
-import portablejim.veinminer.configuration.ConfigurationValues;
-
 /**
  * Proxy interface that allows methods to be performed client-side only or
  * server-side only.
@@ -27,6 +24,4 @@ import portablejim.veinminer.configuration.ConfigurationValues;
 
 public interface CommonProxy {
     public void registerKeybind();
-    public void setupConfig(ConfigurationValues config);
-    public ConfigurationSettings getConfigSettings();
 }

@@ -21,15 +21,13 @@ import cpw.mods.fml.client.registry.KeyBindingRegistry;
 import net.minecraft.client.settings.KeyBinding;
 import org.lwjgl.input.Keyboard;
 import portablejim.veinminer.client.ActivateMinerKeybind;
-import portablejim.veinminer.configuration.ConfigurationSettings;
-import portablejim.veinminer.configuration.ConfigurationValues;
 
 /**
  * Client side implementation of proxy interface.
  */
 
+@SuppressWarnings("UnusedDeclaration")
 public class ClientProxy implements CommonProxy {
-    private ConfigurationSettings configSettings;
     @Override
     public void registerKeybind() {
         KeyBinding enableKeyBinding = new KeyBinding("Activate Veinminer", Keyboard.KEY_GRAVE);
@@ -38,18 +36,5 @@ public class ClientProxy implements CommonProxy {
         ActivateMinerKeybind enableKeyBind = new ActivateMinerKeybind(keyBindings, repeats);
 
         KeyBindingRegistry.registerKeyBinding(enableKeyBind);
-    }
-
-    @Override
-    public void setupConfig(ConfigurationValues config) {
-        configSettings = new ConfigurationSettings(config);
-    }
-
-    @Override
-    public ConfigurationSettings getConfigSettings() {
-        if(configSettings == null) {
-            return null;
-        }
-        return configSettings;
     }
 }

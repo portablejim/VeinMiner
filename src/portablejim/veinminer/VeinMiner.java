@@ -40,6 +40,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.OreDictionary;
 import portablejim.veinminer.api.VeinminerStartCheck;
+import portablejim.veinminer.configuration.ConfigurationSettings;
 import portablejim.veinminer.configuration.ConfigurationValues;
 import portablejim.veinminer.core.MinerInstance;
 import portablejim.veinminer.event.EntityDropHook;
@@ -73,6 +74,7 @@ import static portablejim.veinminer.configuration.ConfigurationSettings.ToolType
 public class VeinMiner {
 
     ConfigurationValues configurationValues;
+    public ConfigurationSettings configurationSettings;
 
     @Metadata(value = ModInfo.MOD_ID)
     public static ModMetadata metadata;
@@ -86,7 +88,7 @@ public class VeinMiner {
     @PreInit
     public void preInit(FMLPreInitializationEvent event) {
         configurationValues = new ConfigurationValues(event.getSuggestedConfigurationFile());
-        proxy.setupConfig(configurationValues);
+        configurationSettings = new ConfigurationSettings(configurationValues);
         proxy.registerKeybind();
 
         metadata = event.getModMetadata();
@@ -131,15 +133,15 @@ public class VeinMiner {
     public void postInit(FMLPostInitializationEvent event) {
         String[] oreDictList = OreDictionary.getOreNames();
         for(ToolType toolType : ToolType.values()) {
-            Set<String> autodetectValues = proxy.getConfigSettings().getAutodetectBlocksList(toolType);
-            if(proxy.getConfigSettings().getAutodetectBlocksToggle(toolType)) {
+            Set<String> autodetectValues = configurationSettings.getAutodetectBlocksList(toolType);
+            if(configurationSettings.getAutodetectBlocksToggle(toolType)) {
                 for(String oreDictEntry : oreDictList) {
                     for(String autodetectValue : autodetectValues) {
                         if(!autodetectValue.isEmpty() && oreDictEntry.startsWith(autodetectValue)) {
                             ArrayList<ItemStack> itemStacks = OreDictionary.getOres(oreDictEntry);
                             for(ItemStack item : itemStacks) {
                                 if(item.getItem() instanceof ItemBlock) {
-                                    proxy.getConfigSettings().addBlockToWhitelist(toolType, new BlockID(item.itemID, item.getItemDamage()));
+                                    configurationSettings.addBlockToWhitelist(toolType, new BlockID(item.itemID, item.getItemDamage()));
                                     Logger.debug("Adding %d:%d (%s) to block whitelist for %s (%s:%s)", item.itemID, item.getItemDamage(), item.getDisplayName(), toolType.toString(), autodetectValue, oreDictEntry);
                                 }
                             }
@@ -148,7 +150,7 @@ public class VeinMiner {
                 }
             }
         }
-        proxy.getConfigSettings().saveConfigs();
+        configurationSettings.saveConfigs();
     }
 
     @ServerStarted
