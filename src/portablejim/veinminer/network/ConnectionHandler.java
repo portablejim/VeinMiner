@@ -53,7 +53,7 @@ public class ConnectionHandler implements IConnectionHandler{
 
     @Override
     public void clientLoggedIn(NetHandler clientHandler, INetworkManager manager, Packet1Login login) {
-        ConfigurationSettings settings = VeinMiner.proxy.getConfigSettings();
+        ConfigurationSettings settings = VeinMiner.instance.configurationSettings;
         int mode = settings.getPreferredMode();
         manager.addToSendQueue(PacketTypeHandler.populatePacket(new PacketClientPresent(mode)));
     }

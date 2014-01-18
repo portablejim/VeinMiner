@@ -17,22 +17,12 @@
 
 package portablejim.veinminer.proxy;
 
-import portablejim.veinminer.configuration.ConfigurationSettings;
-import portablejim.veinminer.configuration.ConfigurationValues;
-
 /**
  * Server implementation of the proxy interface.
  */
 
+@SuppressWarnings("UnusedDeclaration")
 public class ServerProxy implements CommonProxy {
     @Override
     public void registerKeybind() { }
-
-    @Override
-    public void setupConfig(ConfigurationValues config) { }
-
-    @Override
-    public ConfigurationSettings getConfigSettings() {
-        return null;
-    }
 }
