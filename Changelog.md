@@ -1,6 +1,21 @@
 Changelog
 =========
 
+0.9.1
+-----
+Fixes:
+* Fix non-equivalent blocks being detected as equivalent.
+
+0.9
+---
+
+Changes:
+* Improve detection of equal blocks.
+* Added autoadditon of blocks matching oredict (+ config settings).
+
+Fixes:
+* A few config-related bugs.
+
 0.8.3
 ------
 Fixes:

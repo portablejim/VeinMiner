@@ -44,6 +44,6 @@ public class BlockLib {
         int firstResultMeta = firstBlock.damageDropped(first.metadata);
         int secondResultMeta = secondBlock.damageDropped(second.metadata);
 
-        return firstResultMeta == secondResultMeta;
+        return firstBlock.equals(secondBlock) && firstResultMeta == secondResultMeta;
     }
 }
