@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.9.2
+-----
+Fixes:
+* Fix startup crash on dedicated servers.
+
 0.9.1
 -----
 Fixes:
