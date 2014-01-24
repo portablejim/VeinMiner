@@ -54,6 +54,7 @@ import portablejim.veinminer.util.BlockID;
 
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.logging.Level;
 
 import static portablejim.veinminer.configuration.ConfigurationSettings.ToolType;
 
@@ -139,7 +140,13 @@ public class VeinMiner {
                             for(ItemStack item : itemStacks) {
                                 if(item.getItem() instanceof ItemBlock) {
                                     configurationSettings.addBlockToWhitelist(toolType, new BlockID(item.itemID, item.getItemDamage()));
-                                    Logger.debug("Adding %d:%d (%s) to block whitelist for %s (%s:%s)", item.itemID, item.getItemDamage(), item.getDisplayName(), toolType.toString(), autodetectValue, oreDictEntry);
+                                    try {
+                                        // Some mods raise an exception when calling getDisplayName on blocks.
+                                        Logger.debug("Adding %d:%d (%s) to block whitelist for %s (%s:%s)", item.itemID, item.getItemDamage(), item.getDisplayName(), toolType.toString(), autodetectValue, oreDictEntry);
+                                    }
+                                    catch (Exception e) {
+                                        FMLLog.log(Level.SEVERE, e, "VEINMINER: ERROR while looking at block with id %d. This is a bug with the respective mod.");
+                                    }
                                 }
                             }
                         }

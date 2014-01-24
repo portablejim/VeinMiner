@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.9.3
+-----
+Fixes:
+* Fix crash with autodection for some mod's blocks
+
 0.9.2
 -----
 Fixes:
