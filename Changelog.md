@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.9.4
+-----
+Fixes:
+* Fix crash when starting up with some mods (FormatException).
+
 0.9.3
 -----
 Fixes:

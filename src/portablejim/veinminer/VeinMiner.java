@@ -145,7 +145,7 @@ public class VeinMiner {
                                         Logger.debug("Adding %d:%d (%s) to block whitelist for %s (%s:%s)", item.itemID, item.getItemDamage(), item.getDisplayName(), toolType.toString(), autodetectValue, oreDictEntry);
                                     }
                                     catch (Exception e) {
-                                        FMLLog.log(Level.SEVERE, e, "VEINMINER: ERROR while looking at block with id %d. This is a bug with the respective mod.");
+                                        FMLLog.log(Level.SEVERE, e, "VEINMINER: ERROR while looking at block with id %d. This is a bug with the respective mod.", item.itemID);
                                     }
                                 }
                             }
