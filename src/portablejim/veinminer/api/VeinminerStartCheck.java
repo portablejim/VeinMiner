@@ -11,13 +11,13 @@ import net.minecraftforge.event.Event;
  * To change this template use File | Settings | File Templates.
  */
 public class VeinminerStartCheck extends Event {
-    public boolean allowVeinminerStart;
+    public Permission allowVeinminerStart;
     public final EntityPlayerMP player;
     public final int blockId;
     public final int blockMetadata;
 
     public VeinminerStartCheck(EntityPlayerMP player, int id, int metadata) {
-        allowVeinminerStart = false;
+        allowVeinminerStart = Permission.DENY;
         this.player = player;
         this.blockId = id;
         this.blockMetadata = metadata;

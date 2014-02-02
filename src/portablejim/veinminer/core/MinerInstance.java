@@ -90,7 +90,7 @@ public class MinerInstance {
             VeinminerToolCheck toolCheck = new VeinminerToolCheck(player);
             MinecraftForge.EVENT_BUS.post(toolCheck);
 
-            if(toolCheck.allowTool) {
+            if(toolCheck.allowTool.isAllowed()) {
                 this.finished = false;
             }
             else {
@@ -169,7 +169,7 @@ public class MinerInstance {
         // Only go ahead if block was destroyed. Stops mining through protected areas.
         VeinminerStartCheck continueCheck = new VeinminerStartCheck(player, targetBlock.id, targetBlock.metadata);
         MinecraftForge.EVENT_BUS.post(continueCheck);
-        if(success || continueCheck.allowVeinminerStart) {
+        if(success || continueCheck.allowVeinminerStart.isAllowed()) {
             destroyQueue.add(newPoint);
         }
         else {

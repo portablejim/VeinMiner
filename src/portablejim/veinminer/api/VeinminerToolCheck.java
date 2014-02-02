@@ -11,11 +11,11 @@ import net.minecraftforge.event.Event;
  * To change this template use File | Settings | File Templates.
  */
 public class VeinminerToolCheck extends Event {
-    public boolean allowTool;
+    public Permission allowTool;
     public final EntityPlayerMP player;
 
     public VeinminerToolCheck(EntityPlayerMP player) {
-        allowTool = false;
+        allowTool = Permission.DENY;
         this.player = player;
     }
 }
