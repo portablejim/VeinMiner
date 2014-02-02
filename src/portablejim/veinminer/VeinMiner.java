@@ -176,7 +176,7 @@ public class VeinMiner {
         if(!harvestBlockSuccess) {
             VeinminerStartCheck startEvent = new VeinminerStartCheck(player, blockId.id, blockId.metadata);
             MinecraftForge.EVENT_BUS.post(startEvent);
-            if(!startEvent.allowVeinminerStart) {
+            if(startEvent.allowVeinminerStart.isDenied()) {
                 return;
             }
         }

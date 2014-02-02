@@ -1,6 +1,13 @@
 Changelog
 =========
 
+0.10.0
+------
+Changes:
+* API changed to be more flexible. This breaks almost everything using the API, including VeinMiner Mod Support.
+
+Yes people, this is what comes after version x.9, version x.10.
+
 0.9.4
 -----
 Fixes:
