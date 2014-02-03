@@ -21,7 +21,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.event.Event;
 
 /**
- * Event to check whether the current equipped tool can Veinmine.
+ * Event to check whether the current equipped tool can Veinmine, only check if player has no tool.
  * allowTool == Permission.FORCE_ALLOW: Permit tool.
  * allowTool == Permission.ALLOW: Permit tool.
  * allowTool == Permission.DENY: Default. Allow tool if player can mine stone.
