@@ -174,11 +174,9 @@ public class MinerInstance {
         MinecraftForge.EVENT_BUS.post(toolUsedEvent);
 
         // Only go ahead if block was destroyed. Stops mining through protected areas.
-        VeinminerStartCheck continueCheck = new VeinminerStartCheck(player, targetBlock.id, targetBlock.metadata, this.radiusLimit, this.blockLimit);
+        VeinminerStartCheck continueCheck = new VeinminerStartCheck(player, targetBlock.id, targetBlock.metadata);
         MinecraftForge.EVENT_BUS.post(continueCheck);
         if(success || continueCheck.allowVeinminerStart.isAllowed()) {
-            radiusLimit = Math.min(continueCheck.radiusLimit, serverInstance.getConfigurationSettings().getRadiusLimit());
-            blockLimit = Math.min(continueCheck.blockLimit, serverInstance.getConfigurationSettings().getBlockLimit());
             destroyQueue.add(newPoint);
         }
         else {

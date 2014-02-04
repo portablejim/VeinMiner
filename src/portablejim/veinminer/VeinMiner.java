@@ -51,6 +51,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.OreDictionary;
 import portablejim.veinminer.api.VeinminerStartCheck;
+import portablejim.veinminer.api.VeinminerStartConfig;
 import portablejim.veinminer.configuration.ConfigurationSettings;
 import portablejim.veinminer.configuration.ConfigurationValues;
 import portablejim.veinminer.core.MinerInstance;
@@ -187,22 +188,25 @@ public class VeinMiner {
             return;
         }
 
-        int radiusLimit = configurationSettings.getRadiusLimit();
-        int blockLimit = configurationSettings.getBlockLimit();
-
         if(!harvestBlockSuccess) {
-            VeinminerStartCheck startEvent = new VeinminerStartCheck(player, blockId.id, blockId.metadata, radiusLimit, blockLimit);
+            VeinminerStartCheck startEvent = new VeinminerStartCheck(player, blockId.id, blockId.metadata);
             MinecraftForge.EVENT_BUS.post(startEvent);
             if(startEvent.allowVeinminerStart.isDenied()) {
                 return;
             }
-            else {
-                radiusLimit = Math.min(startEvent.radiusLimit, radiusLimit);
-                blockLimit = Math.min(startEvent.blockLimit, blockLimit);
-            }
         }
 
-        MinerInstance ins = new MinerInstance(world, player, x, y, z, blockId, MinerServer.instance, radiusLimit, blockLimit);
-        ins.mineVein(x, y, z);
+        int radiusLimit = configurationSettings.getRadiusLimit();
+        int blockLimit = configurationSettings.getBlockLimit();
+
+        VeinminerStartConfig startConfig = new VeinminerStartConfig(player, radiusLimit, blockLimit);
+        MinecraftForge.EVENT_BUS.post(startConfig);
+        if(startConfig.allowVeinminerStart.isAllowed()) {
+            radiusLimit = Math.min(startConfig.radiusLimit, radiusLimit);
+            blockLimit = Math.min(startConfig.blockLimit, blockLimit);
+
+            MinerInstance ins = new MinerInstance(world, player, x, y, z, blockId, MinerServer.instance, radiusLimit, blockLimit);
+            ins.mineVein(x, y, z);
+        }
     }
 }
