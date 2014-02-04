@@ -19,6 +19,7 @@ package portablejim.veinminer.api;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.event.Event;
+import portablejim.veinminer.VeinMiner;
 
 /**
  * Event to check if Veinmine-ing should start, even though tryHarvestBlock returned false.
@@ -31,11 +32,20 @@ public class VeinminerStartCheck extends Event {
     public final EntityPlayerMP player;
     public final int blockId;
     public final int blockMetadata;
+    public final int radiusLimitConfig;
+    public final int blockLimitConfig;
+    public int radiusLimit;
+    public int blockLimit;
 
-    public VeinminerStartCheck(EntityPlayerMP player, int id, int metadata) {
+    public VeinminerStartCheck(EntityPlayerMP player, int id, int metadata, int radiusLimit, int blockLimit) {
         allowVeinminerStart = Permission.DENY;
         this.player = player;
         this.blockId = id;
         this.blockMetadata = metadata;
+
+        this.radiusLimitConfig = VeinMiner.instance.configurationSettings.getRadiusLimit();
+        this.blockLimitConfig = VeinMiner.instance.configurationSettings.getBlockLimit();
+        this.radiusLimit = radiusLimit;
+        this.blockLimit = blockLimit;
     }
 }

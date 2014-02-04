@@ -19,8 +19,19 @@ package portablejim.veinminer;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import cpw.mods.fml.common.*;
-import cpw.mods.fml.common.Mod.*;
+import cpw.mods.fml.common.FMLLog;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.Mod.FingerprintWarning;
+import cpw.mods.fml.common.Mod.Init;
+import cpw.mods.fml.common.Mod.Instance;
+import cpw.mods.fml.common.Mod.Metadata;
+import cpw.mods.fml.common.Mod.PostInit;
+import cpw.mods.fml.common.Mod.PreInit;
+import cpw.mods.fml.common.Mod.ServerStarted;
+import cpw.mods.fml.common.ModContainer;
+import cpw.mods.fml.common.ModMetadata;
+import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLFingerprintViolationEvent;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -176,15 +187,22 @@ public class VeinMiner {
             return;
         }
 
+        int radiusLimit = configurationSettings.getRadiusLimit();
+        int blockLimit = configurationSettings.getBlockLimit();
+
         if(!harvestBlockSuccess) {
-            VeinminerStartCheck startEvent = new VeinminerStartCheck(player, blockId.id, blockId.metadata);
+            VeinminerStartCheck startEvent = new VeinminerStartCheck(player, blockId.id, blockId.metadata, radiusLimit, blockLimit);
             MinecraftForge.EVENT_BUS.post(startEvent);
             if(startEvent.allowVeinminerStart.isDenied()) {
                 return;
             }
+            else {
+                radiusLimit = Math.min(startEvent.radiusLimit, radiusLimit);
+                blockLimit = Math.min(startEvent.blockLimit, blockLimit);
+            }
         }
 
-        MinerInstance ins = new MinerInstance(world, player, x, y, z, blockId, MinerServer.instance);
+        MinerInstance ins = new MinerInstance(world, player, x, y, z, blockId, MinerServer.instance, radiusLimit, blockLimit);
         ins.mineVein(x, y, z);
     }
 }
