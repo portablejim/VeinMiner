@@ -19,7 +19,6 @@ package portablejim.veinminer.api;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.event.Event;
-import portablejim.veinminer.VeinMiner;
 
 /**
  * Event to configure or disallow the Veinmining of all tools. This takes place before item/block filtering
@@ -33,11 +32,11 @@ public class VeinminerStartConfig extends Event {
     public int radiusLimit;
     public int blockLimit;
 
-    public VeinminerStartConfig(EntityPlayerMP player, int radiusLimit, int blockLimit) {
+    public VeinminerStartConfig(EntityPlayerMP player, int radiusLimit, int blockLimit, int radiusLimitConfig, int blockLimitConfig) {
         this.allowVeinminerStart = Permission.ALLOW;
         this.player = player;
-        this.radiusLimitConfig = VeinMiner.instance.configurationSettings.getRadiusLimit();
-        this.blockLimitConfig = VeinMiner.instance.configurationSettings.getBlockLimit();
+        this.radiusLimitConfig = radiusLimitConfig;
+        this.blockLimitConfig = blockLimitConfig;
         this.radiusLimit = radiusLimit;
         this.blockLimit = blockLimit;
     }

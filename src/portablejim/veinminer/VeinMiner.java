@@ -196,7 +196,7 @@ public class VeinMiner {
         int radiusLimit = configurationSettings.getRadiusLimit();
         int blockLimit = configurationSettings.getBlockLimit();
 
-        VeinminerStartConfig startConfig = new VeinminerStartConfig(player, radiusLimit, blockLimit);
+        VeinminerStartConfig startConfig = new VeinminerStartConfig(player, radiusLimit, blockLimit, configurationSettings.getRadiusLimit(), configurationSettings.getBlockLimit());
         MinecraftForge.EVENT_BUS.post(startConfig);
         if(startConfig.allowVeinminerStart.isAllowed()) {
             radiusLimit = Math.min(startConfig.radiusLimit, radiusLimit);
