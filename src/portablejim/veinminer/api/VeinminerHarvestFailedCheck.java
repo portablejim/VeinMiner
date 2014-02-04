@@ -21,19 +21,21 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.event.Event;
 
 /**
- * Event to check whether the current equipped tool can Veinmine, only check if player has no tool.
- * allowTool == Permission.FORCE_ALLOW: Permit tool.
- * allowTool == Permission.ALLOW: Permit tool.
- * allowTool == Permission.DENY: Default. Allow tool if player can mine stone.
- * allowTool == Permission.FORCE_DENY: Don't allow tool at all.
+ * Event to check if Veinmine-ing should start, even though tryHarvestBlock returned false.
+ * allowVeinminer == Permission.FORCE_ALLOW || allowVeinMiner.ALLOW: Allow Veinminer to start.
+ * allowVeinminer == Permission.FORCE_DENY || allowVeinMiner.DENY: Don't allow Veinminer to start.
  */
 
-public class VeinminerToolCheck extends Event {
-    public Permission allowTool;
+public class VeinminerHarvestFailedCheck extends Event {
+    public Permission allowContinue;
     public final EntityPlayerMP player;
+    public final int blockId;
+    public final int blockMetadata;
 
-    public VeinminerToolCheck(EntityPlayerMP player) {
-        allowTool = Permission.DENY;
+    public VeinminerHarvestFailedCheck(EntityPlayerMP player, int id, int metadata) {
+        allowContinue = Permission.DENY;
         this.player = player;
+        this.blockId = id;
+        this.blockMetadata = metadata;
     }
 }
