@@ -64,10 +64,12 @@ public class MinerInstance {
     private ItemStack usedItem;
     private int numBlocksMined;
     private Point initalBlock;
+    private int radiusLimit;
+    private int blockLimit;
 
     private static final int MIN_HUNGER = 1;
 
-    public MinerInstance(World world, EntityPlayerMP player, int x, int y, int z, BlockID blockID, MinerServer server) {
+    public MinerInstance(World world, EntityPlayerMP player, int x, int y, int z, BlockID blockID, MinerServer server, int radiusLimit, int blockLimit) {
         destroyQueue = new ConcurrentLinkedQueue<Point>();
         awaitingEntityDrop = new HashSet<Point>();
         drops = new LinkedHashMap<ItemStackID, Integer>();
@@ -79,6 +81,8 @@ public class MinerInstance {
         usedItem = player.getCurrentEquippedItem();
         numBlocksMined = 1;
         initalBlock = new Point(x, y, z);
+        this.radiusLimit = radiusLimit;
+        this.blockLimit = blockLimit;
 
         serverInstance.addInstance(this);
 
@@ -144,7 +148,6 @@ public class MinerInstance {
         }
 
         // Within mined block limits
-        int blockLimit = serverInstance.getConfigurationSettings().getBlockLimit();
         if (numBlocksMined >= blockLimit && blockLimit != -1) {
             this.finished = true;
         }
@@ -215,7 +218,6 @@ public class MinerInstance {
                         continue;
                     }
 
-                    int radiusLimit = configSettings.getRadiusLimit();
                     if(!newBlockPos.isWithinRange(initalBlock, radiusLimit) && radiusLimit > 0) {
                         continue;
                     }

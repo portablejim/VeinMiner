@@ -19,8 +19,19 @@ package portablejim.veinminer;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import cpw.mods.fml.common.*;
-import cpw.mods.fml.common.Mod.*;
+import cpw.mods.fml.common.FMLLog;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.Mod.FingerprintWarning;
+import cpw.mods.fml.common.Mod.Init;
+import cpw.mods.fml.common.Mod.Instance;
+import cpw.mods.fml.common.Mod.Metadata;
+import cpw.mods.fml.common.Mod.PostInit;
+import cpw.mods.fml.common.Mod.PreInit;
+import cpw.mods.fml.common.Mod.ServerStarted;
+import cpw.mods.fml.common.ModContainer;
+import cpw.mods.fml.common.ModMetadata;
+import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLFingerprintViolationEvent;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -39,6 +50,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.OreDictionary;
 import portablejim.veinminer.api.VeinminerStartCheck;
+import portablejim.veinminer.api.VeinminerStartConfig;
 import portablejim.veinminer.configuration.ConfigurationSettings;
 import portablejim.veinminer.configuration.ConfigurationValues;
 import portablejim.veinminer.core.MinerInstance;
@@ -181,7 +193,17 @@ public class VeinMiner {
             }
         }
 
-        MinerInstance ins = new MinerInstance(world, player, x, y, z, blockId, MinerServer.instance);
-        ins.mineVein(x, y, z);
+        int radiusLimit = configurationSettings.getRadiusLimit();
+        int blockLimit = configurationSettings.getBlockLimit();
+
+        VeinminerStartConfig startConfig = new VeinminerStartConfig(player, radiusLimit, blockLimit);
+        MinecraftForge.EVENT_BUS.post(startConfig);
+        if(startConfig.allowVeinminerStart.isAllowed()) {
+            radiusLimit = Math.min(startConfig.radiusLimit, radiusLimit);
+            blockLimit = Math.min(startConfig.blockLimit, blockLimit);
+
+            MinerInstance ins = new MinerInstance(world, player, x, y, z, blockId, MinerServer.instance, radiusLimit, blockLimit);
+            ins.mineVein(x, y, z);
+        }
     }
 }

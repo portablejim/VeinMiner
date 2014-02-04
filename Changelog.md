@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.11.0
+------
+Changes:
+* More API changes, adding extra stuff. Should not break anything.
+
 0.10.0
 ------
 Changes:

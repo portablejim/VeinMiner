@@ -19,21 +19,26 @@ package portablejim.veinminer.api;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.event.Event;
+import portablejim.veinminer.VeinMiner;
 
 /**
- * Event to check whether the current equipped tool can Veinmine, only check if player has no tool.
- * allowTool == Permission.FORCE_ALLOW: Permit tool.
- * allowTool == Permission.ALLOW: Permit tool.
- * allowTool == Permission.DENY: Default. Allow tool if player can mine stone.
- * allowTool == Permission.FORCE_DENY: Don't allow tool at all.
+ * Event to configure or disallow the Veinmining of all tools. This takes place before item/block filtering
  */
 
-public class VeinminerToolCheck extends Event {
-    public Permission allowTool;
+public class VeinminerStartConfig extends Event {
+    public Permission allowVeinminerStart;
     public final EntityPlayerMP player;
+    public final int radiusLimitConfig;
+    public final int blockLimitConfig;
+    public int radiusLimit;
+    public int blockLimit;
 
-    public VeinminerToolCheck(EntityPlayerMP player) {
-        allowTool = Permission.DENY;
+    public VeinminerStartConfig(EntityPlayerMP player, int radiusLimit, int blockLimit) {
+        this.allowVeinminerStart = Permission.ALLOW;
         this.player = player;
+        this.radiusLimitConfig = VeinMiner.instance.configurationSettings.getRadiusLimit();
+        this.blockLimitConfig = VeinMiner.instance.configurationSettings.getBlockLimit();
+        this.radiusLimit = radiusLimit;
+        this.blockLimit = blockLimit;
     }
 }
