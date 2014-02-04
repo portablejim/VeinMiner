@@ -68,6 +68,7 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.logging.Level;
 
+import static cpw.mods.fml.common.Mod.EventHandler;
 import static portablejim.veinminer.configuration.ConfigurationSettings.ToolType;
 
 /**
