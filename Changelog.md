@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.12.0
+------
+Changes:
+* Rename stuff in API. Breaks almost anything using API, including VeinMiner Mod support. (hint: there is an update to fix that)
+* Add more tools: Shears and Hoe.
+
 0.11.0
 ------
 Changes:
