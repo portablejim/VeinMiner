@@ -50,6 +50,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.OreDictionary;
+import portablejim.veinminer.api.ToolType;
 import portablejim.veinminer.api.VeinminerHarvestFailedCheck;
 import portablejim.veinminer.api.VeinminerInitalToolCheck;
 import portablejim.veinminer.configuration.ConfigurationSettings;
@@ -68,8 +69,6 @@ import portablejim.veinminer.util.BlockID;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.logging.Level;
-
-import static portablejim.veinminer.configuration.ConfigurationSettings.ToolType;
 
 /**
  * This class is the main mod class for Veinminer. It is loaded as a mod
@@ -101,6 +100,7 @@ public class VeinMiner {
     @PreInit
     public void preInit(FMLPreInitializationEvent event) {
         configurationValues = new ConfigurationValues(event.getSuggestedConfigurationFile());
+        configurationValues.loadConfigFile();
         configurationSettings = new ConfigurationSettings(configurationValues);
         proxy.registerKeybind();
 

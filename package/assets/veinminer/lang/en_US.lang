@@ -1,8 +1,8 @@
 # Command usage/error
 command.veinminer=/veinminer mode/blocklist/toollist/blocklimit/radius/per_tick/saveconfig/help
 command.veinminer.enable=/veinminer mode disable/auto/sneak/no_sneak
-command.veinminer.blocklist=/veinminer blocklist pickaxe/axe/shovel add/remove <block id>:<metadata>
-command.veinminer.toollist=/veinminer toollist pickaxe/axe/shovel add/remove <tool id>
+command.veinminer.blocklist=/veinminer blocklist pickaxe/axe/shovel/hoe/shears add/remove <block id>:<metadata>
+command.veinminer.toollist=/veinminer toollist pickaxe/axe/shovel/hoe/shears add/remove <tool id>
 
 # Command result/Mode status
 command.veinminer.set.disable=Veinminer activation: disabled

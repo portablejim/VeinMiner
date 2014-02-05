@@ -18,8 +18,11 @@
 package portablejim.veinminer.configuration;
 
 import net.minecraftforge.common.Configuration;
+import net.minecraftforge.common.Property;
+import portablejim.veinminer.api.ToolType;
 
 import java.io.File;
+import java.util.HashMap;
 
 /**
  * Stores the raw values of configs which are stored in the config file.
@@ -48,66 +51,7 @@ public class ConfigurationValues {
     public static final String AUTODETECT_TOOLS_TOGGLE_CONFIGNAME = "autodetect.tools.enable";
     public static final String AUTODETECT_TOOLS_TOGGLE_DESCRIPTION = "Autodetect tools on starting the game, adding the ids to the list.";
 
-    public boolean AUTODETECT_BLOCKS_PICKAXE_TOGGLE;
-    public static final boolean AUTODETECT_BLOCKS_PICKAXE_TOGGLE_DEFAULT = true;
-    public static final String AUTODETECT_BLOCKS_PICKAXE_TOGGLE_CONFIGNAME = "autodetect.blocks.pickaxe.enable";
-    public static final String AUTODETECT_BLOCKS_PICKAXE_TOGGLE_DESCRIPTION = "Autodetect blocks with the below prefixes in the ore dictionary, adding the ids to the pickaxe list. [default: true]";
-
-    public String AUTODETECT_BLOCKS_PICKAXE_LIST;
-    public static final String AUTODETECT_BLOCKS_PICKAXE_LIST_DEFAULT = "ore";
-    public static final String AUTODETECT_BLOCKS_PICKAXE_LIST_CONFIGNAME = "autodetect.blocks.pickaxe.prefixes";
-    public static final String AUTODETECT_BLOCKS_PICKAXE_LIST_DESCRIPTION = "List of prefixes to autodetect as blocks to be used with a pickaxe.\nSeparate with ',' [default: 'ore'] (i.e. every oredictionary entry starting with 'ore', such as oreIron, is added to the list.)";
-
-
-    public boolean AUTODETECT_BLOCKS_SHOVEL_TOGGLE;
-    public static final boolean AUTODETECT_BLOCKS_SHOVEL_TOGGLE_DEFAULT = true;
-    public static final String AUTODETECT_BLOCKS_SHOVEL_TOGGLE_CONFIGNAME = "autodetect.blocks.shovel.enable";
-    public static final String AUTODETECT_BLOCKS_SHOVEL_TOGGLE_DESCRIPTION = "Autodetect blocks with the below prefixes in the ore dictionary, adding the ids to the shovel list. [default: true]";
-
-    public String AUTODETECT_BLOCKS_SHOVEL_LIST;
-    public static final String AUTODETECT_BLOCKS_SHOVEL_LIST_DEFAULT = "";
-    public static final String AUTODETECT_BLOCKS_SHOVEL_LIST_CONFIGNAME = "autodetect.blocks.shovel.prefixes";
-    public static final String AUTODETECT_BLOCKS_SHOVEL_LIST_DESCRIPTION = "List of prefixes to autodetect as blocks to be used with a shovel.\nSeparate with ',' [default: '']";
-
-    public boolean AUTODETECT_BLOCKS_AXE_TOGGLE;
-    public static final boolean AUTODETECT_BLOCKS_AXE_TOGGLE_DEFAULT = true;
-    public static final String AUTODETECT_BLOCKS_AXE_TOGGLE_CONFIGNAME = "autodetect.blocks.axe.enable";
-    public static final String AUTODETECT_BLOCKS_AXE_TOGGLE_DESCRIPTION = "Autodetect blocks with the below prefixes in the ore dictionary, adding the ids to the axe list. [default: true]";
-
-    public String AUTODETECT_BLOCKS_AXE_LIST;
-    public static final String AUTODETECT_BLOCKS_AXE_LIST_DEFAULT = "log,treeLeaves";
-    public static final String AUTODETECT_BLOCKS_AXE_LIST_CONFIGNAME = "autodetect.blocks.axe.prefixes";
-    public static final String AUTODETECT_BLOCKS_AXE_LIST_DESCRIPTION = "List of prefixes to autodetect as blocks to be used with an axe.\nSeparate with ',' [default: 'log,treeLeaves'] (i.e. every oredictionary entry starting with 'log', such as logWood, is added to the list.)";
-
-    public String PICKAXE_BLOCK_ID_LIST;
-    public static final String PICKAXE_BLOCK_ID_LIST_DEFAULT = "14,15,16,21,24,48,56,73,74,89,129,153";
-    public static final String PICKAXE_BLOCK_ID_LIST_CONFIGNAME = "blockList.pickaxe";
-    public static final String PICKAXE_BLOCK_ID_LIST_DESCRIPTION = "Block ids to auto-mine when using a configured pickaxe. [default: '14,15,16,21,24,48,56,73,74,89,129,153']";
-
-    public String SHOVEL_BLOCK_ID_LIST;
-    public static final String SHOVEL_BLOCK_ID_LIST_DEFAULT = "82";
-    public static final String SHOVEL_BLOCK_ID_LIST_CONFIGNAME = "blockList.shovel";
-    public static final String SHOVEL_BLOCK_ID_LIST_DESCRIPTION = "Block ids to auto-mine when using a configured shovel. [default: '82']";
-
-    public String AXE_BLOCK_ID_LIST;
-    public static final String AXE_BLOCK_ID_LIST_DEFAULT = "17,18";
-    public static final String AXE_BLOCK_ID_LIST_CONFIGNAME = "blockList.axe";
-    public static final String AXE_BLOCK_ID_LIST_DESCRIPTION = "Block ids to auto-mine when using a configured axe. [default '17,18']";
-
-    public String PICKAXE_ID_LIST;
-    public static final String PICKAXE_ID_LIST_DEFAULT = "257,270,274,278,285";
-    public static final String PICKAXE_ID_LIST_CONFIGNAME = "itemList.pickaxe";
-    public static final String PICKAXE_ID_LIST_DESCRIPTION = "Item ids to use as a pickaxe. [default '257,270,274,278,285']";
-
-    public String SHOVEL_ID_LIST;
-    public static final String SHOVEL_ID_LIST_DEFAULT = "256,269,273,277,284";
-    public static final String SHOVEL_ID_LIST_CONFIGNAME = "itemList.shovel";
-    public static final String SHOVEL_ID_LIST_DESCRIPTION = "Item ids to use as a shovel. [default '256,269,273,277,284']";
-
-    public String AXE_ID_LIST;
-    public static final String AXE_ID_LIST_DEFAULT = "258,271,275,279,286";
-    public static final String AXE_ID_LIST_CONFIGNAME = "itemList.axe";
-    public static final String AXE_ID_LIST_DESCRIPTION = "Item ids to use as a axe. [default '258,271,275,279,286']";
+    public HashMap<ToolType, ConfigToolValue> toolConfig = new HashMap<ToolType, ConfigToolValue>(ToolType.values().length);
 
     public String BLOCK_EQUIVALENCY_LIST;
     public static final String BLOCK_EQUIVALENCY_LIST_DEFAULT = "73:0=74:0,17:0=17:4=17:8,17:1=17:5=17:9,17:2=17:6=17:10,17:3=17:7=17:11";
@@ -146,6 +90,13 @@ public class ConfigurationValues {
 
     public ConfigurationValues(File file) {
         configFile = new Configuration(file);
+
+        toolConfig.put(ToolType.AXE, new ConfigToolValue("axe", true, "log,treeLeaves", "17,18", "258,271,275,279,286"));
+        toolConfig.put(ToolType.HOE, new ConfigToolValue("hoe", false, "", "59,86,103,141,142", "290,291,292,293,294"));
+        toolConfig.put(ToolType.PICKAXE, new ConfigToolValue("pickaxe", true, "ore", "14,15,16,21,24,48,56,73,74,89,129,153", "257,270,274,278,285"));
+        toolConfig.put(ToolType.SHEARS, new ConfigToolValue("shears", true, "treeLeaves", "18,30,31,32,35,106", "359"));
+        toolConfig.put(ToolType.SHOVEL, new ConfigToolValue("shovel", false, "", "82", "256,269,273,277,284"));
+
         loadConfigFile();
     }
 
@@ -154,21 +105,20 @@ public class ConfigurationValues {
 
         configFile.addCustomCategoryComment(CONFIG_AUTODETECT, CONFIG_AUTODETECT_COMMENT);
         AUTODETECT_TOOLS_TOGGLE = configFile.get(CONFIG_AUTODETECT, AUTODETECT_TOOLS_TOGGLE_CONFIGNAME, AUTODETECT_TOOLS_TOGGLE_DEFAULT, AUTODETECT_TOOLS_TOGGLE_DESCRIPTION).getBoolean(AUTODETECT_TOOLS_TOGGLE_DEFAULT);
-        AUTODETECT_BLOCKS_PICKAXE_TOGGLE = configFile.get(CONFIG_AUTODETECT, AUTODETECT_BLOCKS_PICKAXE_TOGGLE_CONFIGNAME, AUTODETECT_BLOCKS_PICKAXE_TOGGLE_DEFAULT, AUTODETECT_BLOCKS_PICKAXE_TOGGLE_DESCRIPTION).getBoolean(AUTODETECT_BLOCKS_PICKAXE_TOGGLE_DEFAULT);
-        AUTODETECT_BLOCKS_PICKAXE_LIST = configFile.get(CONFIG_AUTODETECT, AUTODETECT_BLOCKS_PICKAXE_LIST_CONFIGNAME, AUTODETECT_BLOCKS_PICKAXE_LIST_DEFAULT, AUTODETECT_BLOCKS_PICKAXE_LIST_DESCRIPTION).getString();
-        AUTODETECT_BLOCKS_SHOVEL_TOGGLE = configFile.get(CONFIG_AUTODETECT, AUTODETECT_BLOCKS_SHOVEL_TOGGLE_CONFIGNAME, AUTODETECT_BLOCKS_SHOVEL_TOGGLE_DEFAULT, AUTODETECT_BLOCKS_SHOVEL_TOGGLE_DESCRIPTION).getBoolean(AUTODETECT_BLOCKS_SHOVEL_TOGGLE_DEFAULT);
-        AUTODETECT_BLOCKS_SHOVEL_LIST = configFile.get(CONFIG_AUTODETECT, AUTODETECT_BLOCKS_SHOVEL_LIST_CONFIGNAME, AUTODETECT_BLOCKS_SHOVEL_LIST_DEFAULT, AUTODETECT_BLOCKS_SHOVEL_LIST_DESCRIPTION).getString();
-        AUTODETECT_BLOCKS_AXE_TOGGLE = configFile.get(CONFIG_AUTODETECT, AUTODETECT_BLOCKS_AXE_TOGGLE_CONFIGNAME, AUTODETECT_BLOCKS_AXE_TOGGLE_DEFAULT, AUTODETECT_BLOCKS_AXE_TOGGLE_DESCRIPTION).getBoolean(AUTODETECT_BLOCKS_AXE_TOGGLE_DEFAULT);
-        AUTODETECT_BLOCKS_AXE_LIST = configFile.get(CONFIG_AUTODETECT, AUTODETECT_BLOCKS_AXE_LIST_CONFIGNAME, AUTODETECT_BLOCKS_AXE_LIST_DEFAULT, AUTODETECT_BLOCKS_AXE_LIST_DESCRIPTION).getString();
 
         configFile.addCustomCategoryComment(CONFIG_BLOCKLIST, CONFIG_BLOCKLIST_COMMENT);
-        PICKAXE_BLOCK_ID_LIST = configFile.get(CONFIG_BLOCKLIST, PICKAXE_BLOCK_ID_LIST_CONFIGNAME, PICKAXE_BLOCK_ID_LIST_DEFAULT, PICKAXE_BLOCK_ID_LIST_DESCRIPTION).getString();
-        SHOVEL_BLOCK_ID_LIST = configFile.get(CONFIG_BLOCKLIST, SHOVEL_BLOCK_ID_LIST_CONFIGNAME, SHOVEL_BLOCK_ID_LIST_DEFAULT, SHOVEL_BLOCK_ID_LIST_DESCRIPTION).getString();
-        AXE_BLOCK_ID_LIST = configFile.get(CONFIG_BLOCKLIST, AXE_BLOCK_ID_LIST_CONFIGNAME, AXE_BLOCK_ID_LIST_DEFAULT, AXE_BLOCK_ID_LIST_DESCRIPTION).getString();
         configFile.addCustomCategoryComment(CONFIG_ITEMLIST, CONFIG_ITEMLIST_COMMENT);
-        PICKAXE_ID_LIST = configFile.get(CONFIG_ITEMLIST, PICKAXE_ID_LIST_CONFIGNAME, PICKAXE_ID_LIST_DEFAULT, PICKAXE_ID_LIST_DESCRIPTION).getString();
-        SHOVEL_ID_LIST = configFile.get(CONFIG_ITEMLIST, SHOVEL_ID_LIST_CONFIGNAME, SHOVEL_ID_LIST_DEFAULT, SHOVEL_ID_LIST_DESCRIPTION).getString();
-        AXE_ID_LIST = configFile.get(CONFIG_ITEMLIST, AXE_ID_LIST_CONFIGNAME, AXE_ID_LIST_DEFAULT, AXE_ID_LIST_DESCRIPTION).getString();
+
+        for(ToolType toolType : ToolType.values()) {
+            ConfigOptionBoolean autoToggle = toolConfig.get(toolType).autodetectToggle;
+            autoToggle.value = configFile.get(CONFIG_AUTODETECT, autoToggle.configName, autoToggle.valueDefault, autoToggle.description).getBoolean(autoToggle.valueDefault);
+            ConfigOptionString autoList = toolConfig.get(toolType).autodetectList;
+            autoList.value = configFile.get(CONFIG_AUTODETECT, autoList.configName, autoList.valueDefault, autoList.description).getString();
+            ConfigOptionString blockList = toolConfig.get(toolType).blockIdList;
+            blockList.value = configFile.get(CONFIG_AUTODETECT, blockList.configName, blockList.valueDefault, blockList.description).getString();
+            ConfigOptionString toolList = toolConfig.get(toolType).toolIdList;
+            toolList.value = configFile.get(CONFIG_AUTODETECT, toolList.configName, toolList.valueDefault, toolList.description).getString();
+        }
 
         BLOCK_LIMIT = configFile.get(CONFIG_LIMITS, BLOCK_LIMIT_CONFIGNAME, BLOCK_LIMIT_DEFAULT, BLOCK_LIMIT_DESCRIPTION).getInt(BLOCK_LIMIT_DEFAULT);
         RADIUS_LIMIT = configFile.get(CONFIG_LIMITS, RADIUS_LIMIT_CONFIGNAME, RADIUS_LIMIT_DEFAULT, RADIUS_LIMIT_DESCRIPTION).getInt(RADIUS_LIMIT_DEFAULT);
@@ -188,12 +138,17 @@ public class ConfigurationValues {
     public void saveConfigFile() {
         //configFile.load();
 
-        configFile.getCategory(CONFIG_BLOCKLIST).get(PICKAXE_BLOCK_ID_LIST_CONFIGNAME).set(PICKAXE_BLOCK_ID_LIST);
-        configFile.getCategory(CONFIG_BLOCKLIST).get(SHOVEL_BLOCK_ID_LIST_CONFIGNAME).set(SHOVEL_BLOCK_ID_LIST);
-        configFile.getCategory(CONFIG_BLOCKLIST).get(AXE_BLOCK_ID_LIST_CONFIGNAME).set(AXE_BLOCK_ID_LIST);
-        configFile.getCategory(CONFIG_ITEMLIST).get(PICKAXE_ID_LIST_CONFIGNAME).set(PICKAXE_ID_LIST);
-        configFile.getCategory(CONFIG_ITEMLIST).get(SHOVEL_ID_LIST_CONFIGNAME).set(SHOVEL_ID_LIST);
-        configFile.getCategory(CONFIG_ITEMLIST).get(AXE_ID_LIST_CONFIGNAME).set(AXE_ID_LIST);
+        for(ToolType toolType : ToolType.values()) {
+            ConfigToolValue thisToolValue = toolConfig.get(toolType);
+            Property blockListProp = configFile.getCategory(CONFIG_BLOCKLIST).get(thisToolValue.blockIdList.configName);
+            if(blockListProp != null) {
+                blockListProp.set(thisToolValue.blockIdList.value);
+            }
+            Property itemListProp = configFile.getCategory(CONFIG_ITEMLIST).get(thisToolValue.toolIdList.configName);
+            if(itemListProp != null) {
+                itemListProp.set(thisToolValue.toolIdList.value);
+            }
+        }
 
         configFile.getCategory(CONFIG_LIMITS).get(BLOCK_LIMIT_CONFIGNAME).set(BLOCK_LIMIT);
         configFile.getCategory(CONFIG_LIMITS).get(RADIUS_LIMIT_CONFIGNAME).set(RADIUS_LIMIT);

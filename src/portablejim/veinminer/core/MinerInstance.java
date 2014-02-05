@@ -27,10 +27,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.FoodStats;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import portablejim.veinminer.api.VeinminerHarvestFailedCheck;
-import portablejim.veinminer.api.Permission;
-import portablejim.veinminer.api.VeinminerNoToolCheck;
-import portablejim.veinminer.api.VeinminerPostUseTool;
+import portablejim.veinminer.api.*;
 import portablejim.veinminer.configuration.ConfigurationSettings;
 import portablejim.veinminer.event.InstanceTicker;
 import portablejim.veinminer.lib.BlockLib;
@@ -156,7 +153,7 @@ public class MinerInstance {
     }
 
     private boolean toolAllowedForBlock(ItemStack tool, BlockID block) {
-        for(ConfigurationSettings.ToolType type : ConfigurationSettings.ToolType.values()) {
+        for(ToolType type : ToolType.values()) {
             if(serverInstance.getConfigurationSettings().toolIsOfType(tool, type)) {
                 return serverInstance.getConfigurationSettings().whiteListHasBlockId(type, block);
             }

@@ -20,6 +20,7 @@ package portablejim.veinminer.configuration;
 import com.google.common.base.Joiner;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
+import portablejim.veinminer.api.ToolType;
 import portablejim.veinminer.util.BlockID;
 import portablejim.veinminer.util.PreferredMode;
 
@@ -59,19 +60,12 @@ public class ConfigurationSettings {
     }
 
     private void parseConfigValues() {
-        setAutodetectBlocksToggle(ToolType.AXE, configValues.AUTODETECT_BLOCKS_AXE_TOGGLE);
-        setAutodetectBlocksToggle(ToolType.PICKAXE, configValues.AUTODETECT_BLOCKS_PICKAXE_TOGGLE);
-        setAutodetectBlocksToggle(ToolType.SHOVEL, configValues.AUTODETECT_BLOCKS_SHOVEL_TOGGLE);
-        setAutodetectBlocksList(ToolType.AXE, configValues.AUTODETECT_BLOCKS_AXE_LIST);
-        setAutodetectBlocksList(ToolType.PICKAXE, configValues.AUTODETECT_BLOCKS_PICKAXE_LIST);
-        setAutodetectBlocksList(ToolType.SHOVEL, configValues.AUTODETECT_BLOCKS_SHOVEL_LIST);
-
-        setBlockWhitelist(ToolType.AXE, configValues.AXE_BLOCK_ID_LIST);
-        setBlockWhitelist(ToolType.PICKAXE, configValues.PICKAXE_BLOCK_ID_LIST);
-        setBlockWhitelist(ToolType.SHOVEL, configValues.SHOVEL_BLOCK_ID_LIST);
-        setToolIds(ToolType.AXE, configValues.AXE_ID_LIST);
-        setToolIds(ToolType.PICKAXE, configValues.PICKAXE_ID_LIST);
-        setToolIds(ToolType.SHOVEL, configValues.SHOVEL_ID_LIST);
+        for(ToolType toolType : ToolType.values()) {
+            setAutodetectBlocksToggle(toolType, configValues.toolConfig.get(toolType).autodetectToggle.value);
+            setAutodetectBlocksList(toolType, configValues.toolConfig.get(toolType).autodetectList.value);
+            setBlockWhitelist(toolType, configValues.toolConfig.get(toolType).blockIdList.value);
+            setToolIds(toolType, configValues.toolConfig.get(toolType).toolIdList.value);
+        }
 
         setBlockLimit(configValues.BLOCK_LIMIT);
         setBlocksPerTick(configValues.BLOCKS_PER_TICK);
@@ -103,8 +97,6 @@ public class ConfigurationSettings {
 
     private boolean[] autoDetectBlocksToggle;
     private HashSet<String>[] autoDetectBlocksList;
-
-    public enum ToolType { PICKAXE, SHOVEL, AXE  }
 
     /**
      * List of block IDs to whitelist for each tool.
@@ -249,6 +241,7 @@ public class ConfigurationSettings {
         return Joiner.on(',').join(congruenceGroups);
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     public Set<BlockID> getCongruentBlocks(BlockID targetBlock) {
         int listId = blockCongruenceMap.get(targetBlock);
         return blockCongruenceList.get(listId);
@@ -403,12 +396,10 @@ public class ConfigurationSettings {
     }
 
     public void saveConfigs() {
-        configValues.AXE_BLOCK_ID_LIST = getBlockWhitelist(ToolType.AXE);
-        configValues.PICKAXE_BLOCK_ID_LIST = getBlockWhitelist(ToolType.PICKAXE);
-        configValues.SHOVEL_BLOCK_ID_LIST = getBlockWhitelist(ToolType.SHOVEL);
-        configValues.AXE_ID_LIST = getToolIds(ToolType.AXE);
-        configValues.PICKAXE_ID_LIST = getToolIds(ToolType.PICKAXE);
-        configValues.SHOVEL_ID_LIST = getToolIds(ToolType.SHOVEL);
+        for(ToolType toolType : ToolType.values()) {
+            configValues.toolConfig.get(toolType).blockIdList.value = getBlockWhitelist(toolType);
+            configValues.toolConfig.get(toolType).toolIdList.value = getToolIds(toolType);
+        }
 
         configValues.BLOCK_LIMIT = getBlockLimit();
         configValues.BLOCKS_PER_TICK = getBlocksPerTick();
