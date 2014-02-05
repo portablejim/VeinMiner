@@ -15,25 +15,21 @@
  *    If not, see <http://www.gnu.org/licenses/>.
  */
 
-package portablejim.veinminer.api;
-
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraftforge.event.Event;
+package portablejim.veinminer.configuration;
 
 /**
- * Event to check whether the current equipped tool can Veinmine, only check if player has no tool.
- * allowTool == Permission.FORCE_ALLOW: Permit tool.
- * allowTool == Permission.ALLOW: Permit tool.
- * allowTool == Permission.DENY: Default. Allow tool if player can mine stone.
- * allowTool == Permission.FORCE_DENY: Don't allow tool at all.
+ * Simple class to gather information on a config option into one class.
  */
 
-public class VeinminerToolCheck extends Event {
-    public Permission allowTool;
-    public final EntityPlayerMP player;
+public class ConfigOptionBoolean {
+    public boolean value;
+    public final boolean valueDefault;
+    public final String configName;
+    public final String description;
 
-    public VeinminerToolCheck(EntityPlayerMP player) {
-        allowTool = Permission.DENY;
-        this.player = player;
+    public ConfigOptionBoolean(boolean valueDefault, String configName, String description) {
+        this.valueDefault = valueDefault;
+        this.configName = configName;
+        this.description = description;
     }
 }

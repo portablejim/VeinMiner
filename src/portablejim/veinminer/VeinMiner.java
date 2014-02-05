@@ -44,8 +44,9 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.OreDictionary;
-import portablejim.veinminer.api.VeinminerStartCheck;
-import portablejim.veinminer.api.VeinminerStartConfig;
+import portablejim.veinminer.api.ToolType;
+import portablejim.veinminer.api.VeinminerHarvestFailedCheck;
+import portablejim.veinminer.api.VeinminerInitalToolCheck;
 import portablejim.veinminer.configuration.ConfigurationSettings;
 import portablejim.veinminer.configuration.ConfigurationValues;
 import portablejim.veinminer.core.MinerInstance;
@@ -64,7 +65,6 @@ import java.util.Set;
 import java.util.logging.Level;
 
 import static cpw.mods.fml.common.Mod.EventHandler;
-import static portablejim.veinminer.configuration.ConfigurationSettings.ToolType;
 
 /**
  * This class is the main mod class for Veinminer. It is loaded as a mod
@@ -97,6 +97,7 @@ public class VeinMiner {
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         configurationValues = new ConfigurationValues(event.getSuggestedConfigurationFile());
+        configurationValues.loadConfigFile();
         configurationSettings = new ConfigurationSettings(configurationValues);
         proxy.registerKeybind();
 
@@ -187,9 +188,9 @@ public class VeinMiner {
         }
 
         if(!harvestBlockSuccess) {
-            VeinminerStartCheck startEvent = new VeinminerStartCheck(player, blockId.id, blockId.metadata);
+            VeinminerHarvestFailedCheck startEvent = new VeinminerHarvestFailedCheck(player, blockId.id, blockId.metadata);
             MinecraftForge.EVENT_BUS.post(startEvent);
-            if(startEvent.allowVeinminerStart.isDenied()) {
+            if(startEvent.allowContinue.isDenied()) {
                 return;
             }
         }
@@ -197,7 +198,7 @@ public class VeinMiner {
         int radiusLimit = configurationSettings.getRadiusLimit();
         int blockLimit = configurationSettings.getBlockLimit();
 
-        VeinminerStartConfig startConfig = new VeinminerStartConfig(player, radiusLimit, blockLimit, configurationSettings.getRadiusLimit(), configurationSettings.getBlockLimit());
+        VeinminerInitalToolCheck startConfig = new VeinminerInitalToolCheck(player, radiusLimit, blockLimit, configurationSettings.getRadiusLimit(), configurationSettings.getBlockLimit());
         MinecraftForge.EVENT_BUS.post(startConfig);
         if(startConfig.allowVeinminerStart.isAllowed()) {
             radiusLimit = Math.min(startConfig.radiusLimit, radiusLimit);

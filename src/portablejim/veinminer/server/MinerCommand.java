@@ -25,12 +25,11 @@ import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.StatCollector;
+import portablejim.veinminer.api.ToolType;
 import portablejim.veinminer.configuration.ConfigurationSettings;
 import portablejim.veinminer.util.BlockID;
 
 import java.util.List;
-
-import static portablejim.veinminer.configuration.ConfigurationSettings.ToolType;
 
 /**
  * Command so that clients can control VeinMiner settings for their player.
@@ -72,6 +71,12 @@ public class MinerCommand extends CommandBase {
         }
         else if("shovel".equals(commandString[1])) {
             tool = ToolType.SHOVEL;
+        }
+        else if("hoe".equals(commandString[1])) {
+            tool = ToolType.HOE;
+        }
+        else if("shears".equals(commandString[1])) {
+            tool = ToolType.SHEARS;
         }
         else {
             showUsageError("command.veinminer." + commandName);
@@ -360,7 +365,7 @@ public class MinerCommand extends CommandBase {
                     return getListOfStringsMatchingLastWord(arguments, modes);
                 }
                 else if(arguments[0].equals(commands[COMMAND_BLOCKLIST]) || arguments[0].equals(commands[COMMAND_TOOLLIST])) {
-                    String[] tools = { "pickaxe", "axe", "shovel" };
+                    String[] tools = { "pickaxe", "axe", "shovel", "hoe", "shears" };
 
                     return getListOfStringsMatchingLastWord(arguments, tools);
                 }

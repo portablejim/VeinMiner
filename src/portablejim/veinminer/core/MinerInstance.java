@@ -27,10 +27,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.FoodStats;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import portablejim.veinminer.api.Permission;
-import portablejim.veinminer.api.VeinminerPostUseTool;
-import portablejim.veinminer.api.VeinminerStartCheck;
-import portablejim.veinminer.api.VeinminerToolCheck;
+import portablejim.veinminer.api.*;
 import portablejim.veinminer.configuration.ConfigurationSettings;
 import portablejim.veinminer.event.InstanceTicker;
 import portablejim.veinminer.lib.BlockLib;
@@ -92,7 +89,7 @@ public class MinerInstance {
     private boolean shouldContinue() {
         // Item equipped
         if(!serverInstance.getConfigurationSettings().getEnableAllTools() && player.getCurrentEquippedItem() == null) {
-            VeinminerToolCheck toolCheck = new VeinminerToolCheck(player);
+            VeinminerNoToolCheck toolCheck = new VeinminerNoToolCheck(player);
             MinecraftForge.EVENT_BUS.post(toolCheck);
 
             if(toolCheck.allowTool.isAllowed()) {
@@ -156,7 +153,7 @@ public class MinerInstance {
     }
 
     private boolean toolAllowedForBlock(ItemStack tool, BlockID block) {
-        for(ConfigurationSettings.ToolType type : ConfigurationSettings.ToolType.values()) {
+        for(ToolType type : ToolType.values()) {
             if(serverInstance.getConfigurationSettings().toolIsOfType(tool, type)) {
                 return serverInstance.getConfigurationSettings().whiteListHasBlockId(type, block);
             }
@@ -174,9 +171,9 @@ public class MinerInstance {
         MinecraftForge.EVENT_BUS.post(toolUsedEvent);
 
         // Only go ahead if block was destroyed. Stops mining through protected areas.
-        VeinminerStartCheck continueCheck = new VeinminerStartCheck(player, targetBlock.id, targetBlock.metadata);
+        VeinminerHarvestFailedCheck continueCheck = new VeinminerHarvestFailedCheck(player, targetBlock.id, targetBlock.metadata);
         MinecraftForge.EVENT_BUS.post(continueCheck);
-        if(success || continueCheck.allowVeinminerStart.isAllowed()) {
+        if(success || continueCheck.allowContinue.isAllowed()) {
             destroyQueue.add(newPoint);
         }
         else {
