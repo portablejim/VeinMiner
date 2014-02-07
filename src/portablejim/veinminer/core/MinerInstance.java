@@ -130,6 +130,10 @@ public class MinerInstance {
             this.finished = true;
         }
 
+        if(finished) {
+            return false;
+        }
+
         // Not hungry
         FoodStats food = player.getFoodStats();
         if(food.getFoodLevel() < MIN_HUNGER) {
