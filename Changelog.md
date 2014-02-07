@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.12.1
+------
+Fixes:
+* Stop spamming of "You are too hungry..." when not using Veinminer.
+
 0.12.0
 ------
 Changes:

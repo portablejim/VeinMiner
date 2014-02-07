@@ -118,6 +118,18 @@ public class MinerInstance {
             this.finished = true;
         }
 
+        // Player exists and is in correct status (correct button held)
+        String playerName = player.getEntityName();
+        PlayerStatus playerStatus = serverInstance.getPlayerStatus(playerName);
+        if(playerStatus == null) {
+            this.finished = true;
+        }
+        else if(playerStatus == PlayerStatus.DISABLED || playerStatus == PlayerStatus.INACTIVE ||
+                (playerStatus == PlayerStatus.SNEAK_ACTIVE && !player.isSneaking()) ||
+                (playerStatus == PlayerStatus.SNEAK_INACTIVE && player.isSneaking())) {
+            this.finished = true;
+        }
+
         // Not hungry
         FoodStats food = player.getFoodStats();
         if(food.getFoodLevel() < MIN_HUNGER) {
@@ -130,18 +142,6 @@ public class MinerInstance {
             else {
                 player.addChatMessage(LanguageRegistry.instance().getStringLocalization(problem));
             }
-        }
-
-        // Player exists and is in correct status (correct button held)
-        String playerName = player.getEntityName();
-        PlayerStatus playerStatus = serverInstance.getPlayerStatus(playerName);
-        if(playerStatus == null) {
-            this.finished = true;
-        }
-        else if(playerStatus == PlayerStatus.DISABLED || playerStatus == PlayerStatus.INACTIVE ||
-                (playerStatus == PlayerStatus.SNEAK_ACTIVE && !player.isSneaking()) ||
-                (playerStatus == PlayerStatus.SNEAK_INACTIVE && player.isSneaking())) {
-            this.finished = true;
         }
 
         // Within mined block limits
