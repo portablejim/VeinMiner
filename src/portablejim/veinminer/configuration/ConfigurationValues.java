@@ -115,9 +115,9 @@ public class ConfigurationValues {
             ConfigOptionString autoList = toolConfig.get(toolType).autodetectList;
             autoList.value = configFile.get(CONFIG_AUTODETECT, autoList.configName, autoList.valueDefault, autoList.description).getString();
             ConfigOptionString blockList = toolConfig.get(toolType).blockIdList;
-            blockList.value = configFile.get(CONFIG_AUTODETECT, blockList.configName, blockList.valueDefault, blockList.description).getString();
+            blockList.value = configFile.get(CONFIG_BLOCKLIST, blockList.configName, blockList.valueDefault, blockList.description).getString();
             ConfigOptionString toolList = toolConfig.get(toolType).toolIdList;
-            toolList.value = configFile.get(CONFIG_AUTODETECT, toolList.configName, toolList.valueDefault, toolList.description).getString();
+            toolList.value = configFile.get(CONFIG_ITEMLIST, toolList.configName, toolList.valueDefault, toolList.description).getString();
         }
 
         BLOCK_LIMIT = configFile.get(CONFIG_LIMITS, BLOCK_LIMIT_CONFIGNAME, BLOCK_LIMIT_DEFAULT, BLOCK_LIMIT_DESCRIPTION).getInt(BLOCK_LIMIT_DEFAULT);
