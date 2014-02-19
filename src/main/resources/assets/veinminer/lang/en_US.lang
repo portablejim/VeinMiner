@@ -41,6 +41,10 @@ mod.veinminer.preferredmode.nosneak=Veinminer set to deactivate on sneak.
 
 mod.veinminer.finished.tooHungry=You are too hungry to use VeinMiner.
 
+# Controls
+veinminer.key.category=Vein Miner
+veinminer.key.enable=Actiate Vein Miner
+
 # Command help.
 command.veinminer.help1=Sub-commands available:
 command.veinminer.help2='mode': change VeinMiner activation modes
