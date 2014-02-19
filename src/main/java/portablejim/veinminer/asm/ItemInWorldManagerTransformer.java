@@ -17,21 +17,29 @@
 
 package portablejim.veinminer.asm;
 
-import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
 import net.minecraft.launchwrapper.IClassTransformer;
+import org.apache.logging.log4j.LogManager;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.LocalVariablesSorter;
-import org.objectweb.asm.tree.*;
+import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.FieldInsnNode;
+import org.objectweb.asm.tree.FieldNode;
+import org.objectweb.asm.tree.InsnList;
+import org.objectweb.asm.tree.InsnNode;
+import org.objectweb.asm.tree.MethodInsnNode;
+import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.TypeInsnNode;
+import org.objectweb.asm.tree.VarInsnNode;
 import portablejim.veinminer.lib.MinerLogger;
 import portablejim.veinminer.lib.ModInfo;
 import portablejim.veinminer.util.BlockID;
 
 import java.util.HashMap;
-import java.util.logging.Level;
 
 /**
  * Modifies ItemInWorldManager to add a call to VeinMiner.blockMined() to
@@ -44,8 +52,8 @@ import java.util.logging.Level;
 @SuppressWarnings("UnusedDeclaration")
 public class ItemInWorldManagerTransformer extends GenericTransformer implements IClassTransformer {
 
-    final String targetClassName = "portablejim/veinminer/VeinMiner";
-    final String targetClassType = "Lportablejim/veinminer/VeinMiner;";
+    final String targetClassName = "portablejim/veinminer/core/InjectedCalls";
+    final String targetClassType = "Lportablejim/veinminer/core/InjectedCalls;";
     final String targetMethodName = "blockMined";
     final String targetMethodType = "(%s%sIIIZ%s)V";
     final String blockIdClassName = "portablejim/veinminer/util/BlockID";
@@ -64,7 +72,7 @@ public class ItemInWorldManagerTransformer extends GenericTransformer implements
     @Override
     public byte[] transform(String name, String transformedName, byte[] bytes) {
 
-        if("net.minecraft.item.ItemInWorldManager".equals(transformedName)) {
+        if("net.minecraft.server.management.ItemInWorldManager".equals(transformedName)) {
             obfuscated = !transformedName.equals(name);
             bytes = transformItemInWorldManager(name, bytes);
         }
@@ -123,7 +131,6 @@ public class ItemInWorldManagerTransformer extends GenericTransformer implements
 
         // Add in function call to call function
         InsnList veinMinerFunctionCall = new InsnList();
-        veinMinerFunctionCall.add(new FieldInsnNode(Opcodes.GETSTATIC, targetClassName, "instance", targetClassType));
         veinMinerFunctionCall.add(new VarInsnNode(Opcodes.ALOAD, 0));
         veinMinerFunctionCall.add(new FieldInsnNode(Opcodes.GETFIELD, obfuscatedClassName.replace(".", "/"), getCorrectName("theWorld"), typemap.get(getCorrectName("theWorld"))));
         veinMinerFunctionCall.add(new VarInsnNode(Opcodes.ALOAD, 0));
@@ -135,7 +142,7 @@ public class ItemInWorldManagerTransformer extends GenericTransformer implements
         veinMinerFunctionCall.add(new VarInsnNode(Opcodes.ALOAD, blockVarIndex));
 
         String blockIdClassType = String.format("L%s;", blockIdClassName);
-        veinMinerFunctionCall.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, targetClassName, targetMethodName, String.format(targetMethodType, worldType, playerType, blockIdClassType)));
+        veinMinerFunctionCall.add(new MethodInsnNode(Opcodes.INVOKESTATIC, targetClassName, targetMethodName, String.format(targetMethodType, worldType, playerType, blockIdClassType)));
         curMethod.instructions.insert(curMethod.instructions.get(startIndex), veinMinerFunctionCall);
         ++startIndex;
 
@@ -179,7 +186,7 @@ public class ItemInWorldManagerTransformer extends GenericTransformer implements
             }
         }
         catch(IndexOutOfBoundsException e) {
-            FMLLog.getLogger().log(Level.WARNING, "[%s] Problem inserting all required code. This mod may not function correctly. Please report a bug.", ModInfo.MOD_NAME);
+            LogManager.getLogger(ModInfo.MODID).warn("[%s] Problem inserting all required code. This mod may not function correctly. Please report a bug.", ModInfo.MODID);
         }
 
         ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);

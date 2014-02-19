@@ -31,11 +31,6 @@ import java.util.Map;
 @IFMLLoadingPlugin.TransformerExclusions({ "portablejim.veinminer.asm" })
 public class VeinMinerCorePlugin implements IFMLLoadingPlugin {
     @Override
-    public String[] getLibraryRequestClass() {
-        return null;
-    }
-
-    @Override
     public String[] getASMTransformerClass() {
         return new String[] { "portablejim.veinminer.asm.ItemInWorldManagerTransformer" };
     }
@@ -52,5 +47,10 @@ public class VeinMinerCorePlugin implements IFMLLoadingPlugin {
 
     @Override
     public void injectData(Map<String, Object> data) {
+    }
+
+    @Override
+    public String getAccessTransformerClass() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

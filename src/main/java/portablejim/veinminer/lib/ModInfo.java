@@ -17,14 +17,37 @@
 
 package portablejim.veinminer.lib;
 
+import com.google.common.base.Throwables;
+import portablejim.veinminer.VeinMiner;
+
+import java.io.InputStream;
+import java.util.Properties;
+
 /**
  * Class to store various constants relating to VeinMiner.
  */
 
 public class ModInfo {
-    public static boolean DEBUG_MODE = false;
+    public static boolean DEBUG_MODE = true;
 
     public static final String MODID = "veinminer";
+    public static final String VERSION;
+    static {
+        Properties prop = new Properties();
+
+        try {
+            InputStream stream = VeinMiner.class.getClassLoader().getResourceAsStream("version.properties");
+            prop.load(stream);
+            stream.close();
+        }
+        catch (Exception e) {
+            Throwables.propagate(e);
+        }
+
+        VERSION = String.format("%s_build-%s", prop.getProperty("version"), prop.getProperty("build_number"));
+    }
+    public static final String COREMOD_ID = "veinminer_coremod";
+    public static final String COREMOD_NAME = "Core mod";
     public static final String PROXY_SERVER_CLASS = "portablejim.veinminer.proxy.ServerProxy";
     public static final String PROXY_CLIENT_CLASS = "portablejim.veinminer.proxy.ClientProxy";
     public static final String CHANNEL = "VeinMiner";

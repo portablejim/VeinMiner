@@ -26,7 +26,7 @@ import org.apache.logging.log4j.LogManager;
 public class MinerLogger {
     public static void debug(String format, Object... data) {
         if(ModInfo.DEBUG_MODE) {
-            LogManager.getLogger(ModInfo.MODID).debug(format, data);
+            LogManager.getLogger(ModInfo.MODID).info(String.format(format, data));
         }
     }
 }

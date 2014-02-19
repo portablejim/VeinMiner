@@ -36,6 +36,7 @@ import portablejim.veinminer.proxy.CommonProxy;
 
 @Mod(modid = ModInfo.MODID, acceptedMinecraftVersions = "[1.7,1.8)")
 public class VeinMiner extends DummyModContainer{
+
     @Instance(ModInfo.MODID)
     public static VeinMiner instance;
 

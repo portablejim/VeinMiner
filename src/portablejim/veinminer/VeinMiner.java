@@ -178,34 +178,4 @@ public class VeinMiner {
         ServerCommandManager serverCommandManger = (ServerCommandManager) MinecraftServer.getServer().getCommandManager();
         serverCommandManger.registerCommand(new MinerCommand());
     }
-
-    @SuppressWarnings("UnusedDeclaration")
-    public void blockMined(World world, EntityPlayerMP player, int x, int y, int z, boolean harvestBlockSuccess, BlockID blockId) {
-         MinerLogger.debug("Block mined at %d,%d,%d, result %b, block id is %d:%d", x, y, z, harvestBlockSuccess, blockId.id, blockId.metadata);
-
-        if(blockId.id > Block.blocksList.length || Block.blocksList[blockId.id] == null  || !player.canHarvestBlock(Block.blocksList[blockId.id])) {
-            return;
-        }
-
-        if(!harvestBlockSuccess) {
-            VeinminerHarvestFailedCheck startEvent = new VeinminerHarvestFailedCheck(player, blockId.id, blockId.metadata);
-            MinecraftForge.EVENT_BUS.post(startEvent);
-            if(startEvent.allowContinue.isDenied()) {
-                return;
-            }
-        }
-
-        int radiusLimit = configurationSettings.getRadiusLimit();
-        int blockLimit = configurationSettings.getBlockLimit();
-
-        VeinminerInitalToolCheck startConfig = new VeinminerInitalToolCheck(player, radiusLimit, blockLimit, configurationSettings.getRadiusLimit(), configurationSettings.getBlockLimit());
-        MinecraftForge.EVENT_BUS.post(startConfig);
-        if(startConfig.allowVeinminerStart.isAllowed()) {
-            radiusLimit = Math.min(startConfig.radiusLimit, radiusLimit);
-            blockLimit = Math.min(startConfig.blockLimit, blockLimit);
-
-            MinerInstance ins = new MinerInstance(world, player, x, y, z, blockId, MinerServer.instance, radiusLimit, blockLimit);
-            ins.mineVein(x, y, z);
-        }
-    }
 }
