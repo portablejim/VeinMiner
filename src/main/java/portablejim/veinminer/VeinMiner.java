@@ -19,10 +19,15 @@ package portablejim.veinminer;
 
 import cpw.mods.fml.common.DummyModContainer;
 import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
-import org.apache.logging.log4j.Logger;
+import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import portablejim.veinminer.configuration.ConfigurationSettings;
+import portablejim.veinminer.configuration.ConfigurationValues;
 import portablejim.veinminer.lib.ModInfo;
 import portablejim.veinminer.network.ChannelHandler;
+import portablejim.veinminer.proxy.CommonProxy;
 
 /**
  * This class is the main mod class for VeinMiner. It is loaded as a mod
@@ -34,5 +39,20 @@ public class VeinMiner extends DummyModContainer{
     @Instance(ModInfo.MODID)
     public static VeinMiner instance;
 
+    @SidedProxy(clientSide = ModInfo.PROXY_CLIENT_CLASS, serverSide = ModInfo.PROXY_SERVER_CLASS)
+    public static CommonProxy proxy;
+
     public ChannelHandler channelHandler;
+
+    ConfigurationValues configurationValues;
+    public ConfigurationSettings configurationSettings;
+
+    @SuppressWarnings("UnusedDeclaration")
+    @EventHandler
+    public void preInit(FMLPreInitializationEvent event) {
+        configurationValues = new ConfigurationValues(event.getSuggestedConfigurationFile());
+        configurationValues.loadConfigFile();
+        configurationSettings = new ConfigurationSettings(configurationValues);
+        proxy.registerKeybind();
+    }
 }

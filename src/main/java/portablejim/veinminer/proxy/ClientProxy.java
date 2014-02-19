@@ -17,10 +17,7 @@
 
 package portablejim.veinminer.proxy;
 
-import cpw.mods.fml.client.registry.KeyBindingRegistry;
-import net.minecraft.client.settings.KeyBinding;
-import org.lwjgl.input.Keyboard;
-import portablejim.veinminer.client.ActivateMinerKeybind;
+import portablejim.veinminer.client.ActivateMinerKeybindManager;
 
 /**
  * Client side implementation of proxy interface.
@@ -28,13 +25,9 @@ import portablejim.veinminer.client.ActivateMinerKeybind;
 
 @SuppressWarnings("UnusedDeclaration")
 public class ClientProxy implements CommonProxy {
+    private ActivateMinerKeybindManager keybindManager;
     @Override
     public void registerKeybind() {
-        KeyBinding enableKeyBinding = new KeyBinding("Activate Veinminer", Keyboard.KEY_GRAVE);
-        KeyBinding[] keyBindings = {enableKeyBinding};
-        boolean[] repeats = {false};
-        ActivateMinerKeybind enableKeyBind = new ActivateMinerKeybind(keyBindings, repeats);
-
-        KeyBindingRegistry.registerKeyBinding(enableKeyBind);
+        keybindManager = new ActivateMinerKeybindManager();
     }
 }
