@@ -33,17 +33,16 @@ public class BlockLib {
      * @return If pick block on both blocks are the same.
      */
     public static boolean arePickBlockEqual(BlockID first, BlockID second) {
-        if(first == null || second == null
-                || first.id >= Block.blocksList.length || second.id >= Block.blocksList.length) {
+        if(first == null || second == null) {
             return false;
         }
 
-        Block firstBlock = Block.blocksList[first.id];
-        Block secondBlock = Block.blocksList[second.id];
+        Block firstBlock = Block.getBlockFromName(first.name);
+        Block secondBlock = Block.getBlockFromName(second.name);
 
         int firstResultMeta = firstBlock.damageDropped(first.metadata);
         int secondResultMeta = secondBlock.damageDropped(second.metadata);
 
-        return firstBlock.equals(secondBlock) && firstResultMeta == secondResultMeta;
+        return first.name.equals(second.name) && firstResultMeta == secondResultMeta;
     }
 }

@@ -24,17 +24,17 @@ package portablejim.veinminer.util;
  */
 
 public class ItemStackID {
-    private int itemId;
+    private String itemId;
     private int damage;
     private int maxStackSize;
 
-    public ItemStackID(int id, int dam, int stackSize) {
+    public ItemStackID(String id, int dam, int stackSize) {
         itemId = id;
         damage = dam;
         maxStackSize = stackSize;
     }
 
-    public int getItemId() {
+    public String getItemId() {
         return itemId;
     }
 
@@ -49,7 +49,7 @@ public class ItemStackID {
     @Override
     public int hashCode() {
         int output = 0;
-        output += itemId << 16;
+        output += itemId.hashCode() << 16;
         output += damage;
 
         return output;
@@ -65,6 +65,6 @@ public class ItemStackID {
             return false;
 
         ItemStackID rhs = (ItemStackID) obj;
-        return (itemId == rhs.itemId && damage == rhs.damage);
+        return (itemId.equals(rhs.itemId) && damage == rhs.damage);
     }
 }
