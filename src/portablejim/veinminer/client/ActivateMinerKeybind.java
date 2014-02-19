@@ -32,7 +32,7 @@ import java.util.EnumSet;
  * keybind is pressed and when it is unpressed.
  */
 
-public class ActivateMinerKeybind extends KeyBindingRegistry.KeyHandler {
+public class ActivateMinerKeybind extends KeyBinding {
     public ActivateMinerKeybind(KeyBinding[] keyBindings, boolean[] repeatings) {
         super(keyBindings, repeatings);
     }

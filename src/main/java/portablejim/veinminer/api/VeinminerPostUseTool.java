@@ -17,25 +17,17 @@
 
 package portablejim.veinminer.api;
 
+import cpw.mods.fml.common.eventhandler.Event;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraftforge.event.Event;
 
 /**
- * Event to check if Veinmine-ing should start, even though tryHarvestBlock returned false.
- * allowVeinminer == Permission.FORCE_ALLOW || allowVeinMiner.ALLOW: Allow Veinminer to start.
- * allowVeinminer == Permission.FORCE_DENY || allowVeinMiner.DENY: Don't allow Veinminer to start.
+ * Event called after a block has been destroyed.
  */
 
-public class VeinminerHarvestFailedCheck extends Event {
-    public Permission allowContinue;
+public class VeinminerPostUseTool extends Event {
     public final EntityPlayerMP player;
-    public final int blockId;
-    public final int blockMetadata;
 
-    public VeinminerHarvestFailedCheck(EntityPlayerMP player, int id, int metadata) {
-        allowContinue = Permission.DENY;
+    public VeinminerPostUseTool(EntityPlayerMP player) {
         this.player = player;
-        this.blockId = id;
-        this.blockMetadata = metadata;
     }
 }

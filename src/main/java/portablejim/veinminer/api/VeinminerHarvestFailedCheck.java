@@ -17,27 +17,25 @@
 
 package portablejim.veinminer.api;
 
+import cpw.mods.fml.common.eventhandler.Event;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraftforge.event.Event;
 
 /**
- * Event to configure or disallow the Veinmining of all tools. This takes place before item/block filtering
+ * Event to check if Veinmine-ing should start, even though tryHarvestBlock returned false.
+ * allowVeinminer == Permission.FORCE_ALLOW || allowVeinMiner.ALLOW: Allow Veinminer to start.
+ * allowVeinminer == Permission.FORCE_DENY || allowVeinMiner.DENY: Don't allow Veinminer to start.
  */
 
-public class VeinminerInitalToolCheck extends Event {
-    public Permission allowVeinminerStart;
+public class VeinminerHarvestFailedCheck extends Event {
+    public Permission allowContinue;
     public final EntityPlayerMP player;
-    public final int radiusLimitConfig;
-    public final int blockLimitConfig;
-    public int radiusLimit;
-    public int blockLimit;
+    public final int blockId;
+    public final int blockMetadata;
 
-    public VeinminerInitalToolCheck(EntityPlayerMP player, int radiusLimit, int blockLimit, int radiusLimitConfig, int blockLimitConfig) {
-        this.allowVeinminerStart = Permission.ALLOW;
+    public VeinminerHarvestFailedCheck(EntityPlayerMP player, int id, int metadata) {
+        allowContinue = Permission.DENY;
         this.player = player;
-        this.radiusLimitConfig = radiusLimitConfig;
-        this.blockLimitConfig = blockLimitConfig;
-        this.radiusLimit = radiusLimit;
-        this.blockLimit = blockLimit;
+        this.blockId = id;
+        this.blockMetadata = metadata;
     }
 }

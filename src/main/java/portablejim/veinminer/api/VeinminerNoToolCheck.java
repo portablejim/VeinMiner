@@ -17,8 +17,8 @@
 
 package portablejim.veinminer.api;
 
+import cpw.mods.fml.common.eventhandler.Event;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraftforge.event.Event;
 
 /**
  * Event to check whether the current equipped tool can Veinmine, only check if player has no tool.
