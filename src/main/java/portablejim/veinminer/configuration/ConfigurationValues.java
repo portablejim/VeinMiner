@@ -17,8 +17,8 @@
 
 package portablejim.veinminer.configuration;
 
-import net.minecraftforge.common.Configuration;
-import net.minecraftforge.common.Property;
+import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
 import portablejim.veinminer.api.ToolType;
 
 import java.io.File;
@@ -37,9 +37,9 @@ public class ConfigurationValues {
     public static final String CONFIG_AUTODETECT = "autodetect";
     public static final String CONFIG_AUTODETECT_COMMENT = "Autodetect items and blocks during game start-up.";
     public static final String CONFIG_BLOCKLIST = "blocklist";
-    public static final String CONFIG_BLOCKLIST_COMMENT = "IDs of blocks to auto-mine. Separate ids with ',' and metadata from ID with ':'.";
+    public static final String CONFIG_BLOCKLIST_COMMENT = "Names of blocks to auto-mine.\nNames are formatted like 'modName:block_name/metadata'. Separate names (with metadata) with ','.\nUse 'minecraft' as the mod name for vanilla blocks.";
     public static final String CONFIG_ITEMLIST = "itemlist";
-    public static final String CONFIG_ITEMLIST_COMMENT = "Tools to use to auto-mine with. Separate ids with ',' and metadata from ID with ':'.";
+    public static final String CONFIG_ITEMLIST_COMMENT = "Tools to use to auto-mine with.\nNames are formatted like 'modName:tool_name/metadata'. Separate names (with metadata) with ','.\nUse 'minecraft' as the mod name for vanilla items.";
     public static final String CONFIG_LIMITS = "limit";
     public static final String CONFIG_MISC = "misc";
     public static final String CONFIG_OVERRIDE = "overrides";
@@ -49,29 +49,29 @@ public class ConfigurationValues {
     public boolean AUTODETECT_TOOLS_TOGGLE;
     public static final boolean AUTODETECT_TOOLS_TOGGLE_DEFAULT = true;
     public static final String AUTODETECT_TOOLS_TOGGLE_CONFIGNAME = "autodetect.tools.enable";
-    public static final String AUTODETECT_TOOLS_TOGGLE_DESCRIPTION = "Autodetect tools on starting the game, adding the ids to the list.";
+    public static final String AUTODETECT_TOOLS_TOGGLE_DESCRIPTION = "Autodetect tools on starting the game, adding the names to the list.";
 
     public HashMap<ToolType, ConfigToolValue> toolConfig = new HashMap<ToolType, ConfigToolValue>(ToolType.values().length);
 
     public String BLOCK_EQUIVALENCY_LIST;
-    public static final String BLOCK_EQUIVALENCY_LIST_DEFAULT = "73:0=74:0,17:0=17:4=17:8,17:1=17:5=17:9,17:2=17:6=17:10,17:3=17:7=17:11";
+    public static final String BLOCK_EQUIVALENCY_LIST_DEFAULT = "minecraft:redstone_ore,minecraft:lit_redstone_ore";
     public static final String BLOCK_EQUIVALENCY_LIST_CONFIGNAME = "equalBlocks";
-    public static final String BLOCK_EQUIVALENCY_LIST_DESCRIPTION = "Block IDs (with metadata) to consider equivalent.\nSeparate block IDs from metadata with ':'. Separate blocks with '='. Separate groups with ','\n[default: '73:0=74:0,17:0=17:4=17:8,17:1=17:5=17:9,17:2=17:6=17:10,17:3=17:7=17:11']";
+    public static final String BLOCK_EQUIVALENCY_LIST_DESCRIPTION = String.format("Block IDs (with metadata) to consider equivalent.\nNames are formatted like 'modName:block_name/metadata'. Separate names (with metadata) with ','. Use 'minecraft' as the mod name for vanilla blocks.\n[default: '%s']", BLOCK_EQUIVALENCY_LIST_DEFAULT);
 
     public int BLOCK_LIMIT;
     public static final int BLOCK_LIMIT_DEFAULT = 800;
     public static final String BLOCK_LIMIT_CONFIGNAME = "limit.blocks";
-    public static final String BLOCK_LIMIT_DESCRIPTION = "Limit of blocks to be destroyed at once. Use -1 for infinite. [range: -1 to 2147483647, default: '800']";
+    public static final String BLOCK_LIMIT_DESCRIPTION = String.format("Limit of blocks to be destroyed at once. Use -1 for infinite. [range: -1 to 2147483647, default: %d]", BLOCK_LIMIT_DEFAULT);
 
     public int RADIUS_LIMIT;
     public static final int RADIUS_LIMIT_DEFAULT = 20;
     public static final String RADIUS_LIMIT_CONFIGNAME = "limit.radius";
-    public static final String RADIUS_LIMIT_DESCRIPTION = "Maximum distance from the first block to search for blocks to destroy. [range: -1 to 1000, default: '20]";
+    public static final String RADIUS_LIMIT_DESCRIPTION = String.format("Maximum distance from the first block to search for blocks to destroy. [range: -1 to 1000, default: %d]", RADIUS_LIMIT_DEFAULT);
 
     public int BLOCKS_PER_TICK;
     public static final int BLOCKS_PER_TICK_DEFAULT = 10;
     public static final String BLOCKS_PER_TICK_CONFIGNAME = "limit.blocksPerTick";
-    public static final String BLOCKS_PER_TICK_DESCRIPTION = "Maximum number of blocks to be removed per game tick (1/20 seconds). Using a low number will keep the game from getting huge performance drops but also decreases the speed at which blocks are destroyed. [range: 1 ~ 1000, default: 10]";
+    public static final String BLOCKS_PER_TICK_DESCRIPTION = String.format("Maximum number of blocks to be removed per game tick (1/20 seconds). Using a low number will keep the game from getting huge performance drops but also decreases the speed at which blocks are destroyed. [range: 1 ~ 1000, default: %d]", BLOCKS_PER_TICK_DEFAULT);
 
     public boolean ENABLE_ALL_BLOCKS;
     public static final boolean ENABLE_ALL_BLOCKS_DEFAULT = false;
@@ -91,11 +91,11 @@ public class ConfigurationValues {
     public ConfigurationValues(File file) {
         configFile = new Configuration(file);
 
-        toolConfig.put(ToolType.AXE, new ConfigToolValue("axe", true, "log,treeLeaves", "17,18", "258,271,275,279,286"));
-        toolConfig.put(ToolType.HOE, new ConfigToolValue("hoe", false, "", "59,86,103,141,142", "290,291,292,293,294"));
-        toolConfig.put(ToolType.PICKAXE, new ConfigToolValue("pickaxe", true, "ore", "14,15,16,21,24,48,56,73,74,89,129,153", "257,270,274,278,285"));
-        toolConfig.put(ToolType.SHEARS, new ConfigToolValue("shears", true, "treeLeaves", "18,30,31,32,35,106", "359"));
-        toolConfig.put(ToolType.SHOVEL, new ConfigToolValue("shovel", false, "", "82", "256,269,273,277,284"));
+        toolConfig.put(ToolType.AXE, new ConfigToolValue("axe", true, "log,treeLeaves", "minecraft:log,minecraft:log2,minecraft:leaves,minecraft:leaves2,minecraft:fence", "minecraft:wooden_axe,minecraft:stone_axe,minecraft:golden_axe,minecraft:iron_axe,minecraft:diamond_axe"));
+        toolConfig.put(ToolType.HOE, new ConfigToolValue("hoe", false, "", "minecraft:wheat,minecraft:pumpkin,minecraft:melon_block,minecraft:carrots,minecraft:potatoes", "minecraft:wooden_hoe,minecraft:stone_hoe,minecraft:golden_hoe,minecraft:iron_hoe,minecraft:diamond_hoe"));
+        toolConfig.put(ToolType.PICKAXE, new ConfigToolValue("pickaxe", true, "ore", "minecraft:coal_ore,minecraft:gold_ore,minecraft:iron_ore,minecraft:diamond_ore,minecraft:lapiz_ore,minecraft:emerald_ore,minecraft:quartz_ore,minecraft:redstone_ore,minecraft:lit_redstone_ore,minecraft:mossy_cobblestone,minecraft:glowstone,minecraft:obsidian,minecraft:nether_brick_fence,minecraft:cobblestone_wall", "minecraft:wooden_pickaxe,minecraft:stone_pickaxe,minecraft:golden_pickaxe,minecraft:iron_pickaxe,minecraft:diamond_pickaxe"));
+        toolConfig.put(ToolType.SHEARS, new ConfigToolValue("shears", true, "treeLeaves", "minecraft:leaves,minecraft:leaves2,minecraft:web,minecraft:tallgrass,minecraft:deadbush,minecraft:wool,minecraft:vine", "minecraft:shears"));
+        toolConfig.put(ToolType.SHOVEL, new ConfigToolValue("shovel", false, "", "minecraft:clay,minecraft:gravel", "minecraft:wooden_sword,minecraft:stone_sword,minecraft:golden_sword,minecraft:iron_sword,minecraft:diamond_sword"));
 
         loadConfigFile();
     }

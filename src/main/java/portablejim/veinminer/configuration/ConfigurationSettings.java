@@ -41,7 +41,7 @@ public class ConfigurationSettings {
         //noinspection unchecked
         toolIds = new Set[ToolType.values().length];
         for (ToolType tool : ToolType.values()) {
-            toolIds[tool.ordinal()] = new HashSet<Integer>();
+            toolIds[tool.ordinal()] = new HashSet<String>();
         }
         //noinspection unchecked
         blockWhitelist = new ArrayList[ToolType.values().length];
@@ -117,7 +117,7 @@ public class ConfigurationSettings {
     /**
      * The items specified as each tool.
      */
-    private Set<Integer>[] toolIds;
+    private Set<String>[] toolIds;
 
     private int blockLimit;
 
@@ -155,8 +155,9 @@ public class ConfigurationSettings {
 
     /**
      * Add the blocks mentioned in whitelist to the block whitelist for the specified tool.
-     * @param whitelist String of blocks with metadata value to add to whitelist. Format is ':' to separate block id and
-     *                  metadata and ',' to separate blocks. e.g. "[block id]:[metadata],[block id]".
+     * @param whitelist String of blocks with metadata value to add to whitelist. Format is
+     *                  'modName:block_name/metadata'. 'minecraft' is the modName for vanilla.
+     *                  Use ',' to separate blocks in whitelist.
      *                  See {@link ConfigurationValues}.
      * @param tool Tool to set the whitelist for.
      */
@@ -165,14 +166,14 @@ public class ConfigurationSettings {
 
         for (String blockString : blocksString ) {
             if(!blockString.isEmpty()) {
-                BlockID newBlock = new BlockID(blockString, ":");
+                BlockID newBlock = new BlockID(blockString);
                 blockWhitelist[tool.ordinal()].add(newBlock);
             }
         }
     }
 
     public void addBlockToWhitelist(ToolType tool, BlockID block) {
-        if(block.id != 0) {
+        if(!block.name.isEmpty()) {
             if(!blockWhitelist[tool.ordinal()].contains(block)) {
                 block.metadata = block.metadata == OreDictionary.WILDCARD_VALUE ? -1 : block.metadata;
                 blockWhitelist[tool.ordinal()].add(block);
@@ -195,8 +196,8 @@ public class ConfigurationSettings {
     /**
      * Add groups of blocks mentioned in congruenceList to a set of blocks to be considered equal.
      * @param congruenceList String of groups of blocks with metadata value to be added to congruence list. Format is
-     *                       ':' to separate block id and metadata, '-' to separate blocks in groups and ',' to separate
-     *                       groups. e.g. "[block id]:[metadata]-[block id];[block id]-[block id]-[block id]".
+     *                       'modName:block_name/metadata'. 'minecraft' is the modName for vanilla.
+     *                       Use ',' to separate blocks in whitelist.
      *                       See {@link ConfigurationValues}
      */
     void setBlockCongruenceList(String congruenceList) {
@@ -248,9 +249,9 @@ public class ConfigurationSettings {
     }
 
     public boolean areBlocksCongruent(BlockID block1, BlockID block2) {
-        BlockID block1NoMeta = new BlockID(block1.id, block1.metadata);
+        BlockID block1NoMeta = new BlockID(block1.name, block1.metadata);
         block1NoMeta.metadata = -1;
-        BlockID block2NoMeta = new BlockID(block2.id, block2.metadata);
+        BlockID block2NoMeta = new BlockID(block2.name, block2.metadata);
         block2NoMeta.metadata = -1;
 
         int targetBlock1;
@@ -275,27 +276,17 @@ public class ConfigurationSettings {
     void setToolIds(ToolType tool, String ids) {
         String[] toolsString = ids.split(",");
 
-        for (String idString : toolsString) {
-            int newToolId;
-
-            try {
-                newToolId = Integer.parseInt(idString);
-            }
-            catch (NumberFormatException e) {
-                // Invalid, skip value
-                continue;
-            }
-
-            toolIds[tool.ordinal()].add(newToolId);
+        for (String nameString : toolsString) {
+            toolIds[tool.ordinal()].add(nameString);
         }
     }
 
-    public void addTool(ToolType tool, int id) {
-        toolIds[tool.ordinal()].add(id);
+    public void addTool(ToolType tool, String name) {
+        toolIds[tool.ordinal()].add(name);
     }
 
-    public void removeTool(ToolType tool, int id) {
-        toolIds[tool.ordinal()].remove(id);
+    public void removeTool(ToolType tool, String name) {
+        toolIds[tool.ordinal()].remove(name);
     }
 
     public String getToolIds(ToolType tool) {
@@ -344,7 +335,7 @@ public class ConfigurationSettings {
     }
 
     public boolean toolIsOfType(ItemStack tool, ToolType type) {
-        return tool == null || this.toolIds[type.ordinal()].contains(tool.itemID);
+        return tool == null || this.toolIds[type.ordinal()].contains(tool.getItem().getUnlocalizedName());
     }
 
     /**
