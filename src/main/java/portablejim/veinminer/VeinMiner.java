@@ -19,12 +19,20 @@ package portablejim.veinminer;
 
 import cpw.mods.fml.common.DummyModContainer;
 import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.Mod.Instance;
+import org.apache.logging.log4j.Logger;
+import portablejim.veinminer.lib.ModInfo;
+import portablejim.veinminer.network.ChannelHandler;
 
 /**
  * This class is the main mod class for VeinMiner. It is loaded as a mod
  * through ForgeModLoader.
  */
 
-@Mod(modid = "veinminer", acceptedMinecraftVersions = "[1.7,1.8)")
+@Mod(modid = ModInfo.MODID, acceptedMinecraftVersions = "[1.7,1.8)")
 public class VeinMiner extends DummyModContainer{
+    @Instance(ModInfo.MODID)
+    public static VeinMiner instance;
+
+    public ChannelHandler channelHandler;
 }

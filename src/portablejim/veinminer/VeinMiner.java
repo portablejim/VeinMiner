@@ -51,7 +51,7 @@ import portablejim.veinminer.configuration.ConfigurationSettings;
 import portablejim.veinminer.configuration.ConfigurationValues;
 import portablejim.veinminer.core.MinerInstance;
 import portablejim.veinminer.event.EntityDropHook;
-import portablejim.veinminer.lib.Logger;
+import portablejim.veinminer.lib.MinerLogger;
 import portablejim.veinminer.lib.ModInfo;
 import portablejim.veinminer.network.ConnectionHandler;
 import portablejim.veinminer.network.PacketHandler;
@@ -134,7 +134,7 @@ public class VeinMiner {
             String fileName = thisMod.getSource().getName();
             if(fileName.contains("-dev") || !fileName.contains(".jar")) {
                 ModInfo.DEBUG_MODE = true;
-                Logger.debug("Enabling debug mode");
+                MinerLogger.debug("Enabling debug mode");
             }
         }
     }
@@ -155,7 +155,7 @@ public class VeinMiner {
                                     configurationSettings.addBlockToWhitelist(toolType, new BlockID(item.itemID, item.getItemDamage()));
                                     try {
                                         // Some mods raise an exception when calling getDisplayName on blocks.
-                                        Logger.debug("Adding %d:%d (%s) to block whitelist for %s (%s:%s)", item.itemID, item.getItemDamage(), item.getDisplayName(), toolType.toString(), autodetectValue, oreDictEntry);
+                                        MinerLogger.debug("Adding %d:%d (%s) to block whitelist for %s (%s:%s)", item.itemID, item.getItemDamage(), item.getDisplayName(), toolType.toString(), autodetectValue, oreDictEntry);
                                     }
                                     catch (Exception e) {
                                         FMLLog.log(Level.SEVERE, e, "VEINMINER: ERROR while looking at block with id %d. This is a bug with the respective mod.", item.itemID);
@@ -181,7 +181,7 @@ public class VeinMiner {
 
     @SuppressWarnings("UnusedDeclaration")
     public void blockMined(World world, EntityPlayerMP player, int x, int y, int z, boolean harvestBlockSuccess, BlockID blockId) {
-         Logger.debug("Block mined at %d,%d,%d, result %b, block id is %d:%d", x, y, z, harvestBlockSuccess, blockId.id, blockId.metadata);
+         MinerLogger.debug("Block mined at %d,%d,%d, result %b, block id is %d:%d", x, y, z, harvestBlockSuccess, blockId.id, blockId.metadata);
 
         if(blockId.id > Block.blocksList.length || Block.blocksList[blockId.id] == null  || !player.canHarvestBlock(Block.blocksList[blockId.id])) {
             return;

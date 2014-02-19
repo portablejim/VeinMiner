@@ -17,16 +17,16 @@
 
 package portablejim.veinminer.lib;
 
-import cpw.mods.fml.common.FMLLog;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * Class to log messages to console, but only if debug mode is on.
  */
-public class Logger {
+
+public class MinerLogger {
     public static void debug(String format, Object... data) {
         if(ModInfo.DEBUG_MODE) {
-            String output = String.format("[" + ModInfo.MOD_NAME + "] " + format, data);
-            FMLLog.info(output);
+            LogManager.getLogger(ModInfo.MODID).debug(format, data);
         }
     }
 }

@@ -24,7 +24,8 @@ package portablejim.veinminer.lib;
 public class ModInfo {
     public static boolean DEBUG_MODE = false;
 
+    public static final String MODID = "veinminer";
     public static final String PROXY_SERVER_CLASS = "portablejim.veinminer.proxy.ServerProxy";
     public static final String PROXY_CLIENT_CLASS = "portablejim.veinminer.proxy.ClientProxy";
-    public static final String CHANNEL = "portablejim_vm";
+    public static final String CHANNEL = "VeinMiner";
 }
