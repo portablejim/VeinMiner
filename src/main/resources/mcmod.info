@@ -1,0 +1,15 @@
+[
+{
+  "modid": "veinminer",
+  "name": "Vein Miner",
+  "description": "When a configured block is harvested a chain reaction is initiated to break connected blocks of the same type. Takes durability and health for each block mined.",
+  "version": "${version}",
+  "url": "http://minecraft.curseforge.com/mc-mods/veinminer/",
+  "updateUrl": "",
+  "authors": ["portablejim"],
+  "credits": "Inspired by ConnectedDestruction by DaftPVF (currently maintained by bspkrs).",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": ["Forge"]
+}
+]

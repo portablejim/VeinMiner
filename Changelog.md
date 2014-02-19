@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.13.0
+------
+Changes:
+* Upgrade to Minecraft 1.7.2
+
 0.12.2
 ------
 Fixes:

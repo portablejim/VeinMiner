@@ -1,4 +1,8 @@
+**.directory
 *.iml
-package/replaced/*
+*.gradle
+*.idea
 release/*.jar
-run/
+build/
+eclipse/
+out/

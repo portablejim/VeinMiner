@@ -1,0 +1,72 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+        maven {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.1-SNAPSHOT'
+    }
+}
+
+apply plugin: 'forge'
+
+ext.configFile = file "build.properties"
+
+configFile.withReader {
+    def prop = new Properties()
+    prop.load(it)
+    //noinspection GrUnresolvedAccess
+    ext.config = new ConfigSlurper().parse prop
+}
+
+group= "portablejim.veinminer"
+version = config.mod_version
+archivesBaseName = "VeinMiner"
+
+minecraft {
+    version = config.minecraft_version + "-" + config.forge_version
+}
+
+buildNumber = "unknown"
+if(System.getenv("BUILDNUMBER") != null) {
+    buildNumber = System.getenv("BUILDNUMBER")
+}
+
+version = "${config.minecraft_version}_${config.mod_version}.${buildNumber}"
+
+processResources {
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+        include 'version.properties'
+
+        // replace version and mcversion
+        expand 'version':project.config.mod_version, 'mcversion':project.config.minecraft_version, 'buildnumber', buildNumber
+    }
+
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+        include 'version.properties'
+    }
+}
+
+jar {
+    manifest {
+        attributes 'FMLCorePlugin': 'portablejim.veinminer.VeinMiner'
+    }
+}
+
+//noinspection GrUnresolvedAccess
+task release(type: Copy) {
+    dependsOn "build"
+
+    from project.tasks.jar.archivePath
+    into "release/"
+}
+
