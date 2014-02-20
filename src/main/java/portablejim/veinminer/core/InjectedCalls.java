@@ -24,7 +24,7 @@ public class InjectedCalls {
         }
 
         /*if(!harvestBlockSuccess) {
-            VeinminerHarvestFailedCheck startEvent = new VeinminerHarvestFailedCheck(player, blockId.name, blockId.metadata);
+            VeinminerHarvestFailedCheck startEvent = new VeinminerHarvestFailedCheck(player, blockName.name, blockName.metadata);
             MinecraftForge.EVENT_BUS.post(startEvent);
             if(startEvent.allowContinue.isDenied()) {
                 return;
@@ -40,7 +40,7 @@ public class InjectedCalls {
             radiusLimit = Math.min(startConfig.radiusLimit, radiusLimit);
             blockLimit = Math.min(startConfig.blockLimit, blockLimit);
 
-            MinerInstance ins = new MinerInstance(world, player, x, y, z, blockId, MinerServer.instance, radiusLimit, blockLimit);
+            MinerInstance ins = new MinerInstance(world, player, x, y, z, blockName, MinerServer.instance, radiusLimit, blockLimit);
             ins.mineVein(x, y, z);
         }*/
     }

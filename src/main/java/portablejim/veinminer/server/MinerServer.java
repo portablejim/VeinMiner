@@ -22,10 +22,12 @@ import net.minecraft.entity.item.EntityItem;
 import portablejim.veinminer.configuration.ConfigurationSettings;
 import portablejim.veinminer.configuration.ConfigurationValues;
 import portablejim.veinminer.core.MinerInstance;
+import portablejim.veinminer.util.PlayerStatus;
 import portablejim.veinminer.util.Point;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.UUID;
 
 /**
  * Singleton class that co-ordinates various actions. It allows the current
@@ -38,19 +40,19 @@ public class MinerServer {
 
     public static MinerServer instance;
     private HashSet<MinerInstance> minerInstances;
-    private HashSet<String> clientPlayers;
-    private HashMap<String, PlayerStatus> players;
+    private HashSet<UUID> clientPlayers;
+    private HashMap<UUID, PlayerStatus> players;
     private ConfigurationSettings settings;
 
     public MinerServer(ConfigurationValues configValues) {
         instance = this;
         minerInstances = new HashSet<MinerInstance>();
-        clientPlayers = new HashSet<String>();
-        players = new HashMap<String, PlayerStatus>();
+        clientPlayers = new HashSet<UUID>();
+        players = new HashMap<UUID, PlayerStatus>();
         settings = new ConfigurationSettings(configValues);
     }
 
-    public void setPlayerStatus(String player, PlayerStatus status) {
+    public void setPlayerStatus(UUID player, PlayerStatus status) {
         if(status == PlayerStatus.DISABLED) {
             players.remove(player);
         }
@@ -59,13 +61,13 @@ public class MinerServer {
         }
     }
 
-    public void removePlayer(String player) {
+    public void removePlayer(UUID player) {
         if(players.containsKey(player)) {
             players.remove(player);
         }
     }
 
-    public PlayerStatus getPlayerStatus(String player) {
+    public PlayerStatus getPlayerStatus(UUID player) {
         if(players.containsKey(player)) {
             return players.get(player);
         }
@@ -116,26 +118,26 @@ public class MinerServer {
         return settings;
     }
 
-    public HashSet<String> getClientPlayers() {
+    public HashSet<UUID> getClientPlayers() {
         return clientPlayers;
     }
 
-    public boolean playerHasClient(String playerName) {
+    public boolean playerHasClient(UUID playerName) {
         return clientPlayers.contains(playerName);
     }
 
-    public void addClientPlayer(String playerName) {
+    public void addClientPlayer(UUID playerName) {
         clientPlayers.add(playerName);
         if(getPlayerStatus(playerName).equals(PlayerStatus.DISABLED)) {
             setPlayerStatus(playerName, PlayerStatus.INACTIVE);
         }
     }
 
-    public void removeClientPlayer(String playerName) {
+    public void removeClientPlayer(UUID playerName) {
         clientPlayers.remove(playerName);
     }
 
-    public void setClientPlayers(HashSet<String> clientPlayers) {
+    public void setClientPlayers(HashSet<UUID> clientPlayers) {
         this.clientPlayers = clientPlayers;
     }
 }

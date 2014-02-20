@@ -17,6 +17,8 @@
 
 package portablejim.veinminer.util;
 
+import net.minecraft.item.Item;
+
 /**
  * Class to store the basic information in an ItemStack (well, all that
  * matters in this situation) and allow comparison using only the itemID
@@ -32,6 +34,10 @@ public class ItemStackID {
         itemId = id;
         damage = dam;
         maxStackSize = stackSize;
+    }
+
+    public ItemStackID(Item item, int damage, int stackSize) {
+        this(Item.itemRegistry.getNameForObject(item), damage, stackSize);
     }
 
     public String getItemId() {

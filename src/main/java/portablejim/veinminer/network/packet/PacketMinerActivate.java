@@ -2,6 +2,7 @@ package portablejim.veinminer.network.packet;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.*;
+import portablejim.veinminer.server.MinerServer;
 import portablejim.veinminer.util.*;
 
 import java.util.*;
@@ -16,6 +17,7 @@ import java.util.*;
 public class PacketMinerActivate implements IPacket {
     private boolean keyActive;
 
+    @SuppressWarnings("UnusedDeclaration")
     public PacketMinerActivate(){}
     public PacketMinerActivate(boolean active) {
         this.keyActive = active;
@@ -36,20 +38,18 @@ public class PacketMinerActivate implements IPacket {
 
     @Override
     public void executeServer(EntityPlayerMP player) {
-        EntityPlayer thePlayer = (EntityPlayer) player;
-        UUID playerName = thePlayer.getUniqueID();
+        UUID playerName = player.getUniqueID();
 
-        //TODO: Reactivate once MinerServer is fixed.
-        //PlayerStatus status = MinerServer.instance.getPlayerStatus(playerName);
+        PlayerStatus status = MinerServer.instance.getPlayerStatus(playerName);
         if(keyActive) {
-            /*if(status == PlayerStatus.INACTIVE) {
+            if(status == PlayerStatus.INACTIVE) {
                 MinerServer.instance.setPlayerStatus(playerName, PlayerStatus.ACTIVE);
-            }*/
+            }
         }
         else {
-            /*if(status == PlayerStatus.ACTIVE) {
+            if(status == PlayerStatus.ACTIVE) {
                 MinerServer.instance.setPlayerStatus(playerName, PlayerStatus.INACTIVE);
-            }*/
+            }
         }
     }
 }

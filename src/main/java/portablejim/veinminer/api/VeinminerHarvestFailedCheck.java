@@ -29,13 +29,13 @@ import net.minecraft.entity.player.EntityPlayerMP;
 public class VeinminerHarvestFailedCheck extends Event {
     public Permission allowContinue;
     public final EntityPlayerMP player;
-    public final int blockId;
+    public final String blockName;
     public final int blockMetadata;
 
-    public VeinminerHarvestFailedCheck(EntityPlayerMP player, int id, int metadata) {
+    public VeinminerHarvestFailedCheck(EntityPlayerMP player, String name, int metadata) {
         allowContinue = Permission.DENY;
         this.player = player;
-        this.blockId = id;
+        this.blockName = name;
         this.blockMetadata = metadata;
     }
 }

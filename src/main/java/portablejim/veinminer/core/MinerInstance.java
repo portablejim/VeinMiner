@@ -17,29 +17,38 @@
 
 package portablejim.veinminer.core;
 
-import cpw.mods.fml.common.registry.LanguageRegistry;
-import cpw.mods.fml.common.registry.TickRegistry;
-import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
+import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.FoodStats;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import portablejim.veinminer.api.*;
+import portablejim.veinminer.api.Permission;
+import portablejim.veinminer.api.ToolType;
+import portablejim.veinminer.api.VeinminerHarvestFailedCheck;
+import portablejim.veinminer.api.VeinminerNoToolCheck;
+import portablejim.veinminer.api.VeinminerPostUseTool;
 import portablejim.veinminer.configuration.ConfigurationSettings;
-import portablejim.veinminer.event.InstanceTicker;
 import portablejim.veinminer.lib.BlockLib;
 import portablejim.veinminer.server.MinerServer;
-import portablejim.veinminer.server.PlayerStatus;
 import portablejim.veinminer.util.BlockID;
 import portablejim.veinminer.util.ItemStackID;
+import portablejim.veinminer.util.PlayerStatus;
 import portablejim.veinminer.util.Point;
 
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import static net.minecraftforge.event.entity.player.PlayerEvent.HarvestCheck;
@@ -83,7 +92,7 @@ public class MinerInstance {
 
         serverInstance.addInstance(this);
 
-        TickRegistry.registerTickHandler(new InstanceTicker(this), Side.SERVER);
+        FMLCommonHandler.instance().bus().register(this);
     }
 
     private boolean shouldContinue() {
@@ -102,7 +111,7 @@ public class MinerInstance {
                 // Test to see if the player can mine stone.
                 // If they can, they have other assistance and so should be
                 // considered a tool.
-                Block testBlock = Block.stone;
+                Block testBlock = Blocks.stone;
                 HarvestCheck event = new HarvestCheck(player, testBlock, false);
                 MinecraftForge.EVENT_BUS.post(event);
                 this.finished = !event.success;
@@ -119,7 +128,7 @@ public class MinerInstance {
         }
 
         // Player exists and is in correct status (correct button held)
-        String playerName = player.getEntityName();
+        UUID playerName = player.getUniqueID();
         PlayerStatus playerStatus = serverInstance.getPlayerStatus(playerName);
         if(playerStatus == null) {
             this.finished = true;
@@ -140,11 +149,12 @@ public class MinerInstance {
             this.finished = true;
 
             String problem = "mod.veinminer.finished.tooHungry";
-            if(serverInstance.playerHasClient(player.getEntityName())) {
-                player.addChatMessage(problem);
+            if(serverInstance.playerHasClient(player.getUniqueID())) {
+                player.addChatMessage(new ChatComponentTranslation(problem));
             }
             else {
-                player.addChatMessage(LanguageRegistry.instance().getStringLocalization(problem));
+                String translatedProblem = StatCollector.translateToLocal(problem);
+                player.addChatMessage(new ChatComponentText(translatedProblem));
             }
         }
 
@@ -175,7 +185,7 @@ public class MinerInstance {
         MinecraftForge.EVENT_BUS.post(toolUsedEvent);
 
         // Only go ahead if block was destroyed. Stops mining through protected areas.
-        VeinminerHarvestFailedCheck continueCheck = new VeinminerHarvestFailedCheck(player, targetBlock.id, targetBlock.metadata);
+        VeinminerHarvestFailedCheck continueCheck = new VeinminerHarvestFailedCheck(player, targetBlock.name, targetBlock.metadata);
         MinecraftForge.EVENT_BUS.post(continueCheck);
         if(success || continueCheck.allowContinue.isAllowed()) {
             destroyQueue.add(newPoint);
@@ -208,7 +218,7 @@ public class MinerInstance {
                     BlockID newBlock = new BlockID(world, x + dx, y + dy, z + dz);
 
                     // Ensure valid block
-                    if(Block.blocksList[newBlock.id] == null) {
+                    if(Block.getBlockFromName(newBlock.name) == null) {
                         continue;
                     }
 
@@ -242,7 +252,9 @@ public class MinerInstance {
         }
     }
 
-    public void mineScheduled() {
+    @SuppressWarnings({"UnusedParameters", "UnusedDeclaration"})
+    @SubscribeEvent
+    public void mineScheduled(ServerTickEvent event) {
         int quantity = serverInstance.getConfigurationSettings().getBlocksPerTick();
         for(int i = 0; i < quantity; i++) {
             if(!destroyQueue.isEmpty()) {
@@ -261,14 +273,22 @@ public class MinerInstance {
     private void spawnDrops() {
         for(Map.Entry<ItemStackID, Integer> schedDrop : drops.entrySet()) {
             ItemStackID itemStack = schedDrop.getKey();
+            String[] itemNames = itemStack.getItemId().split(":", 1);
+
+            if(GameRegistry.findItemStack(itemNames[0], itemNames[1], 1) == null) {
+                continue;
+            }
+
             int numItems = schedDrop.getValue();
             while (numItems > itemStack.getMaxStackSize()) {
-                ItemStack newItemStack = new ItemStack(itemStack.getItemId(), itemStack.getMaxStackSize(), itemStack.getDamage());
+                ItemStack newItemStack = GameRegistry.findItemStack(itemNames[0], itemNames[1], itemStack.getMaxStackSize());
+                newItemStack.setItemDamage(itemStack.getDamage());
                 EntityItem newEntityItem = new EntityItem(world, initalBlock.getX(), initalBlock.getY(), initalBlock.getZ(), newItemStack);
                 world.spawnEntityInWorld(newEntityItem);
                 numItems -= itemStack.getMaxStackSize();
             }
-            ItemStack newItemStack = new ItemStack(itemStack.getItemId(), numItems, itemStack.getDamage());
+            ItemStack newItemStack = GameRegistry.findItemStack(itemNames[0], itemNames[1], itemStack.getMaxStackSize());
+            newItemStack.setItemDamage(itemStack.getDamage());
             EntityItem newEntityItem = new EntityItem(world, initalBlock.getX(), initalBlock.getY(), initalBlock.getZ(), newItemStack);
             world.spawnEntityInWorld(newEntityItem);
         }
@@ -281,7 +301,7 @@ public class MinerInstance {
 
     public void addDrop(EntityItem entity, Point point) {
         ItemStack item = entity.getEntityItem();
-        ItemStackID itemInfo = new ItemStackID(item.itemID, item.getItemDamage(), item.getMaxStackSize());
+        ItemStackID itemInfo = new ItemStackID(item.getItem(), item.getItemDamage(), item.getMaxStackSize());
 
         if(drops.containsKey(itemInfo)) {
             int oldDropNumber = drops.get(itemInfo);
