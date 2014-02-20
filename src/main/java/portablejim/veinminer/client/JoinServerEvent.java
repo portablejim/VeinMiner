@@ -17,8 +17,8 @@ import java.util.TimerTask;
  * Time: 4:56 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JoinServerEventHandler {
-    public JoinServerEventHandler() {
+public class JoinServerEvent {
+    public JoinServerEvent() {
         FMLCommonHandler.instance().bus().register(this);
     }
 
