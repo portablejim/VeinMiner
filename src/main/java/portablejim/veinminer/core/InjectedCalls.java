@@ -3,7 +3,13 @@ package portablejim.veinminer.core;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
+import portablejim.veinminer.VeinMiner;
+import portablejim.veinminer.api.VeinminerHarvestFailedCheck;
+import portablejim.veinminer.api.VeinminerInitalToolCheck;
+import portablejim.veinminer.configuration.ConfigurationSettings;
 import portablejim.veinminer.lib.MinerLogger;
+import portablejim.veinminer.server.MinerServer;
 import portablejim.veinminer.util.BlockID;
 
 /**
@@ -16,14 +22,14 @@ import portablejim.veinminer.util.BlockID;
 @SuppressWarnings("UnusedDeclaration")
 public class InjectedCalls {
     @SuppressWarnings("UnusedDeclaration")
-    public static void blockMined(World world, EntityPlayerMP player, int x, int y, int z, boolean harvestBlockSuccess, BlockID blockId) {
-        MinerLogger.debug("Block mined at %d,%d,%d, result %s, block id is %s/%d", x, y, z, harvestBlockSuccess, blockId.name, blockId.metadata);
+    public static void blockMined(World world, EntityPlayerMP player, int x, int y, int z, boolean harvestBlockSuccess, BlockID blockName) {
+        MinerLogger.debug("Block mined at %d,%d,%d, result %s, block id is %s/%d", x, y, z, harvestBlockSuccess, blockName.name, blockName.metadata);
 
-        if(blockId.name.isEmpty() || Block.getBlockFromName(blockId.name) == null  || !player.canHarvestBlock(Block.getBlockFromName(blockId.name))) {
+        if(blockName.name.isEmpty() || Block.getBlockFromName(blockName.name) == null  || !player.canHarvestBlock(Block.getBlockFromName(blockName.name))) {
             return;
         }
 
-        /*if(!harvestBlockSuccess) {
+        if(!harvestBlockSuccess) {
             VeinminerHarvestFailedCheck startEvent = new VeinminerHarvestFailedCheck(player, blockName.name, blockName.metadata);
             MinecraftForge.EVENT_BUS.post(startEvent);
             if(startEvent.allowContinue.isDenied()) {
@@ -31,6 +37,7 @@ public class InjectedCalls {
             }
         }
 
+        ConfigurationSettings configurationSettings = VeinMiner.instance.configurationSettings;
         int radiusLimit = configurationSettings.getRadiusLimit();
         int blockLimit = configurationSettings.getBlockLimit();
 
@@ -42,6 +49,6 @@ public class InjectedCalls {
 
             MinerInstance ins = new MinerInstance(world, player, x, y, z, blockName, MinerServer.instance, radiusLimit, blockLimit);
             ins.mineVein(x, y, z);
-        }*/
+        }
     }
 }

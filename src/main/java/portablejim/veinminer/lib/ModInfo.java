@@ -28,7 +28,7 @@ import java.util.Properties;
  */
 
 public class ModInfo {
-    public static boolean DEBUG_MODE = true;
+    public static boolean DEBUG_MODE = false;
 
     public static final String MODID = "veinminer";
     public static final String VERSION;
@@ -41,7 +41,7 @@ public class ModInfo {
             stream.close();
         }
         catch (Exception e) {
-            Throwables.propagate(e);
+            throw Throwables.propagate(e);
         }
 
         VERSION = String.format("%s_build-%s", prop.getProperty("version"), prop.getProperty("build_number"));

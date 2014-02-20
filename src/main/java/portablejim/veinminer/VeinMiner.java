@@ -18,13 +18,17 @@
 package portablejim.veinminer;
 
 import cpw.mods.fml.common.DummyModContainer;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
+import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import portablejim.veinminer.configuration.ConfigurationSettings;
 import portablejim.veinminer.configuration.ConfigurationValues;
+import portablejim.veinminer.lib.MinerLogger;
 import portablejim.veinminer.lib.ModInfo;
 import portablejim.veinminer.network.ChannelHandler;
 import portablejim.veinminer.proxy.CommonProxy;
@@ -55,5 +59,21 @@ public class VeinMiner extends DummyModContainer{
         configurationValues.loadConfigFile();
         configurationSettings = new ConfigurationSettings(configurationValues);
         proxy.registerKeybind();
+    }
+
+    @SuppressWarnings("UnusedDeclaration")
+    @EventHandler
+    public void init(@SuppressWarnings("UnusedParameters") FMLInitializationEvent event) {
+        //TODO: Enable when EntityDropHook added.
+        //MinecraftForge.EVENT_BUS.register(new EntityDropHook());
+
+        ModContainer thisMod = Loader.instance().getIndexedModList().get(ModInfo.MODID);
+        if(thisMod != null) {
+            String fileName = thisMod.getSource().getName();
+            if(fileName.contains("-dev") || !fileName.contains(".jar")) {
+                ModInfo.DEBUG_MODE = true;
+                MinerLogger.debug("Enabling debug mode");
+            }
+        }
     }
 }
