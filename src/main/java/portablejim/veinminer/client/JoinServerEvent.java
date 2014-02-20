@@ -2,6 +2,7 @@ package portablejim.veinminer.client;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
 import portablejim.veinminer.VeinMiner;
@@ -18,25 +19,32 @@ import java.util.TimerTask;
  * To change this template use File | Settings | File Templates.
  */
 public class JoinServerEvent {
+    boolean loggedIn = false;
+
     public JoinServerEvent() {
         FMLCommonHandler.instance().bus().register(this);
+        loggedIn = false;
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     @SubscribeEvent
-    public void joinServer(ClientConnectedToServerEvent event) {
-        final PacketClientPresent packet = new PacketClientPresent(VeinMiner.instance.configurationSettings.getPreferredMode());
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                //To change body of implemented methods use File | Settings | File Templates.
-                VeinMiner.PACKET_PIPELINE.sendToServer(packet);
-            }
-        }, 1000);
-        VeinMiner.PACKET_PIPELINE.sendToServer(packet);
+    public void connected(ClientConnectedToServerEvent event) {
+        /*
+         * Logged in, but can't send packets yet, so just flag that we need to
+         * send the packet. (if PlayerLoggedInEvent is called multiple times
+         * while connected to the server, which I am not sure if it happens or
+         * not)
+         */
+        loggedIn = false;
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     @SubscribeEvent
-    public void custom(FMLNetworkEvent e) {
-        VeinMiner.instance.logger.info(String.format("TESTING NETWORK EVENT: %s", e.toString()));
+    public void joinServer(PlayerLoggedInEvent event) {
+        if(!loggedIn) {
+            PacketClientPresent packet = new PacketClientPresent(VeinMiner.instance.configurationSettings.getPreferredMode());
+            VeinMiner.PACKET_PIPELINE.sendToServer(packet);
+            loggedIn = true;
+        }
     }
 }
