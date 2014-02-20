@@ -53,7 +53,7 @@ public class ActivateMinerKeybindManager {
         }
         if (sendPacket) {
             PacketMinerActivate packet = new PacketMinerActivate(statusEnabled);
-            VeinMiner.instance.channelManager.sendToServer(packet);
+            VeinMiner.PACKET_PIPELINE.sendToServer(packet);
         }
     }
 }
