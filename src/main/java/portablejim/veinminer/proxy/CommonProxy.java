@@ -24,4 +24,5 @@ package portablejim.veinminer.proxy;
 
 public interface CommonProxy {
     public void registerKeybind();
+    public void addOtherEvents();
 }

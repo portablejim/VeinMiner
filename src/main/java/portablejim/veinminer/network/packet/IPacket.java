@@ -1,5 +1,6 @@
 package portablejim.veinminer.network.packet;
 
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.*;
 
@@ -10,9 +11,4 @@ import net.minecraft.entity.player.*;
  * Time: 4:03 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface IPacket {
-    public void readBytes(ByteBuf bytes);
-    public void writeBytes(ByteBuf bytes);
-    public void executeClient();
-    public void executeServer(EntityPlayerMP player);
-}
+public interface IPacket { }

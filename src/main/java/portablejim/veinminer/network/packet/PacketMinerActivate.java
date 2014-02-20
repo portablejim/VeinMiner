@@ -1,5 +1,6 @@
 package portablejim.veinminer.network.packet;
 
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.*;
 import portablejim.veinminer.server.MinerServer;
@@ -14,8 +15,8 @@ import java.util.*;
  * Time: 5:50 PM
  * To change this template use File | Settings | File Templates.
  */
-public class PacketMinerActivate implements IPacket {
-    private boolean keyActive;
+public class PacketMinerActivate implements IMessage {
+    public boolean keyActive;
 
     @SuppressWarnings("UnusedDeclaration")
     public PacketMinerActivate(){}
@@ -24,32 +25,12 @@ public class PacketMinerActivate implements IPacket {
     }
 
     @Override
-    public void readBytes(ByteBuf bytes) {
+    public void fromBytes(ByteBuf bytes) {
         keyActive = bytes.readBoolean();
     }
 
     @Override
-    public void writeBytes(ByteBuf bytes) {
+    public void toBytes(ByteBuf bytes) {
         bytes.writeBoolean(keyActive);
-    }
-
-    @Override
-    public void executeClient() { }
-
-    @Override
-    public void executeServer(EntityPlayerMP player) {
-        UUID playerName = player.getUniqueID();
-
-        PlayerStatus status = MinerServer.instance.getPlayerStatus(playerName);
-        if(keyActive) {
-            if(status == PlayerStatus.INACTIVE) {
-                MinerServer.instance.setPlayerStatus(playerName, PlayerStatus.ACTIVE);
-            }
-        }
-        else {
-            if(status == PlayerStatus.ACTIVE) {
-                MinerServer.instance.setPlayerStatus(playerName, PlayerStatus.INACTIVE);
-            }
-        }
     }
 }

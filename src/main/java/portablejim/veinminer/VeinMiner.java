@@ -24,12 +24,13 @@ import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.discovery.ASMDataTable;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
-import net.minecraft.block.Block;
 import net.minecraft.command.ServerCommandManager;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
@@ -40,7 +41,7 @@ import portablejim.veinminer.configuration.ConfigurationSettings;
 import portablejim.veinminer.configuration.ConfigurationValues;
 import portablejim.veinminer.lib.MinerLogger;
 import portablejim.veinminer.lib.ModInfo;
-import portablejim.veinminer.network.ChannelHandler;
+import portablejim.veinminer.network.ChannelManager;
 import portablejim.veinminer.proxy.CommonProxy;
 import portablejim.veinminer.server.MinerServer;
 import portablejim.veinminer.util.BlockID;
@@ -62,7 +63,7 @@ public class VeinMiner extends DummyModContainer{
     @SidedProxy(clientSide = ModInfo.PROXY_CLIENT_CLASS, serverSide = ModInfo.PROXY_SERVER_CLASS)
     public static CommonProxy proxy;
 
-    public ChannelHandler channelHandler;
+    public ChannelManager channelManager;
 
     ConfigurationValues configurationValues;
     public ConfigurationSettings configurationSettings;
@@ -73,11 +74,13 @@ public class VeinMiner extends DummyModContainer{
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         logger = event.getModLog();
+        ASMDataTable asmData = event.getAsmData();
 
         configurationValues = new ConfigurationValues(event.getSuggestedConfigurationFile());
         configurationValues.loadConfigFile();
         configurationSettings = new ConfigurationSettings(configurationValues);
         proxy.registerKeybind();
+        proxy.addOtherEvents();
     }
 
     @SuppressWarnings("UnusedDeclaration")
@@ -94,6 +97,9 @@ public class VeinMiner extends DummyModContainer{
                 MinerLogger.debug("Enabling debug mode");
             }
         }
+
+        channelManager = new ChannelManager();
+        channelManager.init();
     }
 
     @SuppressWarnings("UnusedDeclaration")
@@ -109,13 +115,15 @@ public class VeinMiner extends DummyModContainer{
                             ArrayList<ItemStack> itemStacks = OreDictionary.getOres(oreDictEntry);
                             for(ItemStack item : itemStacks) {
                                 if(item.getItem() instanceof ItemBlock) {
-                                    String blockName = Block.blockRegistry.getNameForObject(item.getItem());
+                                    String blockName = Item.itemRegistry.getNameForObject(item.getItem());
                                     configurationSettings.addBlockToWhitelist(toolType, new BlockID(blockName, item.getItemDamage()));
                                     try {
                                         // Some mods raise an exception when calling getDisplayName on blocks.
-                                        MinerLogger.debug("Adding %d:%d (%s) to block whitelist for %s (%s:%s)", blockName, item.getItemDamage(), item.getDisplayName(), toolType.toString(), autodetectValue, oreDictEntry);
+                                        MinerLogger.debug("Adding %s/%d (%s) to block whitelist for %s (%s:%s)", blockName, item.getItemDamage(), item.getDisplayName(), toolType.toString(), autodetectValue, oreDictEntry);
                                     }
                                     catch (Exception e) {
+                                        // Left over from 1.5/1.6 where some mods were throwing exceptions on item.getDisplayName()
+                                        // I just changed id => mod in 1.7
                                         logger.error("ERROR while looking at block with name %d. This is a bug with the respective mod.", blockName);
                                         logger.catching(e);
                                     }

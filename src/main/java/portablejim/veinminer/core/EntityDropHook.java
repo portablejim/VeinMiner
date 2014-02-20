@@ -15,13 +15,15 @@
  *    If not, see <http://www.gnu.org/licenses/>.
  */
 
-package portablejim.veinminer.event;
+package portablejim.veinminer.core;
 
+import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.Item;
-import net.minecraftforge.event.ForgeSubscribe;
+import net.minecraft.item.ItemBlock;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import portablejim.veinminer.server.MinerServer;
 
@@ -33,7 +35,7 @@ import portablejim.veinminer.server.MinerServer;
 
 public class EntityDropHook {
 
-    @ForgeSubscribe
+    @EventHandler
     public void tryAddEntity(EntityJoinWorldEvent event) {
         Entity entity = event.entity;
 
@@ -66,12 +68,12 @@ public class EntityDropHook {
         boolean isBlock = false;
         boolean isItem = false;
 
-        if(entityItem.getEntityItem().itemID < Block.blocksList.length) {
-            isBlock = Block.blocksList[entityItem.getEntityItem().itemID] != null;
+        if(entityItem.getEntityItem().getItem() instanceof ItemBlock) {
+            isBlock = Block.blockRegistry.containsKey(entityItem.getEntityItem().getItem());
         }
-        if(entityItem.getEntityItem().itemID < Item.itemsList.length) {
-            isItem = Item.itemsList[entityItem.getEntityItem().itemID] != null;
-        }
+        isItem = Item.itemRegistry.containsKey(entityItem.getEntityItem().getItem());
+
+        StackTraceElement[] stackTrace = (new Throwable()).getStackTrace();
 
         //new MinerServer();
         if((isBlock || isItem) && MinerServer.instance != null && MinerServer.instance.isRegistered(entityX, entityY, entityZ)) {

@@ -25,4 +25,7 @@ package portablejim.veinminer.proxy;
 public class ServerProxy implements CommonProxy {
     @Override
     public void registerKeybind() { }
+
+    @Override
+    public void addOtherEvents() { }
 }

@@ -18,6 +18,7 @@
 package portablejim.veinminer.proxy;
 
 import portablejim.veinminer.client.ActivateMinerKeybindManager;
+import portablejim.veinminer.client.JoinServerEventHandler;
 
 /**
  * Client side implementation of proxy interface.
@@ -26,8 +27,14 @@ import portablejim.veinminer.client.ActivateMinerKeybindManager;
 @SuppressWarnings("UnusedDeclaration")
 public class ClientProxy implements CommonProxy {
     private ActivateMinerKeybindManager keybindManager;
+    private JoinServerEventHandler joinServerEventHandler;
     @Override
     public void registerKeybind() {
         keybindManager = new ActivateMinerKeybindManager();
+    }
+
+    @Override
+    public void addOtherEvents() {
+        joinServerEventHandler = new JoinServerEventHandler();
     }
 }
