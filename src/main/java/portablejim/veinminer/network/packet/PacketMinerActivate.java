@@ -16,7 +16,7 @@ import java.util.UUID;
  * Time: 5:50 PM
  * To change this template use File | Settings | File Templates.
  */
-public class PacketMinerActivate extends AbstractPacket {
+public class PacketMinerActivate implements IPacket {
     public boolean keyActive;
 
     public PacketMinerActivate(boolean keyActive) {
@@ -24,17 +24,14 @@ public class PacketMinerActivate extends AbstractPacket {
     }
 
     @Override
-    public void encodeInto(ChannelHandlerContext ctx, ByteBuf buffer) {
+    public void writeBytes(ByteBuf buffer) {
         buffer.writeBoolean(keyActive);
     }
 
     @Override
-    public void decodeInto(ChannelHandlerContext ctx, ByteBuf buffer) {
+    public void readBytes(ByteBuf buffer) {
         keyActive = buffer.readBoolean();
     }
-
-    @Override
-    public void handleClientSide(EntityPlayer player) { }
 
     @Override
     public void handleServerSide(EntityPlayerMP player) {

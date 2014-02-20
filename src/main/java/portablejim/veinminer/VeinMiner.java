@@ -41,8 +41,7 @@ import portablejim.veinminer.configuration.ConfigurationSettings;
 import portablejim.veinminer.configuration.ConfigurationValues;
 import portablejim.veinminer.lib.MinerLogger;
 import portablejim.veinminer.lib.ModInfo;
-import portablejim.veinminer.network.PacketPipeline;
-import portablejim.veinminer.network.PacketRegistrar;
+import portablejim.veinminer.network.ChannelHandler;
 import portablejim.veinminer.proxy.CommonProxy;
 import portablejim.veinminer.server.MinerServer;
 import portablejim.veinminer.util.BlockID;
@@ -64,7 +63,7 @@ public class VeinMiner extends DummyModContainer{
     @SidedProxy(clientSide = ModInfo.PROXY_CLIENT_CLASS, serverSide = ModInfo.PROXY_SERVER_CLASS)
     public static CommonProxy proxy;
 
-    public static final PacketPipeline PACKET_PIPELINE = new PacketPipeline();
+    public final ChannelHandler channelHandler = new ChannelHandler();
 
     ConfigurationValues configurationValues;
     public ConfigurationSettings configurationSettings;
@@ -98,9 +97,6 @@ public class VeinMiner extends DummyModContainer{
                 MinerLogger.debug("Enabling debug mode");
             }
         }
-
-        PACKET_PIPELINE.initalise(ModInfo.CHANNEL);
-        PacketRegistrar.registerPackets(PACKET_PIPELINE);
     }
 
     @SuppressWarnings("UnusedDeclaration")

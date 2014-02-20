@@ -43,7 +43,7 @@ public class JoinServerEvent {
     public void joinServer(PlayerLoggedInEvent event) {
         if(!loggedIn) {
             PacketClientPresent packet = new PacketClientPresent(VeinMiner.instance.configurationSettings.getPreferredMode());
-            VeinMiner.PACKET_PIPELINE.sendToServer(packet);
+            VeinMiner.instance.channelHandler.sendToServer(packet);
             loggedIn = true;
         }
     }
