@@ -20,7 +20,7 @@ public class JoinServerEventHandler {
 
     @SubscribeEvent
     public void joinServer(ClientConnectedToServerEvent event) {
-        PacketClientPresent packet = new PacketClientPresent(VeinMiner.instance.configurationSettings.getPreferredMode());
+        PacketClientPresent packet = new PacketClientPresent();
         VeinMiner.instance.channelManager.sendToServer(packet);
     }
 }

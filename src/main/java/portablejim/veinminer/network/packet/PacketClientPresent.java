@@ -11,22 +11,11 @@ import io.netty.buffer.ByteBuf;
  * To change this template use File | Settings | File Templates.
  */
 public class PacketClientPresent implements IMessage {
-    public int preferredMode;
-
-    @SuppressWarnings("UnusedDeclaration")
-    public PacketClientPresent(){}
-
-    public PacketClientPresent(int preferredMode) {
-        this.preferredMode = preferredMode;
-    }
-
     @Override
     public void fromBytes(ByteBuf bytes) {
-        preferredMode = bytes.readInt();
     }
 
     @Override
     public void toBytes(ByteBuf bytes) {
-        bytes.writeInt(preferredMode);
     }
 }

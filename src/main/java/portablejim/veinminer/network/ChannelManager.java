@@ -29,9 +29,8 @@ public class ChannelManager {
     public ChannelManager() { }
 
     public void init(){
-        channels = NetworkRegistry.INSTANCE.newSimpleChannel(ModInfo.CHANNEL);
-
-        channels.registerMessage(HandlerClientPresent.class, PacketClientPresent.class, 0, Side.SERVER);
+        channels = NetworkRegistry.INSTANCE.newSimpleChannel("TESTING");
+        channels.registerMessage(HandlerClientPresent.class, PacketClientPresent.class, 1, Side.SERVER);
     }
 
     public void sendToServer(IMessage packet) {
