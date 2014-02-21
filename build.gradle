@@ -34,7 +34,7 @@ minecraft {
     version = config.minecraft_version + "-" + config.forge_version
 }
 
-buildNumber = "unknown"
+String buildNumber = "unknown"
 if(System.getenv("BUILDNUMBER") != null) {
     buildNumber = System.getenv("BUILDNUMBER")
 }
@@ -47,7 +47,7 @@ processResources {
         include 'version.properties'
 
         // replace version and mcversion
-        expand 'version':project.config.mod_version, 'mcversion':project.config.minecraft_version, 'buildnumber', buildNumber
+        expand 'version':project.config.mod_version, 'mcversion':project.config.minecraft_version, 'buildnumber': buildNumber
     }
 
     from(sourceSets.main.resources.srcDirs) {
