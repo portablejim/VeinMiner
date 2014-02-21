@@ -43,6 +43,7 @@ import portablejim.veinminer.lib.MinerLogger;
 import portablejim.veinminer.lib.ModInfo;
 import portablejim.veinminer.network.ChannelHandler;
 import portablejim.veinminer.proxy.CommonProxy;
+import portablejim.veinminer.server.MinerCommand;
 import portablejim.veinminer.server.MinerServer;
 import portablejim.veinminer.util.BlockID;
 
@@ -140,7 +141,6 @@ public class VeinMiner extends DummyModContainer{
         new MinerServer(configurationValues);
 
         ServerCommandManager serverCommandManger = (ServerCommandManager) MinecraftServer.getServer().getCommandManager();
-        // TODO: Enable when MinerCommand is fixed.
-        //serverCommandManger.registerCommand(new MinerCommand());
+        serverCommandManger.registerCommand(new MinerCommand());
     }
 }

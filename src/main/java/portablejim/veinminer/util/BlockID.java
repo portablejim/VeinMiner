@@ -38,7 +38,7 @@ public class BlockID
     
     public BlockID(String fullDescription) {
         int preMeta = -1;
-        Pattern p = Pattern.compile("(.+?)(?:/([-]?\\d{1,2})?)");
+        Pattern p = Pattern.compile("(.+?)(?:/([-]?\\d{1,2}))?");
         Matcher m = p.matcher(fullDescription);
 
         if(m.matches()) {

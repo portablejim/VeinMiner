@@ -24,12 +24,17 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.util.StatCollector;
 import portablejim.veinminer.api.ToolType;
 import portablejim.veinminer.configuration.ConfigurationSettings;
 import portablejim.veinminer.util.BlockID;
+import portablejim.veinminer.util.PlayerStatus;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Command so that clients can control VeinMiner settings for their player.
@@ -138,13 +143,15 @@ public class MinerCommand extends CommandBase {
         }
     }
 
-    private void sendProperChatToPlayer(EntityPlayerMP player, String incomingMessage) {
-        String message = StatCollector.translateToLocal(incomingMessage);
-        player.addChatMessage(message);
-    }
-
     private void sendProperChatToPlayer(EntityPlayerMP player, String incomingMessage, Object... params) {
-        String message = StatCollector.translateToLocalFormatted(incomingMessage, params);
+        IChatComponent message;
+        if(MinerServer.instance.playerHasClient(player.getPersistentID())) {
+            message = new ChatComponentTranslation(incomingMessage, params);
+        }
+        else {
+            String rawMessage = StatCollector.translateToLocal(incomingMessage);
+            message = new ChatComponentText(String.format(rawMessage, params));
+        }
         player.addChatMessage(message);
     }
 
@@ -161,7 +168,7 @@ public class MinerCommand extends CommandBase {
     private void needAdmin(EntityPlayerMP player) {
         MinecraftServer server = player.mcServer;
         if(server.isDedicatedServer() && !server.getConfigurationManager().isPlayerOpped(player.getCommandSenderName())) {
-            boolean playerNoClient = !MinerServer.instance.playerHasClient(player.getEntityName());
+            boolean playerNoClient = !MinerServer.instance.playerHasClient(player.getUniqueID());
             String message = "command.veinminer.permissionDenied";
             if(playerNoClient) {
                 message = LanguageRegistry.instance().getStringLocalization(message);
@@ -178,7 +185,7 @@ public class MinerCommand extends CommandBase {
 
     private void runCommandMode(EntityPlayerMP senderPlayer, String[] astring) throws WrongUsageException {
         MinerServer minerServer = MinerServer.instance;
-        String player = senderPlayer.getCommandSenderName();
+        UUID player = senderPlayer.getPersistentID();
 
         if(astring.length == 1) {
             showUsageError("command.veinminer.enable");
@@ -219,19 +226,27 @@ public class MinerCommand extends CommandBase {
             showUsageError("command.veinminer.blocklist.itemerror", toolString, action);
         }
 
-        BlockID blockID = new BlockID(astring[3], ":", -1);
-        if(blockID.id <= 0) {
+        int metadata = -1;
+        if(astring.length >= 5) {
+            try {
+                metadata = Integer.parseInt(astring[4]);
+            }
+            catch (NumberFormatException ignored) {}
+        }
+
+        BlockID blockID = new BlockID(astring[3], metadata);
+        if(blockID.name.isEmpty()) {
             // String is not in proper format
             showUsageError("command.veinminer.blocklist.itemerror", toolString, action);
         }
 
         if("add".equals(action)) {
             configSettings.addBlockToWhitelist(tool, blockID);
-            sendProperChatToPlayer(senderPlayer, "command.veinminer.blocklist.add", blockID.id, blockID.metadata, toolString);
+            sendProperChatToPlayer(senderPlayer, "command.veinminer.blocklist.add", blockID.name, blockID.metadata, toolString);
         }
         else if("remove".equals(action)) {
             configSettings.removeBlockFromWhitelist(tool, blockID);
-            sendProperChatToPlayer(senderPlayer, "command.veinminer.blocklist.remove", blockID.id, blockID.metadata, toolString);
+            sendProperChatToPlayer(senderPlayer, "command.veinminer.blocklist.remove", blockID.name, blockID.metadata, toolString);
         }
     }
 
@@ -248,15 +263,9 @@ public class MinerCommand extends CommandBase {
             showUsageError("command.veinminer.toollist.itemerror", toolString, action);
         }
 
-        int toolId;
-        try{
-            toolId = Integer.parseInt(astring[3]);
-        }
-        catch(NumberFormatException e) {
-            toolId = -1;
-        }
+        String toolId = astring[3];
 
-        if(toolId <= 0) {
+        if(toolId.isEmpty()) {
             // String is not in proper format
             showUsageError("command.veinminer.toollist.itemerror", toolString, action);
         }
@@ -384,6 +393,6 @@ public class MinerCommand extends CommandBase {
 
     @Override
     public String getCommandUsage(ICommandSender par1ICommandSender) {
-        return LanguageRegistry.instance().getStringLocalization("command.veinminer");
+        return StatCollector.translateToLocal("command.veinminer");
     }
 }

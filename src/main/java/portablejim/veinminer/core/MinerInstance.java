@@ -32,6 +32,7 @@ import net.minecraft.util.FoodStats;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import portablejim.veinminer.VeinMiner;
 import portablejim.veinminer.api.Permission;
 import portablejim.veinminer.api.ToolType;
 import portablejim.veinminer.api.VeinminerHarvestFailedCheck;
@@ -216,6 +217,7 @@ public class MinerInstance {
 
                     Point newBlockPos = new Point(x + dx, y + dy, z + dz);
                     BlockID newBlock = new BlockID(world, x + dx, y + dy, z + dz);
+                    VeinMiner.instance.logger.info(String.format("Testing %d %d %d (from %d %d %d)", x + dx, y+dy, z+dz, x, y, z));
 
                     // Ensure valid block
                     if(Block.getBlockFromName(newBlock.name) == null) {

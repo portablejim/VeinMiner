@@ -1,7 +1,7 @@
 # Command usage/error
 command.veinminer=/veinminer mode/blocklist/toollist/blocklimit/radius/per_tick/saveconfig/help
 command.veinminer.enable=/veinminer mode disable/auto/sneak/no_sneak
-command.veinminer.blocklist=/veinminer blocklist pickaxe/axe/shovel/hoe/shears add/remove <block id>:<metadata>
+command.veinminer.blocklist=/veinminer blocklist pickaxe/axe/shovel/hoe/shears add/remove <mod id>:<block name> <metadata>
 command.veinminer.toollist=/veinminer toollist pickaxe/axe/shovel/hoe/shears add/remove <tool id>
 
 # Command result/Mode status
@@ -11,16 +11,16 @@ command.veinminer.set.sneak=Veinminer activation: When sneaking
 command.veinminer.set.nosneak=Veinminer activation: When not sneaking
 
 # Command blocklist
-command.veinminer.blocklist.actionerror=/veinminer blocklist %s add/remove <block id>:<metadata>
-command.veinminer.blocklist.itemerror=/veinminer blocklist %s %s <block id>:<metadata>
-command.veinminer.blocklist.add=Added %d:%d to the %s block whitelist
-command.veinminer.blocklist.remove=Removed %d:%d from the %s block whitelist
+command.veinminer.blocklist.actionerror=/veinminer blocklist %s add/remove <mod id>:<block name> <metadata>
+command.veinminer.blocklist.itemerror=/veinminer blocklist %s %s  <mod id>:<block name> <metadata>
+command.veinminer.blocklist.add=Added %s/%d to the %s block whitelist
+command.veinminer.blocklist.remove=Removed %s/%d from the %s block whitelist
 
 # Command toollist
 command.veinminer.toollist.actionerror=/veinminer toollist %s add/remove <tool id>
 command.veinminer.toollist.itemerror=/veinminer toollist %s %s <tool id>
-command.veinminer.toollist.add=Added %d to the %s tool list
-command.veinminer.toollist.remove=Removed %d from the %s tool list
+command.veinminer.toollist.add=Added %s to the %s tool list
+command.veinminer.toollist.remove=Removed %s from the %s tool list
 
 command.veinminer.blocklimit=/veinminer blocklimit [-1 - 2147483647]
 command.veinminer.blocklimit.set=Set block limit to %d blocks

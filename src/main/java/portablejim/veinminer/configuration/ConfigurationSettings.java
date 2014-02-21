@@ -18,6 +18,7 @@
 package portablejim.veinminer.configuration;
 
 import com.google.common.base.Joiner;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import portablejim.veinminer.api.ToolType;
@@ -165,8 +166,8 @@ public class ConfigurationSettings {
         String[] blocksString = whitelist.split(",");
 
         for (String blockString : blocksString ) {
-            if(!blockString.isEmpty()) {
-                BlockID newBlock = new BlockID(blockString);
+            BlockID newBlock = new BlockID(blockString);
+            if(!newBlock.name.isEmpty()) {
                 blockWhitelist[tool.ordinal()].add(newBlock);
             }
         }
@@ -335,7 +336,7 @@ public class ConfigurationSettings {
     }
 
     public boolean toolIsOfType(ItemStack tool, ToolType type) {
-        return tool == null || this.toolIds[type.ordinal()].contains(tool.getItem().getUnlocalizedName());
+        return tool == null || this.toolIds[type.ordinal()].contains(Item.itemRegistry.getNameForObject(tool.getItem()));
     }
 
     /**
