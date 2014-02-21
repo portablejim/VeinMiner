@@ -17,15 +17,21 @@
 
 package portablejim.veinminer.proxy;
 
+import portablejim.veinminer.event.server.JoinServerEvent;
+
 /**
  * Server implementation of the proxy interface.
  */
 
 @SuppressWarnings("UnusedDeclaration")
 public class ServerProxy implements CommonProxy {
+    private JoinServerEvent joinServerEvent;
+
     @Override
     public void registerKeybind() { }
 
     @Override
-    public void addOtherEvents() { }
+    public void addOtherEvents() {
+        joinServerEvent = new JoinServerEvent();
+    }
 }

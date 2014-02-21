@@ -1,8 +1,7 @@
 package portablejim.veinminer.network.packet;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelHandlerContext;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ChatComponentTranslation;
 import portablejim.veinminer.server.MinerServer;
@@ -36,6 +35,9 @@ public class PacketClientPresent implements IPacket {
     public void readBytes(ByteBuf buffer) {
         preferredMode = buffer.readInt();
     }
+
+    @Override
+    public void handleClientSide(EntityClientPlayerMP player) { }
 
     @Override
     public void handleServerSide(EntityPlayerMP player) {

@@ -1,8 +1,7 @@
 package portablejim.veinminer.network.packet;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelHandlerContext;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.entity.player.EntityPlayerMP;
 import portablejim.veinminer.server.MinerServer;
 import portablejim.veinminer.util.PlayerStatus;
@@ -32,6 +31,9 @@ public class PacketMinerActivate implements IPacket {
     public void readBytes(ByteBuf buffer) {
         keyActive = buffer.readBoolean();
     }
+
+    @Override
+    public void handleClientSide(EntityClientPlayerMP player) { }
 
     @Override
     public void handleServerSide(EntityPlayerMP player) {

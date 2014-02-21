@@ -9,11 +9,14 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.relauncher.Side;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.NetHandlerPlayServer;
 import portablejim.veinminer.lib.ModInfo;
 import portablejim.veinminer.network.packet.IPacket;
 import portablejim.veinminer.network.packet.PacketClientPresent;
 import portablejim.veinminer.network.packet.PacketMinerActivate;
+import portablejim.veinminer.network.packet.PacketPingClient;
 
 import java.util.EnumMap;
 
@@ -29,8 +32,9 @@ public class ChannelHandler extends FMLIndexedMessageToMessageCodec<IPacket> {
     public ChannelHandler() {
         channels = NetworkRegistry.INSTANCE.newChannel(ModInfo.CHANNEL, this);
 
-        addDiscriminator(0, PacketClientPresent.class);
-        addDiscriminator(1, PacketMinerActivate.class);
+        addDiscriminator(0, PacketPingClient.class);
+        addDiscriminator(1, PacketClientPresent.class);
+        addDiscriminator(2, PacketMinerActivate.class);
     }
 
     @Override
@@ -44,11 +48,19 @@ public class ChannelHandler extends FMLIndexedMessageToMessageCodec<IPacket> {
         if(FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
             NetHandlerPlayServer handler = (NetHandlerPlayServer) ctx.channel().attr(NetworkRegistry.NET_HANDLER).get();
             msg.handleServerSide(handler.playerEntity);
+        } else if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
+            msg.handleClientSide(Minecraft.getMinecraft().thePlayer);
         }
     }
 
     public void sendToServer(IPacket packet) {
         channels.get(Side.CLIENT).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(OutboundTarget.TOSERVER);
         channels.get(Side.CLIENT).writeOutbound(packet);
+    }
+
+    public void sendToPlayer(EntityPlayer player, IPacket packet) {
+      channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.PLAYER);
+        channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(player);
+        channels.get(Side.SERVER).writeOutbound(packet);
     }
 }
