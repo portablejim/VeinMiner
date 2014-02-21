@@ -55,7 +55,8 @@ import java.util.Set;
  * through ForgeModLoader.
  */
 
-@Mod(modid = ModInfo.MODID, acceptedMinecraftVersions = "[1.7,1.8)")
+@Mod(modid = ModInfo.MODID, acceptedMinecraftVersions = "[1.7,1.8)",
+        canBeDeactivated = true, guiFactory = "portablejim.veinminer.configuration.client.ConfigGuiFactory")
 public class VeinMiner extends DummyModContainer{
 
     @Instance(ModInfo.MODID)
