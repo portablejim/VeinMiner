@@ -17,12 +17,19 @@
 
 package portablejim.veinminer.proxy;
 
+import portablejim.veinminer.event.server.JoinServerEvent;
+
 /**
- * Proxy interface that allows methods to be performed client-side only or
- * server-side only.
+ * Server implementation of the proxy interface.
  */
 
-public interface CommonProxy {
-    public void registerKeybind();
-    public void addOtherEvents();
+@SuppressWarnings("UnusedDeclaration")
+public class CommonProxy {
+    private JoinServerEvent joinServerEvent;
+
+    public void registerClientEvents () { }
+
+    public void registerCommonEvents () {
+        joinServerEvent = new JoinServerEvent();
+    }
 }

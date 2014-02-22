@@ -48,7 +48,7 @@ public class ModInfo {
     }
     public static final String COREMOD_ID = "veinminer_coremod";
     public static final String COREMOD_NAME = "Core mod";
-    public static final String PROXY_SERVER_CLASS = "portablejim.veinminer.proxy.ServerProxy";
+    public static final String PROXY_SERVER_CLASS = "portablejim.veinminer.proxy.CommonProxy";
     public static final String PROXY_CLIENT_CLASS = "portablejim.veinminer.proxy.ClientProxy";
     public static final String CHANNEL = "VeinMiner";
 }

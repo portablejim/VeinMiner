@@ -24,14 +24,11 @@ import portablejim.veinminer.event.client.ActivateMinerKeybindManager;
  */
 
 @SuppressWarnings("UnusedDeclaration")
-public class ClientProxy implements CommonProxy {
+public class ClientProxy extends CommonProxy {
     private ActivateMinerKeybindManager keybindManager;
-    @Override
-    public void registerKeybind() {
-        keybindManager = new ActivateMinerKeybindManager();
-    }
 
     @Override
-    public void addOtherEvents() {
+    public void registerClientEvents() {
+        keybindManager = new ActivateMinerKeybindManager();
     }
 }

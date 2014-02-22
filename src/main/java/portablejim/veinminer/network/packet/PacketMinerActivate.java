@@ -18,6 +18,9 @@ import java.util.UUID;
 public class PacketMinerActivate implements IPacket {
     public boolean keyActive;
 
+    @SuppressWarnings("UnusedDeclaration")
+    public PacketMinerActivate() {}
+
     public PacketMinerActivate(boolean keyActive) {
         this.keyActive = keyActive;
     }

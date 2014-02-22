@@ -4,6 +4,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import portablejim.veinminer.VeinMiner;
+import portablejim.veinminer.lib.MinerLogger;
 import portablejim.veinminer.network.packet.PacketPingClient;
 
 /**
@@ -25,5 +26,6 @@ public class JoinServerEvent {
         //new JoinServerTicker();
         PacketPingClient packet = new PacketPingClient();
         VeinMiner.instance.channelHandler.sendToPlayer(event.player, packet);
+        MinerLogger.debug("Sent ping packet to client");
     }
 }

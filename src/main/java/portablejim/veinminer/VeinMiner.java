@@ -81,8 +81,8 @@ public class VeinMiner extends DummyModContainer{
         configurationValues = new ConfigurationValues(event.getSuggestedConfigurationFile());
         configurationValues.loadConfigFile();
         configurationSettings = new ConfigurationSettings(configurationValues);
-        proxy.registerKeybind();
-        proxy.addOtherEvents();
+        proxy.registerClientEvents();
+        proxy.registerCommonEvents();
     }
 
     @SuppressWarnings("UnusedDeclaration")
