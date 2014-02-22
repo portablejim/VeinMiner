@@ -134,7 +134,7 @@ public class MinerInstance {
         if(playerStatus == null) {
             this.finished = true;
         }
-        else if(playerStatus == PlayerStatus.DISABLED || playerStatus == PlayerStatus.INACTIVE ||
+        else if(playerStatus == PlayerStatus.INACTIVE ||
                 (playerStatus == PlayerStatus.SNEAK_ACTIVE && !player.isSneaking()) ||
                 (playerStatus == PlayerStatus.SNEAK_INACTIVE && player.isSneaking())) {
             this.finished = true;

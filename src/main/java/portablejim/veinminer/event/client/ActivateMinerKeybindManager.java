@@ -25,6 +25,7 @@ import net.minecraft.client.settings.KeyBinding;
 import org.lwjgl.input.Keyboard;
 import portablejim.veinminer.VeinMiner;
 import portablejim.veinminer.network.packet.PacketMinerActivate;
+import portablejim.veinminer.util.PreferredMode;
 
 /**
  * Manages the keybind for the client side of VeinMiner.
@@ -44,10 +45,17 @@ public class ActivateMinerKeybindManager {
     @SubscribeEvent
     public void KeyEvent(InputEvent.KeyInputEvent event) {
         boolean sendPacket = false;
-        if (keyBinding.getIsKeyPressed() && !statusEnabled) {
+
+        int mode = VeinMiner.instance.configurationSettings.getPreferredMode();
+        boolean pressed = keyBinding.getIsKeyPressed();
+        if(mode == PreferredMode.DISABLED) {
+            statusEnabled = false;
+            sendPacket = true; // If enabled when changing, notify server that it is disabled.
+        }
+        else if ((pressed &&  mode == PreferredMode.PRESSED) || (!pressed && mode == PreferredMode.RELEASED) && !statusEnabled) {
             statusEnabled = true;
             sendPacket = true;
-        } else if (!keyBinding.getIsKeyPressed() && statusEnabled) {
+        } else if (((pressed &&  mode == PreferredMode.RELEASED) || (!pressed && mode == PreferredMode.PRESSED)) && statusEnabled) {
             statusEnabled = false;
             sendPacket = true;
         }

@@ -84,9 +84,9 @@ public class ConfigurationValues {
     public static final String ENABLE_ALL_TOOLS_DESCRIPTION = "Allow all tools, including the open hand, to be used to mine blocks.";
 
     public String CLIENT_PREFERRED_MODE;
-    public static final String CLIENT_PREFERRED_MODE_DEFAULT = "sneak";
+    public static final String CLIENT_PREFERRED_MODE_DEFAULT = "pressed";
     public static final String CLIENT_PREFERRED_MODE_CONFIGNAME = "client.preferredMode";
-    public static final String CLIENT_PREFERRED_MODE_DESCRIPTION = "What mode should the client use when joining a game.\nValid modes: [default: sneak\n  'auto' = enables on press of keybind\n  'sneak' = enables on sneaking\n  'no_sneak' = disables on sneaking";
+    public static final String CLIENT_PREFERRED_MODE_DESCRIPTION = "What mode should the client use when joining a game.\nValid modes: [default: pressed\n  'disabled' = don't enable, even when keybind pressed\n  'pressed' = enables when keybind is pressed\n  'released' = enables when keybind is released";
 
     public ConfigurationValues(File file) {
         configFile = new Configuration(file);

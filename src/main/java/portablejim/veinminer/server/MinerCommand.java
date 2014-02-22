@@ -50,7 +50,7 @@ public class MinerCommand extends CommandBase {
     public static final int COMMAND_SAVE = 6;
     public static final int COMMAND_HELP = 7;
     private static final String[] commands = new String[]{"mode", "blocklist", "toollist", "blocklimit", "radius", "per_tick", "saveconfig", "help"};
-    private static final String[] modes = new String[] {"disable", "auto", "sneak", "no_sneak"};
+    private static final String[] modes = new String[] {"auto", "sneak", "no_sneak"};
 
     @Override
     public String getCommandName() {
@@ -191,23 +191,14 @@ public class MinerCommand extends CommandBase {
             showUsageError("command.veinminer.enable");
         }
         else if(astring[1].equals(modes[0])) {
-            minerServer.setPlayerStatus(player, PlayerStatus.DISABLED);
-            sendProperChatToPlayer(senderPlayer, "command.veinminer.set.disable");
-        }
-        else if(astring[1].equals(modes[1])) {
-            if(minerServer.playerHasClient(player)) {
-                minerServer.setPlayerStatus(player, PlayerStatus.INACTIVE);
-            }
-            else {
-                minerServer.setPlayerStatus(player, PlayerStatus.DISABLED);
-            }
+            minerServer.setPlayerStatus(player, PlayerStatus.INACTIVE);
             sendProperChatToPlayer(senderPlayer, "command.veinminer.set.auto");
         }
-        else if(astring[1].equals(modes[2])) {
+        else if(astring[1].equals(modes[1])) {
             minerServer.setPlayerStatus(player, PlayerStatus.SNEAK_ACTIVE);
             sendProperChatToPlayer(senderPlayer, "command.veinminer.set.sneak");
         }
-        else if(astring[1].equals(modes[3])) {
+        else if(astring[1].equals(modes[2])) {
             minerServer.setPlayerStatus(player, PlayerStatus.SNEAK_INACTIVE);
             sendProperChatToPlayer(senderPlayer, "command.veinminer.set.nosneak");
         }

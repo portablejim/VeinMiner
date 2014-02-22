@@ -6,7 +6,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ChatComponentTranslation;
 import portablejim.veinminer.server.MinerServer;
 import portablejim.veinminer.util.PlayerStatus;
-import portablejim.veinminer.util.PreferredMode;
 
 import java.util.UUID;
 
@@ -18,23 +17,14 @@ import java.util.UUID;
  * To change this template use File | Settings | File Templates.
  */
 public class PacketClientPresent implements IPacket {
-    int preferredMode;
 
     public PacketClientPresent() {}
 
-    public PacketClientPresent(int preferredMode) {
-        this.preferredMode = preferredMode;
-    }
+    @Override
+    public void writeBytes(ByteBuf buffer) { }
 
     @Override
-    public void writeBytes(ByteBuf buffer) {
-        buffer.writeInt(preferredMode);
-    }
-
-    @Override
-    public void readBytes(ByteBuf buffer) {
-        preferredMode = buffer.readInt();
-    }
+    public void readBytes(ByteBuf buffer) { }
 
     @Override
     public void handleClientSide(EntityClientPlayerMP player) { }
@@ -44,18 +34,7 @@ public class PacketClientPresent implements IPacket {
         UUID playerName = player.getUniqueID();
 
         MinerServer.instance.addClientPlayer(playerName);
-        switch (preferredMode) {
-            case PreferredMode.AUTO:
-                MinerServer.instance.setPlayerStatus(playerName, PlayerStatus.INACTIVE);
-                player.addChatMessage(new ChatComponentTranslation("mod.veinminer.preferredmode.auto"));
-                break;
-            case PreferredMode.SNEAK:
-                MinerServer.instance.setPlayerStatus(playerName, PlayerStatus.SNEAK_ACTIVE);
-                player.addChatMessage(new ChatComponentTranslation("mod.veinminer.preferredmode.sneak"));
-                break;
-            case PreferredMode.NO_SNEAK:
-                MinerServer.instance.setPlayerStatus(playerName, PlayerStatus.SNEAK_INACTIVE);
-                player.addChatMessage(new ChatComponentTranslation("mod.veinminer.preferredmode.nosneak"));
-        }
+        MinerServer.instance.setPlayerStatus(playerName, PlayerStatus.INACTIVE);
+        player.addChatMessage(new ChatComponentTranslation("mod.veinminer.preferredmode.auto"));
     }
 }

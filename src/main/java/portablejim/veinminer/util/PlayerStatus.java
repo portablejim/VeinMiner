@@ -22,5 +22,5 @@ package portablejim.veinminer.util;
  */
 
 public enum PlayerStatus {
-    DISABLED, INACTIVE, ACTIVE, SNEAK_ACTIVE, SNEAK_INACTIVE
+    INACTIVE, ACTIVE, SNEAK_ACTIVE, SNEAK_INACTIVE
 }

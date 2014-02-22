@@ -3,9 +3,11 @@ package portablejim.veinminer.event.server;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import portablejim.veinminer.VeinMiner;
 import portablejim.veinminer.lib.MinerLogger;
 import portablejim.veinminer.network.packet.PacketPingClient;
+import portablejim.veinminer.server.MinerServer;
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,9 +16,9 @@ import portablejim.veinminer.network.packet.PacketPingClient;
  * Time: 4:56 PM
  * To change this template use File | Settings | File Templates.
  */
-public class JoinServerEvent {
+public class PlayerServerEvent {
 
-    public JoinServerEvent() {
+    public PlayerServerEvent() {
         FMLCommonHandler.instance().bus().register(this);
     }
 
@@ -27,5 +29,11 @@ public class JoinServerEvent {
         PacketPingClient packet = new PacketPingClient();
         VeinMiner.instance.channelHandler.sendToPlayer(event.player, packet);
         MinerLogger.debug("Sent ping packet to client");
+    }
+
+    @SuppressWarnings("UnusedDeclaration")
+    @SubscribeEvent
+    public void disconnected(PlayerLoggedOutEvent event) {
+        MinerServer.instance.removeClientPlayer(event.player.getPersistentID());
     }
 }

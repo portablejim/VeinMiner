@@ -346,16 +346,16 @@ public class ConfigurationSettings {
      * @return If modestring is valid
      */
     boolean setPreferredMode(String modeString, String fallback) {
-        if("auto".equals(modeString)) {
-            preferredMode = PreferredMode.AUTO;
+        if("disabled".equals(modeString)) {
+            preferredMode = PreferredMode.DISABLED;
             return true;
         }
-        else if("sneak".equals(modeString)) {
-            preferredMode = PreferredMode.SNEAK;
+        else if("pressed".equals(modeString)) {
+            preferredMode = PreferredMode.PRESSED;
             return true;
         }
-        else if("no_sneak".equals(modeString)) {
-            preferredMode = PreferredMode.NO_SNEAK;
+        else if("released".equals(modeString)) {
+            preferredMode = PreferredMode.RELEASED;
             return true;
         }
 
@@ -377,12 +377,12 @@ public class ConfigurationSettings {
 
     public String getPreferredModeString() {
         switch (preferredMode) {
-            case PreferredMode.AUTO:
-                return "auto";
-            case PreferredMode.SNEAK:
-                return "sneak";
-            case PreferredMode.NO_SNEAK:
-                return "no_sneak";
+            case PreferredMode.DISABLED:
+                return "disabled";
+            case PreferredMode.PRESSED:
+                return "pressed";
+            case PreferredMode.RELEASED:
+                return "released";
         }
         return "";
     }

@@ -53,12 +53,7 @@ public class MinerServer {
     }
 
     public void setPlayerStatus(UUID player, PlayerStatus status) {
-        if(status == PlayerStatus.DISABLED) {
-            players.remove(player);
-        }
-        else {
             players.put(player, status);
-        }
     }
 
     public void removePlayer(UUID player) {
@@ -72,7 +67,7 @@ public class MinerServer {
             return players.get(player);
         }
         else {
-            return PlayerStatus.DISABLED;
+            return PlayerStatus.INACTIVE;
         }
     }
 
@@ -128,9 +123,7 @@ public class MinerServer {
 
     public void addClientPlayer(UUID playerName) {
         clientPlayers.add(playerName);
-        if(getPlayerStatus(playerName).equals(PlayerStatus.DISABLED)) {
-            setPlayerStatus(playerName, PlayerStatus.INACTIVE);
-        }
+        setPlayerStatus(playerName, PlayerStatus.INACTIVE);
     }
 
     public void removeClientPlayer(UUID playerName) {

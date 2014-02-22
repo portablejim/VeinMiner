@@ -17,7 +17,7 @@
 
 package portablejim.veinminer.proxy;
 
-import portablejim.veinminer.event.server.JoinServerEvent;
+import portablejim.veinminer.event.server.PlayerServerEvent;
 
 /**
  * Server implementation of the proxy interface.
@@ -25,11 +25,11 @@ import portablejim.veinminer.event.server.JoinServerEvent;
 
 @SuppressWarnings("UnusedDeclaration")
 public class CommonProxy {
-    private JoinServerEvent joinServerEvent;
+    private PlayerServerEvent playerServerEvent;
 
     public void registerClientEvents () { }
 
     public void registerCommonEvents () {
-        joinServerEvent = new JoinServerEvent();
+        playerServerEvent = new PlayerServerEvent();
     }
 }

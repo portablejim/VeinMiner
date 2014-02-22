@@ -24,7 +24,7 @@ package portablejim.veinminer.util;
  */
 
 public class PreferredMode {
-    public static final int AUTO = 0;
-    public static final int SNEAK = 1;
-    public static final int NO_SNEAK = 2;
+    public static final int DISABLED = 0;
+    public static final int PRESSED = 1;
+    public static final int RELEASED = 2;
 }
