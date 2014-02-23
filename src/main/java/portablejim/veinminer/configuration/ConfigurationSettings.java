@@ -367,6 +367,10 @@ public class ConfigurationSettings {
         return false;
     }
 
+    public void setPreferredMode(int mode) {
+        preferredMode = mode;
+    }
+
     /**
      * Returns the preferred mode.
      * @return One of PreferredMode.AUTO, PreferredMode.SNEAK, PreferredMode.NO_SNEAK

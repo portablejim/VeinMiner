@@ -60,3 +60,20 @@ command.veinminer.help.enable2='disable': Completely disable
 command.veinminer.help.enable3='auto': Activate on keybind (useless without mod on client)
 command.veinminer.help.enable4='sneak': Activate while sneaking
 command.veinminer.help.enable5='no_sneak': Activate while not sneaking
+
+# GUI config
+gui.veinminer.config=Veinminer Configuration
+gui.veinminer.config.disabled=Disabled
+gui.veinminer.config.pressed=When keybind pressed
+gui.veinminer.config.released=When keybind released
+gui.veinminer.config.enable.text=Enable Veinminer:
+gui.veinminer.config.range=Range: %d blocks
+gui.veinminer.config.blocklimit=Block limit: %d blocks
+gui.veinminer.config.blocklimit.infinite=Block limit: Infinite blocks
+gui.veinminer.config.blocklist=Block List:
+gui.veinminer.config.toollist=Tool List:
+gui.veinminer.config.list.axe=Axe
+gui.veinminer.config.list.hoe=Hoe
+gui.veinminer.config.list.pickaxe=Pickaxe
+gui.veinminer.config.list.shears=Shears
+gui.veinminer.config.list.shovel=Shovel
