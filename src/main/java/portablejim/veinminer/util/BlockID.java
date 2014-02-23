@@ -19,6 +19,7 @@ package portablejim.veinminer.util;
 
 import net.minecraft.block.Block;
 import net.minecraft.world.World;
+import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -60,7 +61,7 @@ public class BlockID
 
     public BlockID(String name, int meta) {
         this.name = name;
-        this.metadata =  meta < -1 ? -1 : meta;
+        this.metadata =  meta < -1 || meta == OreDictionary.WILDCARD_VALUE ? -1 : meta;
     }
 
     public BlockID(World world, int x, int y, int z) {

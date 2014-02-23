@@ -175,7 +175,8 @@ public class ConfigurationSettings {
 
     public void addBlockToWhitelist(ToolType tool, BlockID block) {
         if(!block.name.isEmpty()) {
-            if(!blockWhitelist[tool.ordinal()].contains(block)) {
+            BlockID testBlock = new BlockID(block.name, -1);
+            if(!blockWhitelist[tool.ordinal()].contains(block) && !blockWhitelist[tool.ordinal()].contains(testBlock)) {
                 block.metadata = block.metadata == OreDictionary.WILDCARD_VALUE ? -1 : block.metadata;
                 blockWhitelist[tool.ordinal()].add(block);
             }
