@@ -56,16 +56,16 @@ public class ConfigGuiScreen extends GuiScreen implements IGuiElementValuePersis
         this.buttonList.add(new GuiElementSliderLog(3, this.width / 2 - 152, topOffset + 1 * 24, this, 1F, 1000F, 4));
         this.buttonList.add(new GuiElementSliderLog(4, this.width / 2 + 2, topOffset + 1 * 24, this, 1F, (2 << 16) + 1, 3));
 
-        this.buttonList.add(new GuiButton(5, this.width / 2 - 152 + 0 * 60, this.height - 38 - 1 * 22 - 6, 56, 20, I18n.format("gui.veinminer.config.list.axe")));
-        this.buttonList.add(new GuiButton(6, this.width / 2 - 152 + 0 * 60, this.height - 38 - 3 * 22 - 6, 56, 20, I18n.format("gui.veinminer.config.list.axe")));
-        this.buttonList.add(new GuiButton(7, this.width / 2 - 152 + 1 * 60, this.height - 38 - 1 * 22 - 6, 56, 20, I18n.format("gui.veinminer.config.list.hoe")));
-        this.buttonList.add(new GuiButton(8, this.width / 2 - 152 + 1 * 60, this.height - 38 - 3 * 22 - 6, 56, 20, I18n.format("gui.veinminer.config.list.hoe")));
-        this.buttonList.add(new GuiButton(9, this.width / 2 - 152 + 2 * 60, this.height - 38 - 1 * 22 - 6, 56, 20, I18n.format("gui.veinminer.config.list.pickaxe")));
-        this.buttonList.add(new GuiButton(10, this.width / 2 - 152 + 2 * 60, this.height - 38 - 3 * 22 - 6, 56, 20, I18n.format("gui.veinminer.config.list.pickaxe")));
-        this.buttonList.add(new GuiButton(11, this.width / 2 - 152 + 3 * 60, this.height - 38 - 1 * 22 - 6, 56, 20, I18n.format("gui.veinminer.config.list.shears")));
-        this.buttonList.add(new GuiButton(12, this.width / 2 - 152 + 3 * 60, this.height - 38 - 3 * 22 - 6, 56, 20, I18n.format("gui.veinminer.config.list.shears")));
-        this.buttonList.add(new GuiButton(13, this.width / 2 - 152 + 4 * 60, this.height - 38 - 1 * 22 - 6, 56, 20, I18n.format("gui.veinminer.config.list.shovel")));
-        this.buttonList.add(new GuiButton(14, this.width / 2 - 152 + 4 * 60, this.height - 38 - 3 * 22 - 6, 56, 20, I18n.format("gui.veinminer.config.list.shovel")));
+        this.buttonList.add(new GuiButton(5, this.width / 2 - 152 + 0 * 62, this.height - 38 - 1 * 22 - 6, 57, 20, I18n.format("gui.veinminer.config.list.axe")));
+        this.buttonList.add(new GuiButton(6, this.width / 2 - 152 + 0 * 62, this.height - 38 - 3 * 22 - 6, 57, 20, I18n.format("gui.veinminer.config.list.axe")));
+        this.buttonList.add(new GuiButton(7, this.width / 2 - 152 + 1 * 62 - 1, this.height - 38 - 1 * 22 - 6, 57, 20, I18n.format("gui.veinminer.config.list.hoe")));
+        this.buttonList.add(new GuiButton(8, this.width / 2 - 152 + 1 * 62 - 1, this.height - 38 - 3 * 22 - 6, 57, 20, I18n.format("gui.veinminer.config.list.hoe")));
+        this.buttonList.add(new GuiButton(9, this.width / 2 - 152 + 2 * 62 - 1, this.height - 38 - 1 * 22 - 6, 57, 20, I18n.format("gui.veinminer.config.list.pickaxe")));
+        this.buttonList.add(new GuiButton(10, this.width / 2 - 152 + 2 * 62 - 1, this.height - 38 - 3 * 22 - 6, 57, 20, I18n.format("gui.veinminer.config.list.pickaxe")));
+        this.buttonList.add(new GuiButton(11, this.width / 2 - 152 + 3 * 62 - 1, this.height - 38 - 1 * 22 - 6, 57, 20, I18n.format("gui.veinminer.config.list.shears")));
+        this.buttonList.add(new GuiButton(12, this.width / 2 - 152 + 3 * 62 - 1, this.height - 38 - 3 * 22 - 6, 57, 20, I18n.format("gui.veinminer.config.list.shears")));
+        this.buttonList.add(new GuiButton(13, this.width / 2 - 152 + 4 * 62 - 1, this.height - 38 - 1 * 22 - 6, 57, 20, I18n.format("gui.veinminer.config.list.shovel")));
+        this.buttonList.add(new GuiButton(14, this.width / 2 - 152 + 4 * 62 - 1, this.height - 38 - 3 * 22 - 6, 57, 20, I18n.format("gui.veinminer.config.list.shovel")));
     }
 
     @Override
