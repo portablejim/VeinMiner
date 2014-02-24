@@ -56,12 +56,6 @@ public class MinerServer {
             players.put(player, status);
     }
 
-    public void removePlayer(UUID player) {
-        if(players.containsKey(player)) {
-            players.remove(player);
-        }
-    }
-
     public PlayerStatus getPlayerStatus(UUID player) {
         if(players.containsKey(player)) {
             return players.get(player);
@@ -84,7 +78,7 @@ public class MinerServer {
 
         for (MinerInstance minerInstance : minerInstances) {
             if (minerInstance.isRegistered(p)) {
-                minerInstance.addDrop(entityItem, p);
+                minerInstance.addDrop(entityItem);
             }
         }
     }
@@ -97,24 +91,8 @@ public class MinerServer {
         minerInstances.remove(ins);
     }
 
-    public boolean isRegistered(int x, int y, int z) {
-        Point p = new Point(x, y, z);
-        boolean registered = false;
-
-        for (MinerInstance minerInstance : minerInstances) {
-            if (minerInstance.isRegistered(p)) {
-                registered = true;
-            }
-        }
-        return registered;
-    }
-
     public ConfigurationSettings getConfigurationSettings() {
         return settings;
-    }
-
-    public HashSet<UUID> getClientPlayers() {
-        return clientPlayers;
     }
 
     public boolean playerHasClient(UUID playerName) {
@@ -128,9 +106,5 @@ public class MinerServer {
 
     public void removeClientPlayer(UUID playerName) {
         clientPlayers.remove(playerName);
-    }
-
-    public void setClientPlayers(HashSet<UUID> clientPlayers) {
-        this.clientPlayers = clientPlayers;
     }
 }

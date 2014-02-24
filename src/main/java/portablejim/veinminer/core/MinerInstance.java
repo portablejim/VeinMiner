@@ -301,7 +301,7 @@ public class MinerInstance {
         return awaitingEntityDrop.contains(p);
     }
 
-    public void addDrop(EntityItem entity, Point point) {
+    public void addDrop(EntityItem entity) {
         ItemStack item = entity.getEntityItem();
         ItemStackID itemInfo = new ItemStackID(item.getItem(), item.getItemDamage(), item.getMaxStackSize());
 
@@ -313,7 +313,5 @@ public class MinerInstance {
         else {
             drops.put(itemInfo, item.stackSize);
         }
-
-        //awaitingEntityDrop.remove(point);
     }
 }
