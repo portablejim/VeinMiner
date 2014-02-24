@@ -275,9 +275,9 @@ public class MinerInstance {
     private void spawnDrops() {
         for(Map.Entry<ItemStackID, Integer> schedDrop : drops.entrySet()) {
             ItemStackID itemStack = schedDrop.getKey();
-            String[] itemNames = itemStack.getItemId().split(":", 1);
+            String[] itemNames = itemStack.getItemId().split(":", 2);
 
-            if(GameRegistry.findItemStack(itemNames[0], itemNames[1], 1) == null) {
+            if(itemNames.length < 2 || GameRegistry.findItemStack(itemNames[0], itemNames[1], 1) == null) {
                 continue;
             }
 
@@ -289,7 +289,7 @@ public class MinerInstance {
                 world.spawnEntityInWorld(newEntityItem);
                 numItems -= itemStack.getMaxStackSize();
             }
-            ItemStack newItemStack = GameRegistry.findItemStack(itemNames[0], itemNames[1], itemStack.getMaxStackSize());
+            ItemStack newItemStack = GameRegistry.findItemStack(itemNames[0], itemNames[1], numItems);
             newItemStack.setItemDamage(itemStack.getDamage());
             EntityItem newEntityItem = new EntityItem(world, initalBlock.getX(), initalBlock.getY(), initalBlock.getZ(), newItemStack);
             world.spawnEntityInWorld(newEntityItem);
@@ -314,6 +314,6 @@ public class MinerInstance {
             drops.put(itemInfo, item.stackSize);
         }
 
-        awaitingEntityDrop.remove(point);
+        //awaitingEntityDrop.remove(point);
     }
 }

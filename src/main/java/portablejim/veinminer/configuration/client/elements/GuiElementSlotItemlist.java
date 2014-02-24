@@ -82,18 +82,18 @@ public class GuiElementSlotItemlist extends GuiScrollingList {
         BlockID itemParts = new BlockID(entry);
         String[] nameParts = itemParts.name.split(":", 2);
 
-        String displayName;
-        boolean renderItem;
+        String displayName = "";
+        boolean renderItem = false;
 
         Block tryBlock = Block.getBlockFromName(entry);
-        Item tryItem;
+        Item tryItem = null;
         if(tryBlock != null) {
             displayName = tryBlock.getUnlocalizedName();
 
             tryItem = Item.getItemFromBlock(tryBlock);
             renderItem = tryItem != null;
         }
-        else {
+        else if(nameParts.length == 2) {
             tryItem = GameRegistry.findItem(nameParts[0], nameParts[1]);
             displayName = tryItem.getUnlocalizedName();
 

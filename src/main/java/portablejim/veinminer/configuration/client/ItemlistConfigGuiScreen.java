@@ -59,8 +59,6 @@ public class ItemlistConfigGuiScreen extends GuiScreen {
         this.mode = mode;
         this.parent = parent;
 
-        iconRenderer = new IconRenderer(mc, zLevel, fontRendererObj, mc.getTextureManager());
-
         String[] toolNames = { "axe", "hoe", "pickaxe", "shears", "shovel"};
         String toolName = toolNames[toolType.ordinal()];
         String[] modeNames = { "blocklist", "toollist" };
@@ -81,6 +79,8 @@ public class ItemlistConfigGuiScreen extends GuiScreen {
         clearButton = new GuiButton(4, this.width / 2 + 104, 34, 48, 20, I18n.format("gui.veinminer.item.clear"));
         clearButton.enabled = false;
         this.buttonList.add(clearButton);
+
+        iconRenderer = new IconRenderer(mc, zLevel, fontRendererObj, mc.getTextureManager());
 
         textFieldAdd = new GuiTextField(this.getFontRenderer(), this.width / 2 - 128, 34, 176, 20);
         textFieldAdd.setEnabled(true);
@@ -134,6 +134,7 @@ public class ItemlistConfigGuiScreen extends GuiScreen {
                         case 1:
                             VeinMiner.instance.configurationSettings.removeTool(toolType, selectedItem);
                     }
+                    VeinMiner.instance.configurationSettings.saveConfigs();
                     break;
                 }
                 case 3:
@@ -146,11 +147,13 @@ public class ItemlistConfigGuiScreen extends GuiScreen {
                         case 1:
                             VeinMiner.instance.configurationSettings.addTool(toolType, this.textFieldText);
                     }
+                    VeinMiner.instance.configurationSettings.saveConfigs();
                     break;
                 }
                 case 4:
                     this.textFieldAdd.setText("");
                     this.textFieldText = "";
+                    addButtonCheck();
 
             }
             this.itemList.updateItemIds();
@@ -185,8 +188,10 @@ public class ItemlistConfigGuiScreen extends GuiScreen {
             BlockID testBlockId = new BlockID(textFieldText);
 
             String[] testItemName = testBlockId.name.split(":", 2);
-            ItemStack itemStack = GameRegistry.findItemStack(testItemName[0], testItemName[1], 1);
-            iconRenderer.renderItemStackIcon(this.width / 2 - 152, 34, itemStack);
+            if(testItemName.length == 2) {
+                ItemStack itemStack = GameRegistry.findItemStack(testItemName[0], testItemName[1], 1);
+                iconRenderer.renderItemStackIcon(this.width / 2 - 152, 34, itemStack);
+            }
         }
     }
 
