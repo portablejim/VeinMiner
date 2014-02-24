@@ -3,7 +3,6 @@ package portablejim.veinminer.configuration.client;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
@@ -20,7 +19,6 @@ import org.lwjgl.opengl.GL12;
 import portablejim.veinminer.VeinMiner;
 import portablejim.veinminer.api.ToolType;
 import portablejim.veinminer.configuration.client.elements.GuiElementSlotItemlist;
-import portablejim.veinminer.server.MinerServer;
 import portablejim.veinminer.util.BlockID;
 
 import java.util.ArrayList;
@@ -42,6 +40,8 @@ public class ItemlistConfigGuiScreen extends GuiScreen {
     String textFieldText = "";
     boolean renderIcon = false;
 
+    String titleString;
+
     GuiElementSlotItemlist itemList;
     private Object parent;
 
@@ -49,6 +49,13 @@ public class ItemlistConfigGuiScreen extends GuiScreen {
         this.toolType = toolType;
         this.mode = mode;
         this.parent = parent;
+
+        String[] toolNames = { "axe", "hoe", "pickaxe", "shears", "shovel"};
+        String toolName = toolNames[toolType.ordinal()];
+        String[] modeNames = { "blocklist", "toollist" };
+        String modeName = modeNames[mode];
+
+        this.titleString = String.format("gui.veinminer.title.%s.%s", modeName, toolName);
     }
 
     @SuppressWarnings("unchecked")
@@ -155,40 +162,29 @@ public class ItemlistConfigGuiScreen extends GuiScreen {
         this.textFieldAdd.mouseClicked(par1, par2, par3);
     }
 
-    private void func_148225_a(int p_148225_1_, int p_148225_2_, ItemStack p_148225_3_)
+    private void renderItemStackIcon(int renderX, int renderY, ItemStack itemStack)
     {
-        this.func_148226_e(p_148225_1_ + 1, p_148225_2_ + 1);
+        this.setupRender(renderX + 1, renderY + 1, 0, 0);
         GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-
-        if (p_148225_3_ != null)
+        if (itemStack != null)
         {
             RenderHelper.enableGUIStandardItemLighting();
-            this.renderItem.renderItemIntoGUI(this.getFontRenderer(), this.mc.getTextureManager(), p_148225_3_, p_148225_1_ + 2, p_148225_2_ + 2);
+            this.renderItem.renderItemIntoGUI(this.getFontRenderer(), this.mc.getTextureManager(), itemStack, renderX + 2, renderY + 2);
             RenderHelper.disableStandardItemLighting();
         }
-
         GL11.glDisable(GL12.GL_RESCALE_NORMAL);
     }
 
-    private void func_148226_e(int p_148226_1_, int p_148226_2_)
-    {
-        this.func_148224_c(p_148226_1_, p_148226_2_, 0, 0);
-    }
-
-    private void func_148224_c(int p_148224_1_, int p_148224_2_, int p_148224_3_, int p_148224_4_)
+    private void setupRender(int xBase, int yBase, int uBase, int vBase)
     {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.mc.getTextureManager().bindTexture(Gui.statIcons);
-        float f = 0.0078125F;
-        float f1 = 0.0078125F;
-        boolean flag = true;
-        boolean flag1 = true;
         Tessellator tessellator = Tessellator.instance;
         tessellator.startDrawingQuads();
-        tessellator.addVertexWithUV((double)(p_148224_1_ + 0), (double)(p_148224_2_ + 18), (double)this.getZLevel(), (double)((float)(p_148224_3_ + 0) * 0.0078125F), (double)((float)(p_148224_4_ + 18) * 0.0078125F));
-        tessellator.addVertexWithUV((double) (p_148224_1_ + 18), (double) (p_148224_2_ + 18), (double) this.getZLevel(), (double) ((float) (p_148224_3_ + 18) * 0.0078125F), (double) ((float) (p_148224_4_ + 18) * 0.0078125F));
-        tessellator.addVertexWithUV((double)(p_148224_1_ + 18), (double)(p_148224_2_ + 0), (double)this.getZLevel(), (double)((float)(p_148224_3_ + 18) * 0.0078125F), (double)((float)(p_148224_4_ + 0) * 0.0078125F));
-        tessellator.addVertexWithUV((double)(p_148224_1_ + 0), (double)(p_148224_2_ + 0), (double)this.getZLevel(), (double)((float)(p_148224_3_ + 0) * 0.0078125F), (double)((float)(p_148224_4_ + 0) * 0.0078125F));
+        tessellator.addVertexWithUV((double)(xBase), (double)(yBase + 18), (double)this.getZLevel(), (double)((float)(uBase) * 0.0078125F), (double)((float)(vBase + 18) * 0.0078125F));
+        tessellator.addVertexWithUV((double) (xBase + 18), (double) (yBase + 18), (double) this.getZLevel(), (double) ((float) (uBase + 18) * 0.0078125F), (double) ((float) (vBase + 18) * 0.0078125F));
+        tessellator.addVertexWithUV((double)(xBase + 18), (double)(yBase), (double)this.getZLevel(), (double)((float)(uBase + 18) * 0.0078125F), (double)((float)(vBase) * 0.0078125F));
+        tessellator.addVertexWithUV((double)(xBase), (double)(yBase), (double)this.getZLevel(), (double)((float)(uBase) * 0.0078125F), (double)((float)(vBase) * 0.0078125F));
         tessellator.draw();
     }
 
@@ -196,6 +192,7 @@ public class ItemlistConfigGuiScreen extends GuiScreen {
     public void drawScreen(int par1, int par2, float par3) {
         drawDefaultBackground();
         itemList.drawScreen(par1, par2, par3);
+        drawCenteredString(getFontRenderer(), I18n.format(titleString), this.width / 2, 14, 0xFFFFFF);
         clearButton.enabled = !textFieldText.isEmpty();
         textFieldAdd.drawTextBox();
         super.drawScreen(par1, par2, par3);
@@ -204,7 +201,7 @@ public class ItemlistConfigGuiScreen extends GuiScreen {
 
             String[] testItemName = testBlockId.name.split(":", 2);
             ItemStack itemStack = GameRegistry.findItemStack(testItemName[0], testItemName[1], 1);
-            func_148225_a(this.width / 2 - 152, 34, itemStack);
+            renderItemStackIcon(this.width / 2 - 152, 34, itemStack);
         }
     }
 
