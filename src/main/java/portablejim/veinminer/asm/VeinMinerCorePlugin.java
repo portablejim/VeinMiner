@@ -51,6 +51,6 @@ public class VeinMinerCorePlugin implements IFMLLoadingPlugin {
 
     @Override
     public String getAccessTransformerClass() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 }

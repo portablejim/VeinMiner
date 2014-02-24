@@ -1,40 +1,43 @@
+/* This file is part of VeinMiner.
+ *
+ *    VeinMiner is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Lesser General Public License as
+ *    published by the Free Software Foundation, either version 3 of
+ *     the License, or (at your option) any later version.
+ *
+ *    VeinMiner is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Lesser General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Lesser General Public
+ *    License along with VeinMiner.
+ *    If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package portablejim.veinminer.configuration.client;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiLabel;
-import net.minecraft.client.gui.GuiOptionButton;
-import net.minecraft.client.gui.GuiOptionSlider;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.client.settings.GameSettings;
-import net.minecraft.client.settings.GameSettings.Options;
-import net.minecraftforge.client.EnumHelperClient;
 import portablejim.veinminer.VeinMiner;
 import portablejim.veinminer.api.ToolType;
 import portablejim.veinminer.configuration.ConfigurationSettings;
-import portablejim.veinminer.configuration.client.elements.GuiElementSlider;
 import portablejim.veinminer.configuration.client.elements.GuiElementSliderLog;
 import portablejim.veinminer.configuration.client.elements.IGuiElementValuePersist;
 import portablejim.veinminer.util.PreferredMode;
 
 /**
- * Created with IntelliJ IDEA.
- * User: james
- * Date: 21/02/14
- * Time: 10:33 PM
- * To change this template use File | Settings | File Templates.
+ * Screen to configure non-whitelist settings and provide links to edit
+ * tool/item whitelists
  */
+
 public class ConfigGuiScreen extends GuiScreen implements IGuiElementValuePersist {
     private GuiScreen parent;
 
     private ConfigurationSettings settings = VeinMiner.instance.configurationSettings;
     private String[] currentModeStrings = { "disabled", "pressed", "released" };
-    private GuiButton currentModeButton;
-
-    //private Options optionRange = EnumHelperClient.addOptions("veinminer.blocklimit", "gui.veinminer.config.blocklimit", false, false);
-
-    private boolean needsUpdate = true;
 
     public ConfigGuiScreen(GuiScreen parent) {
         this.parent = parent;
@@ -54,19 +57,19 @@ public class ConfigGuiScreen extends GuiScreen implements IGuiElementValuePersis
 
         this.buttonList.add(new GuiButton(2, this.width / 2 + 2, topOffset, 150, 20, I18n.format(String.format("gui.veinminer.config.%s", currentModeStrings[settings.getPreferredMode()]))));
         //optionRange.setValueMax(100F);
-        this.buttonList.add(new GuiElementSliderLog(3, this.width / 2 - 152, topOffset + 1 * 24, this, 1F, 1000F, 4));
-        this.buttonList.add(new GuiElementSliderLog(4, this.width / 2 + 2, topOffset + 1 * 24, this, 1F, (2 << 16) + 1, 3));
+        this.buttonList.add(new GuiElementSliderLog(3, this.width / 2 - 152, topOffset + 24, this, 1F, 1000F, 4));
+        this.buttonList.add(new GuiElementSliderLog(4, this.width / 2 + 2, topOffset + 24, this, 1F, (2 << 16) + 1, 3));
 
-        this.buttonList.add(new GuiButton(5, this.width / 2 - 152 + 0 * 62, this.height - 38 - 3 * 22 - 6, 57, 20, I18n.format("gui.veinminer.config.list.axe")));
-        this.buttonList.add(new GuiButton(6, this.width / 2 - 152 + 0 * 62, this.height - 38 - 1 * 22 - 6, 57, 20, I18n.format("gui.veinminer.config.list.axe")));
-        this.buttonList.add(new GuiButton(7, this.width / 2 - 152 + 1 * 62 - 1, this.height - 38 - 3 * 22 - 6, 57, 20, I18n.format("gui.veinminer.config.list.hoe")));
-        this.buttonList.add(new GuiButton(8, this.width / 2 - 152 + 1 * 62 - 1, this.height - 38 - 1 * 22 - 6, 57, 20, I18n.format("gui.veinminer.config.list.hoe")));
+        this.buttonList.add(new GuiButton(5, this.width / 2 - 152, this.height - 38 - 3 * 22 - 6, 57, 20, I18n.format("gui.veinminer.config.list.axe")));
+        this.buttonList.add(new GuiButton(6, this.width / 2 - 152, this.height - 38 - 22 - 6, 57, 20, I18n.format("gui.veinminer.config.list.axe")));
+        this.buttonList.add(new GuiButton(7, this.width / 2 - 152 + 62 - 1, this.height - 38 - 3 * 22 - 6, 57, 20, I18n.format("gui.veinminer.config.list.hoe")));
+        this.buttonList.add(new GuiButton(8, this.width / 2 - 152 + 62 - 1, this.height - 38 - 22 - 6, 57, 20, I18n.format("gui.veinminer.config.list.hoe")));
         this.buttonList.add(new GuiButton(9, this.width / 2 - 152 + 2 * 62 - 1, this.height - 38 - 3 * 22 - 6, 57, 20, I18n.format("gui.veinminer.config.list.pickaxe")));
-        this.buttonList.add(new GuiButton(10, this.width / 2 - 152 + 2 * 62 - 1, this.height - 38 - 1 * 22 - 6, 57, 20, I18n.format("gui.veinminer.config.list.pickaxe")));
+        this.buttonList.add(new GuiButton(10, this.width / 2 - 152 + 2 * 62 - 1, this.height - 38 - 22 - 6, 57, 20, I18n.format("gui.veinminer.config.list.pickaxe")));
         this.buttonList.add(new GuiButton(11, this.width / 2 - 152 + 3 * 62 - 1, this.height - 38 - 3 * 22 - 6, 57, 20, I18n.format("gui.veinminer.config.list.shears")));
-        this.buttonList.add(new GuiButton(12, this.width / 2 - 152 + 3 * 62 - 1, this.height - 38 - 1 * 22 - 6, 57, 20, I18n.format("gui.veinminer.config.list.shears")));
+        this.buttonList.add(new GuiButton(12, this.width / 2 - 152 + 3 * 62 - 1, this.height - 38 - 22 - 6, 57, 20, I18n.format("gui.veinminer.config.list.shears")));
         this.buttonList.add(new GuiButton(13, this.width / 2 - 152 + 4 * 62 - 1, this.height - 38 - 3 * 22 - 6, 57, 20, I18n.format("gui.veinminer.config.list.shovel")));
-        this.buttonList.add(new GuiButton(14, this.width / 2 - 152 + 4 * 62 - 1, this.height - 38 - 1 * 22 - 6, 57, 20, I18n.format("gui.veinminer.config.list.shovel")));
+        this.buttonList.add(new GuiButton(14, this.width / 2 - 152 + 4 * 62 - 1, this.height - 38 - 22 - 6, 57, 20, I18n.format("gui.veinminer.config.list.shovel")));
     }
 
     @Override
@@ -129,7 +132,6 @@ public class ConfigGuiScreen extends GuiScreen implements IGuiElementValuePersis
     }
 
     public void updateScreen() {
-        needsUpdate = true;
     }
 
     @Override

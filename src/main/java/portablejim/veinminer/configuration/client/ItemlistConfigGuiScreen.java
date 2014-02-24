@@ -1,3 +1,20 @@
+/* This file is part of VeinMiner.
+ *
+ *    VeinMiner is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Lesser General Public License as
+ *    published by the Free Software Foundation, either version 3 of
+ *     the License, or (at your option) any later version.
+ *
+ *    VeinMiner is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Lesser General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Lesser General Public
+ *    License along with VeinMiner.
+ *    If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package portablejim.veinminer.configuration.client;
 
 import cpw.mods.fml.client.FMLClientHandler;
@@ -19,12 +36,9 @@ import portablejim.veinminer.util.BlockID;
 import java.util.ArrayList;
 
 /**
- * Created with IntelliJ IDEA.
- * User: james
- * Date: 23/02/14
- * Time: 5:47 PM
- * To change this template use File | Settings | File Templates.
+ * Screen to help add and remove items from the item/tool whitelists.
  */
+
 public class ItemlistConfigGuiScreen extends GuiScreen {
     ToolType toolType;
     int mode;
@@ -58,7 +72,7 @@ public class ItemlistConfigGuiScreen extends GuiScreen {
     @SuppressWarnings("unchecked")
     @Override
     public void initGui() {
-        itemList = new GuiElementSlotItemlist(this, toolType, false);
+        itemList = new GuiElementSlotItemlist(this, toolType);
         this.buttonList.add(new GuiButton(1, this.width / 2 + 2, this.height - 34, 150, 20, I18n.format("gui.veinminer.back")));
         this.buttonList.add(new GuiButton(2, this.width / 2 - 152, this.height - 34, 150, 20, I18n.format("gui.veinminer.item.delete")));
         addButton = new GuiButton(3, this.width / 2 + 52, 34, 48, 20, I18n.format("gui.veinminer.item.add"));

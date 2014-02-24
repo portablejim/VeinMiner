@@ -1,3 +1,20 @@
+/* This file is part of VeinMiner.
+ *
+ *    VeinMiner is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Lesser General Public License as
+ *    published by the Free Software Foundation, either version 3 of
+ *     the License, or (at your option) any later version.
+ *
+ *    VeinMiner is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Lesser General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Lesser General Public
+ *    License along with VeinMiner.
+ *    If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package portablejim.veinminer.configuration.client.elements;
 
 import cpw.mods.fml.client.GuiScrollingList;
@@ -16,26 +33,22 @@ import portablejim.veinminer.util.BlockID;
 import java.util.ArrayList;
 
 /**
- * Created with IntelliJ IDEA.
- * User: james
- * Date: 23/02/14
- * Time: 4:01 PM
- * To change this template use File | Settings | File Templates.
+ * List the items/blocks on the whitelist for the specificed tool and allow
+ * selection of items on the list.
  */
+
 public class GuiElementSlotItemlist extends GuiScrollingList {
     private final IconRenderer iconRenderer;
     ItemlistConfigGuiScreen parent;
     public ArrayList<String> items;
     public int selectedItem;
     ToolType toolType;
-    boolean forceBlocks;
 
-    public GuiElementSlotItemlist(ItemlistConfigGuiScreen parent, ToolType toolType, boolean forceBlocks) {
+    public GuiElementSlotItemlist(ItemlistConfigGuiScreen parent, ToolType toolType) {
         super(Minecraft.getMinecraft(), parent.width - 10, parent.height, 60, parent.height - 40, 5, 22);
         iconRenderer = new IconRenderer(parent.mc, parent.getZLevel(), parent.getFontRenderer(), parent.mc.getTextureManager());
         this.parent = parent;
         this.toolType = toolType;
-        this.forceBlocks = forceBlocks;
         updateItemIds();
     }
 

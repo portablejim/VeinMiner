@@ -1,3 +1,20 @@
+/* This file is part of VeinMiner.
+ *
+ *    VeinMiner is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Lesser General Public License as
+ *    published by the Free Software Foundation, either version 3 of
+ *     the License, or (at your option) any later version.
+ *
+ *    VeinMiner is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Lesser General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Lesser General Public
+ *    License along with VeinMiner.
+ *    If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package portablejim.veinminer.event.server;
 
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -10,11 +27,7 @@ import portablejim.veinminer.network.packet.PacketPingClient;
 import portablejim.veinminer.server.MinerServer;
 
 /**
- * Created with IntelliJ IDEA.
- * User: james
- * Date: 20/02/14
- * Time: 4:56 PM
- * To change this template use File | Settings | File Templates.
+ * Class to hold events that happen on the server.
  */
 public class PlayerServerEvent {
 

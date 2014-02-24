@@ -1,3 +1,20 @@
+/* This file is part of VeinMiner.
+ *
+ *    VeinMiner is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Lesser General Public License as
+ *    published by the Free Software Foundation, either version 3 of
+ *     the License, or (at your option) any later version.
+ *
+ *    VeinMiner is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Lesser General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Lesser General Public
+ *    License along with VeinMiner.
+ *    If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package portablejim.veinminer.asm;
 
 import com.google.common.collect.Lists;
@@ -17,12 +34,9 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Created with IntelliJ IDEA.
- * User: james
- * Date: 15/10/13
- * Time: 12:30 AM
- * To change this template use File | Settings | File Templates.
+ * Container for the Veinminer Coremod.
  */
+
 public class VeinMinerCoreContainer extends DummyModContainer {
     public VeinMinerCoreContainer() {
         super(new ModMetadata());
@@ -104,7 +118,7 @@ public class VeinMinerCoreContainer extends DummyModContainer {
                 return certs[0];
             }
         }
-        catch (NullPointerException e) { }
+        catch (NullPointerException ignored) { }
         return null;
     }
 }

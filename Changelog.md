@@ -59,7 +59,7 @@ Fixes:
 
 Changes:
 * Improve detection of equal blocks.
-* Added autoadditon of blocks matching oredict (+ config settings).
+* Added autoaddition of blocks matching oredict (+ config settings).
 
 Fixes:
 * A few config-related bugs.

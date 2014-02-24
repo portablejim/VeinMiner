@@ -18,7 +18,6 @@
 package portablejim.veinminer.core;
 
 import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -35,6 +34,7 @@ import portablejim.veinminer.server.MinerServer;
 
 public class EntityDropHook {
 
+    @SuppressWarnings("UnusedDeclaration")
     @EventHandler
     public void tryAddEntity(EntityJoinWorldEvent event) {
         Entity entity = event.entity;
@@ -66,14 +66,15 @@ public class EntityDropHook {
         }
 
         boolean isBlock = false;
-        boolean isItem = false;
+        boolean isItem;
 
         if(entityItem.getEntityItem().getItem() instanceof ItemBlock) {
             isBlock = Block.blockRegistry.containsKey(entityItem.getEntityItem().getItem());
         }
         isItem = Item.itemRegistry.containsKey(entityItem.getEntityItem().getItem());
 
-        StackTraceElement[] stackTrace = (new Throwable()).getStackTrace();
+        //TODO: Redo pickup of entities
+        //StackTraceElement[] stackTrace = (new Throwable()).getStackTrace();
 
         //new MinerServer();
         if((isBlock || isItem) && MinerServer.instance != null && MinerServer.instance.isRegistered(entityX, entityY, entityZ)) {

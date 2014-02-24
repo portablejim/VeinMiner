@@ -24,7 +24,6 @@ import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.discovery.ASMDataTable;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -76,7 +75,6 @@ public class VeinMiner extends DummyModContainer{
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         logger = event.getModLog();
-        ASMDataTable asmData = event.getAsmData();
 
         configurationValues = new ConfigurationValues(event.getSuggestedConfigurationFile());
         configurationValues.loadConfigFile();
