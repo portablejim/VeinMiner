@@ -62,6 +62,7 @@ command.veinminer.help.enable4='sneak': Activate while sneaking
 command.veinminer.help.enable5='no_sneak': Activate while not sneaking
 
 # GUI config
+gui.veinminer.back=Back
 gui.veinminer.config=Veinminer Configuration
 gui.veinminer.config.disabled=Disabled
 gui.veinminer.config.pressed=When keybind pressed
@@ -77,3 +78,6 @@ gui.veinminer.config.list.hoe=Hoe
 gui.veinminer.config.list.pickaxe=Pickaxe
 gui.veinminer.config.list.shears=Shears
 gui.veinminer.config.list.shovel=Shovel
+gui.veinminer.item.delete=Delete from list
+gui.veinminer.item.add=Add
+gui.veinminer.item.clear=Clear

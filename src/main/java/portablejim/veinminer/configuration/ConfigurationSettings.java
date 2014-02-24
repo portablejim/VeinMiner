@@ -21,6 +21,7 @@ import com.google.common.base.Joiner;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
+import org.apache.commons.lang3.ArrayUtils;
 import portablejim.veinminer.api.ToolType;
 import portablejim.veinminer.util.BlockID;
 import portablejim.veinminer.util.PreferredMode;
@@ -191,6 +192,14 @@ public class ConfigurationSettings {
         return Joiner.on(',').join(blockWhitelist[tool.ordinal()]);
     }
 
+    public ArrayList<String> getBlockIDArray(ToolType toolType) {
+        ArrayList<String> output = new ArrayList<String>();
+        for(BlockID blockID : blockWhitelist[toolType.ordinal()]) {
+            output.add(blockID.toString());
+        }
+        return output;
+    }
+
     public boolean whiteListHasBlockId(ToolType tool, BlockID targetBlock) {
         return blockWhitelist[tool.ordinal()].contains(targetBlock);
     }
@@ -293,6 +302,9 @@ public class ConfigurationSettings {
 
     public String getToolIds(ToolType tool) {
         return Joiner.on(',').join(toolIds[tool.ordinal()]);
+    }
+    public ArrayList<String> getToolIdArray(ToolType tool) {
+        return new ArrayList<String>(toolIds[tool.ordinal()]);
     }
 
     public int getBlockLimit() {
