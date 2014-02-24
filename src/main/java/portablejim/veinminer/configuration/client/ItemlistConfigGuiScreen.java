@@ -4,21 +4,16 @@ import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 import portablejim.veinminer.VeinMiner;
 import portablejim.veinminer.api.ToolType;
 import portablejim.veinminer.configuration.client.elements.GuiElementSlotItemlist;
+import portablejim.veinminer.lib.IconRenderer;
 import portablejim.veinminer.util.BlockID;
 
 import java.util.ArrayList;
@@ -33,7 +28,7 @@ import java.util.ArrayList;
 public class ItemlistConfigGuiScreen extends GuiScreen {
     ToolType toolType;
     int mode;
-    public RenderItem renderItem = new RenderItem();
+    IconRenderer iconRenderer;
     GuiButton addButton;
     GuiButton clearButton;
     GuiTextField textFieldAdd;
@@ -49,6 +44,8 @@ public class ItemlistConfigGuiScreen extends GuiScreen {
         this.toolType = toolType;
         this.mode = mode;
         this.parent = parent;
+
+        iconRenderer = new IconRenderer(mc, zLevel, fontRendererObj, mc.getTextureManager());
 
         String[] toolNames = { "axe", "hoe", "pickaxe", "shears", "shovel"};
         String toolName = toolNames[toolType.ordinal()];
@@ -162,32 +159,6 @@ public class ItemlistConfigGuiScreen extends GuiScreen {
         this.textFieldAdd.mouseClicked(par1, par2, par3);
     }
 
-    private void renderItemStackIcon(int renderX, int renderY, ItemStack itemStack)
-    {
-        this.setupRender(renderX + 1, renderY + 1, 0, 0);
-        GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-        if (itemStack != null)
-        {
-            RenderHelper.enableGUIStandardItemLighting();
-            this.renderItem.renderItemIntoGUI(this.getFontRenderer(), this.mc.getTextureManager(), itemStack, renderX + 2, renderY + 2);
-            RenderHelper.disableStandardItemLighting();
-        }
-        GL11.glDisable(GL12.GL_RESCALE_NORMAL);
-    }
-
-    private void setupRender(int xBase, int yBase, int uBase, int vBase)
-    {
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.mc.getTextureManager().bindTexture(Gui.statIcons);
-        Tessellator tessellator = Tessellator.instance;
-        tessellator.startDrawingQuads();
-        tessellator.addVertexWithUV((double)(xBase), (double)(yBase + 18), (double)this.getZLevel(), (double)((float)(uBase) * 0.0078125F), (double)((float)(vBase + 18) * 0.0078125F));
-        tessellator.addVertexWithUV((double) (xBase + 18), (double) (yBase + 18), (double) this.getZLevel(), (double) ((float) (uBase + 18) * 0.0078125F), (double) ((float) (vBase + 18) * 0.0078125F));
-        tessellator.addVertexWithUV((double)(xBase + 18), (double)(yBase), (double)this.getZLevel(), (double)((float)(uBase + 18) * 0.0078125F), (double)((float)(vBase) * 0.0078125F));
-        tessellator.addVertexWithUV((double)(xBase), (double)(yBase), (double)this.getZLevel(), (double)((float)(uBase) * 0.0078125F), (double)((float)(vBase) * 0.0078125F));
-        tessellator.draw();
-    }
-
     @Override
     public void drawScreen(int par1, int par2, float par3) {
         drawDefaultBackground();
@@ -201,7 +172,7 @@ public class ItemlistConfigGuiScreen extends GuiScreen {
 
             String[] testItemName = testBlockId.name.split(":", 2);
             ItemStack itemStack = GameRegistry.findItemStack(testItemName[0], testItemName[1], 1);
-            renderItemStackIcon(this.width / 2 - 152, 34, itemStack);
+            iconRenderer.renderItemStackIcon(this.width / 2 - 152, 34, itemStack);
         }
     }
 
