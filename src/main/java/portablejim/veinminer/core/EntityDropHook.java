@@ -17,12 +17,12 @@
 
 package portablejim.veinminer.core;
 
-import cpw.mods.fml.common.Mod.EventHandler;
-import net.minecraft.block.Block;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.common.registry.GameRegistry.UniqueIdentifier;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import portablejim.veinminer.server.MinerServer;
 
@@ -33,9 +33,12 @@ import portablejim.veinminer.server.MinerServer;
  */
 
 public class EntityDropHook {
+    public EntityDropHook() {
+        MinecraftForge.EVENT_BUS.register(this);
+    }
 
     @SuppressWarnings("UnusedDeclaration")
-    @EventHandler
+    @SubscribeEvent
     public void tryAddEntity(EntityJoinWorldEvent event) {
         Entity entity = event.entity;
 
@@ -65,19 +68,29 @@ public class EntityDropHook {
             return;
         }
 
-        boolean isBlock = false;
+        boolean isBlock;
         boolean isItem;
 
-        if(entityItem.getEntityItem().getItem() instanceof ItemBlock) {
-            isBlock = Block.blockRegistry.containsKey(entityItem.getEntityItem().getItem());
-        }
-        isItem = Item.itemRegistry.containsKey(entityItem.getEntityItem().getItem());
+        UniqueIdentifier uniqueId = GameRegistry.findUniqueIdentifierFor(entityItem.getEntityItem().getItem());
+        isBlock = GameRegistry.findBlock(uniqueId.modId, uniqueId.name) != null;
+        isItem = GameRegistry.findItem(uniqueId.modId, uniqueId.name) != null;
 
         //TODO: Redo pickup of entities
-        //StackTraceElement[] stackTrace = (new Throwable()).getStackTrace();
+        StackTraceElement[] stackTrace = (new Throwable()).getStackTrace();
+        boolean veinminerMethod = false;
+        for(StackTraceElement element : stackTrace) {
+            if(InjectedCalls.class.getCanonicalName().equals(element.getClassName())) {
+                veinminerMethod = true;
+                break;
+            }
+            else if(MinerInstance.class.getCanonicalName().equals(element.getClassName()) && "mineBlock".equals(element.getMethodName())) {
+                veinminerMethod = true;
+                break;
+            }
+        }
 
         //new MinerServer();
-        if((isBlock || isItem) && MinerServer.instance != null && MinerServer.instance.isRegistered(entityX, entityY, entityZ)) {
+        if((isBlock || isItem) && veinminerMethod) {
             MinerServer.instance.addEntity(entity);
             event.setCanceled(true);
         }
