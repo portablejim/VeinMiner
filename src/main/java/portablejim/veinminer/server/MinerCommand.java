@@ -386,4 +386,15 @@ public class MinerCommand extends CommandBase {
     public String getCommandUsage(ICommandSender par1ICommandSender) {
         return StatCollector.translateToLocal("command.veinminer");
     }
+
+    public int compareTo(MinerCommand par1ICommand)
+    {
+        return this.getCommandName().compareTo(par1ICommand.getCommandName());
+    }
+
+    @Override
+    public int compareTo(Object par1Obj)
+    {
+        return this.compareTo((MinerCommand)par1Obj);
+    }
 }
