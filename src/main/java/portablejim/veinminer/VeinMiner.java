@@ -17,7 +17,6 @@
 
 package portablejim.veinminer;
 
-import cpw.mods.fml.common.DummyModContainer;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -56,7 +55,7 @@ import java.util.Set;
 
 @Mod(modid = ModInfo.MODID, acceptedMinecraftVersions = "[1.7,1.8)",
         canBeDeactivated = true, guiFactory = "portablejim.veinminer.configuration.client.ConfigGuiFactory")
-public class VeinMiner extends DummyModContainer{
+public class VeinMiner {
 
     @Instance(ModInfo.MODID)
     public static VeinMiner instance;

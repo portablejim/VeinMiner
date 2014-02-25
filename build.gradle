@@ -58,7 +58,8 @@ processResources {
 
 jar {
     manifest {
-        attributes 'FMLCorePlugin': 'portablejim.veinminer.VeinMiner'
+        attributes 'FMLCorePlugin': 'portablejim.veinminer.asm.VeinMinerCorePlugin'
+        attributes 'FMLCorePluginContainsFMLMod': 'true'
     }
 }
 
