@@ -5,6 +5,9 @@ Changelog
 ------
 Changes:
 * Upgrade to Minecraft 1.7.2
+* Added GUI to configure Veinminer
+* Simplified keybind options to take advantage of new keybinding code.
+* Changed method of detecting drops so all drops (e.g. from clay) are picked up and collated.
 
 0.12.2
 ------
