@@ -35,8 +35,8 @@ minecraft {
 }
 
 String buildNumber = "unknown"
-if(System.getenv("BUILDNUMBER") != null) {
-    buildNumber = System.getenv("BUILDNUMBER")
+if(System.getenv("BUILD_NUMBER") != null) {
+    buildNumber = System.getenv("BUILD_NUMBER")
 }
 
 version = "${config.minecraft_version}_${config.mod_version}.${buildNumber}"
