@@ -113,6 +113,9 @@ public class ItemlistConfigGuiScreen extends GuiScreen {
 
             renderIcon = testItem != null;
         }
+        else {
+            addButton.enabled = false;
+        }
     }
 
     protected void actionPerformed(GuiButton par1GuiButton)
@@ -190,6 +193,7 @@ public class ItemlistConfigGuiScreen extends GuiScreen {
             String[] testItemName = testBlockId.name.split(":", 2);
             if(testItemName.length == 2) {
                 ItemStack itemStack = GameRegistry.findItemStack(testItemName[0], testItemName[1], 1);
+                itemStack.setItemDamage(testBlockId.metadata == -1 ? 0 : testBlockId.metadata);
                 iconRenderer.renderItemStackIcon(this.width / 2 - 152, 34, itemStack);
             }
         }

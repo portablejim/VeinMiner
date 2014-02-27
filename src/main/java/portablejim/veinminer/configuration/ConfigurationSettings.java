@@ -21,12 +21,15 @@ import com.google.common.base.Joiner;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
-import org.apache.commons.lang3.ArrayUtils;
 import portablejim.veinminer.api.ToolType;
 import portablejim.veinminer.util.BlockID;
 import portablejim.veinminer.util.PreferredMode;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Class to manage the config settings. It takes the raw values from
@@ -169,7 +172,7 @@ public class ConfigurationSettings {
         for (String blockString : blocksString ) {
             BlockID newBlock = new BlockID(blockString);
             if(!newBlock.name.isEmpty()) {
-                blockWhitelist[tool.ordinal()].add(newBlock);
+                addBlockToWhitelist(tool, newBlock);
             }
         }
     }

@@ -95,9 +95,12 @@ public class GuiElementSlotItemlist extends GuiScrollingList {
         }
         else if(nameParts.length == 2) {
             tryItem = GameRegistry.findItem(nameParts[0], nameParts[1]);
-            displayName = tryItem.getUnlocalizedName();
-
-            renderItem = true;
+            ItemStack tryItemStack = new ItemStack(tryItem);
+            tryItemStack.setItemDamage(itemParts.metadata == -1 ? 0 : itemParts.metadata);
+            if(tryItem != null) {
+                displayName = tryItemStack.getUnlocalizedName();
+                renderItem = true;
+            }
         }
 
         if(renderItem) {

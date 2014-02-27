@@ -39,14 +39,14 @@ public class BlockID
     
     public BlockID(String fullDescription) {
         int preMeta = -1;
-        Pattern p = Pattern.compile("(.+?)(?:/([-]?\\d{1,2}))?");
+        Pattern p = Pattern.compile("([^/]+)(?:/([-]?\\d{1,2}))?");
         Matcher m = p.matcher(fullDescription);
 
         if(m.matches()) {
-            name = m.group(0);
-            if(m.group(1) != null) {
+            name = m.group(1);
+            if(m.group(2) != null) {
                 try {
-                    preMeta = Integer.parseInt(m.group(1));
+                    preMeta = Integer.parseInt(m.group(2));
                 }
                 catch (NumberFormatException e) {
                     preMeta = -1;
