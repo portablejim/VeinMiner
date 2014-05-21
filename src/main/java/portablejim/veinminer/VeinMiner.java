@@ -27,10 +27,12 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
+import cpw.mods.fml.common.event.FMLInterModComms;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.logging.log4j.Logger;
@@ -140,5 +142,32 @@ public class VeinMiner {
 
         ServerCommandManager serverCommandManger = (ServerCommandManager) MinecraftServer.getServer().getCommandManager();
         serverCommandManger.registerCommand(new MinerCommand());
+    }
+
+    @Mod.EventHandler
+    public void imcCallback(FMLInterModComms.IMCEvent event) {
+        for(final FMLInterModComms.IMCMessage message : event.getMessages()) {
+            if("whitelist".equalsIgnoreCase(message.key) && message.isNBTMessage()) {
+                NBTTagCompound nbtMessage = message.getNBTValue();
+
+                String whitelistName = nbtMessage.getString("whitelistType");
+                ToolType toolType = ToolType.values()[nbtMessage.getShort("toolType")];
+                String toolName = nbtMessage.getString("blockName");
+
+                if("block".equalsIgnoreCase(whitelistName)) {
+                    BlockID blockName = new BlockID(toolName);
+                    MinerLogger.debug("Adding block %s %s to whitelist because of IMC", toolType.toString(), blockName.toString());
+                    configurationSettings.addBlockToWhitelist(toolType, blockName);
+                }
+                else if("item".equalsIgnoreCase(whitelistName)) {
+                    MinerLogger.debug("Adding item/tool %s %s to whitelist because of IMC", toolType.toString(), toolName);
+                    configurationSettings.addTool(toolType, toolName);
+                }
+                configurationSettings.saveConfigs();
+            }
+            if("forceTool".equalsIgnoreCase(message.key) && message.isStringMessage()) {
+
+            }
+        }
     }
 }
