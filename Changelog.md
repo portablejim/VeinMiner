@@ -1,6 +1,14 @@
 Changelog
 =========
 
+0.14.0
+------
+Changes:
+* Update and include VeinMiner Mod Support, configured to auto-add tools from a few popular mods.
+* Config filename now start with uppercase.
+Fixes:
+* Redstone ore will now work properly.
+
 0.13.0
 ------
 Changes:
