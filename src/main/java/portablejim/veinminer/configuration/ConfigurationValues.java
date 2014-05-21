@@ -54,7 +54,7 @@ public class ConfigurationValues {
     public HashMap<ToolType, ConfigToolValue> toolConfig = new HashMap<ToolType, ConfigToolValue>(ToolType.values().length);
 
     public String BLOCK_EQUIVALENCY_LIST;
-    public static final String BLOCK_EQUIVALENCY_LIST_DEFAULT = "minecraft:redstone_ore,minecraft:lit_redstone_ore";
+    public static final String BLOCK_EQUIVALENCY_LIST_DEFAULT = "minecraft:redstone_ore=minecraft:lit_redstone_ore";
     public static final String BLOCK_EQUIVALENCY_LIST_CONFIGNAME = "equalBlocks";
     public static final String BLOCK_EQUIVALENCY_LIST_DESCRIPTION = String.format("Block IDs (with metadata) to consider equivalent.\nNames are formatted like 'modName:block_name/metadata'. Separate names (with metadata) with ','. Use 'minecraft' as the mod name for vanilla blocks.\n[default: '%s']", BLOCK_EQUIVALENCY_LIST_DEFAULT);
 
