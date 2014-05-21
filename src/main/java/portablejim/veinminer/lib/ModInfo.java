@@ -30,7 +30,7 @@ import java.util.Properties;
 public class ModInfo {
     public static boolean DEBUG_MODE = false;
 
-    public static final String MODID = "veinminer";
+    public static final String MODID = "VeinMiner";
     public static final String VERSION;
     static {
         Properties prop = new Properties();
@@ -46,7 +46,7 @@ public class ModInfo {
 
         VERSION = String.format("%s_build-%s", prop.getProperty("version"), prop.getProperty("build_number"));
     }
-    public static final String COREMOD_ID = "veinminer_coremod";
+    public static final String COREMOD_ID = "VeinMiner_coremod";
     public static final String COREMOD_NAME = "Core mod";
     public static final String PROXY_SERVER_CLASS = "portablejim.veinminer.proxy.CommonProxy";
     public static final String PROXY_CLIENT_CLASS = "portablejim.veinminer.proxy.ClientProxy";
