@@ -32,6 +32,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
+import portablejim.veinminer.api.IMCMessage;
+import portablejim.veinminer.api.ToolType;
 import portablejim.veinminer.api.VeinminerHarvestFailedCheck;
 import portablejim.veinminer.api.Permission;
 import portablejim.veinminer.api.VeinminerPostUseTool;
@@ -72,6 +74,57 @@ public class VeinMinerModSupport {
             }
         }
         forceConsumerAvailable = false;
+
+        addTools();
+    }
+
+    private void addTools() {
+        if(Loader.isModLoaded("IC2")) {
+            IMCMessage.addTool(ToolType.AXE, "IC2:itemToolBronzeAxe");
+            IMCMessage.addTool(ToolType.AXE, "IC2:itemToolChainsaw");
+            IMCMessage.addTool(ToolType.HOE, "IC2:itemToolBronzeHoe");
+            IMCMessage.addTool(ToolType.PICKAXE, "IC2:itemToolBronzePickaxe");
+            IMCMessage.addTool(ToolType.PICKAXE, "IC2:itemToolDrill");
+            IMCMessage.addTool(ToolType.PICKAXE, "IC2:itemToolDDrill");
+            IMCMessage.addTool(ToolType.PICKAXE, "IC2:itemToolIridiumDrill");
+            IMCMessage.addTool(ToolType.SHEARS, "IC2:itemToolBronzeHoe");
+            IMCMessage.addTool(ToolType.SHOVEL, "IC2:itemToolBronzeSpade");
+        }
+        if(Loader.isModLoaded("appliedenergistics2")) {
+            IMCMessage.addTool(ToolType.AXE, "appliedenergistics2:item.ToolCertusQuartzAxe");
+            IMCMessage.addTool(ToolType.HOE, "appliedenergistics2:item.ToolCertusQuartzHoe");
+            IMCMessage.addTool(ToolType.PICKAXE, "appliedenergistics2:item.ToolCertusQuartzPickaxe");
+            IMCMessage.addTool(ToolType.SHOVEL, "appliedenergistics2:item.ToolCertusQuartzSpade");
+            IMCMessage.addTool(ToolType.AXE, "appliedenergistics2:item.ToolNetherQuartzAxe");
+            IMCMessage.addTool(ToolType.HOE, "appliedenergistics2:item.ToolNetherQuartzHoe");
+            IMCMessage.addTool(ToolType.PICKAXE, "appliedenergistics2:item.ToolNetherQuartzPickaxe");
+            IMCMessage.addTool(ToolType.SHOVEL, "appliedenergistics2:item.ToolNetherQuartzSpade");
+        }
+        if(Loader.isModLoaded("BiomesOPlenty")) {
+            IMCMessage.addTool(ToolType.AXE, "BiomesOPlenty:axeMud");
+            IMCMessage.addTool(ToolType.HOE, "BiomesOPlenty:hoeMud");
+            IMCMessage.addTool(ToolType.PICKAXE, "BiomesOPlenty:pickaxeMud");
+            IMCMessage.addTool(ToolType.SHOVEL, "BiomesOPlenty:shovelMud");
+            IMCMessage.addTool(ToolType.AXE, "BiomesOPlenty:axeAmethyst");
+            IMCMessage.addTool(ToolType.HOE, "BiomesOPlenty:hoeAmethyst");
+            IMCMessage.addTool(ToolType.PICKAXE, "BiomesOPlenty:pickaxeAmethyst");
+            IMCMessage.addTool(ToolType.SHOVEL, "BiomesOPlenty:shovelAmethyst");
+            IMCMessage.addTool(ToolType.SHEARS, "BiomesOPlenty:scytheWood");
+            IMCMessage.addTool(ToolType.SHEARS, "BiomesOPlenty:scytheStone");
+            IMCMessage.addTool(ToolType.SHEARS, "BiomesOPlenty:scytheIron");
+            IMCMessage.addTool(ToolType.SHEARS, "BiomesOPlenty:scytheGold");
+            IMCMessage.addTool(ToolType.SHEARS, "BiomesOPlenty:scytheDiamond");
+            IMCMessage.addTool(ToolType.SHEARS, "BiomesOPlenty:scytheMud");
+            IMCMessage.addTool(ToolType.SHEARS, "BiomesOPlenty:scytheAmethyst");
+        }
+        if(Loader.isModLoaded("TConstruct")) {
+            devLog("Tinkers support loaded");
+            IMCMessage.addTool(ToolType.AXE, "TConstruct:hatchet");
+            IMCMessage.addTool(ToolType.HOE, "TConstruct:mattock");
+            IMCMessage.addTool(ToolType.PICKAXE, "TConstruct:pickaxe");
+            IMCMessage.addTool(ToolType.SHOVEL, "TConstruct:shovel");
+            IMCMessage.addTool(ToolType.SHOVEL, "TConstruct:mattock");
+        }
     }
 
     @SuppressWarnings("UnusedDeclaration")
@@ -149,26 +202,10 @@ public class VeinMinerModSupport {
             return;
         }
 
-        boolean hasLava = toolTags.getBoolean("Lava");
-        if(!hasLava) {
-            devLog("ERROR: Not lava tool");
-            return;
-        }
-
         Random r = event.player.worldObj.rand;
         Block block = Block.getBlockFromName(event.blockName);
         if(block == null) {
             devLog("ERROR: Block id wrong.");
-            return;
-        }
-
-        ItemStack smeltStack = new ItemStack(
-                block.getItemDropped(event.blockMetadata, r, 0),
-                block.quantityDropped(event.blockMetadata, 0, r),
-                block.damageDropped(event.blockMetadata));
-        ItemStack smeltResult = FurnaceRecipes.smelting().getSmeltingResult(smeltStack);
-        if(smeltResult == null) {
-            devLog("ERROR: No Smelt result");
             return;
         }
 
