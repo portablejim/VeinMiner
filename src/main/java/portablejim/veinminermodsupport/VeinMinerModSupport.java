@@ -25,24 +25,22 @@ import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
 import portablejim.veinminer.api.IMCMessage;
+import portablejim.veinminer.api.Permission;
 import portablejim.veinminer.api.ToolType;
 import portablejim.veinminer.api.VeinminerHarvestFailedCheck;
-import portablejim.veinminer.api.Permission;
 import portablejim.veinminer.api.VeinminerPostUseTool;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Random;
 
-import static cpw.mods.fml.common.Mod.*;
+import static cpw.mods.fml.common.Mod.EventHandler;
+import static cpw.mods.fml.common.Mod.Instance;
 
 /**
  * Main mod class to handle events from Veinminer and cancel events when
@@ -50,8 +48,7 @@ import static cpw.mods.fml.common.Mod.*;
  */
 
 @Mod(modid = ModInfo.MOD_ID,
-        name = ModInfo.MOD_NAME,
-        version = ModInfo.VERSION)
+        name = ModInfo.MOD_NAME)
 public class VeinMinerModSupport {
 
     private boolean debugMode = false;
@@ -151,6 +148,7 @@ public class VeinMinerModSupport {
         }
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     @SubscribeEvent
     public void makeToolsWork(VeinminerHarvestFailedCheck event) {
         ItemStack currentEquipped = event.player.getCurrentEquippedItem();
@@ -202,7 +200,6 @@ public class VeinMinerModSupport {
             return;
         }
 
-        Random r = event.player.worldObj.rand;
         Block block = Block.getBlockFromName(event.blockName);
         if(block == null) {
             devLog("ERROR: Block id wrong.");
@@ -215,6 +212,7 @@ public class VeinMinerModSupport {
         }
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     @SubscribeEvent
     public void applyForce(VeinminerPostUseTool event) {
         ItemStack currentEquippedItemStack = event.player.getCurrentEquippedItem();
