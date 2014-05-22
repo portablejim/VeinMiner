@@ -4,6 +4,11 @@ Changelog
 0.12.2
 ------
 Fixes:
+* Tools now work when they are part of multiple tools.
+
+0.12.2
+------
+Fixes:
 * Fix config file up.
 
 0.12.1
