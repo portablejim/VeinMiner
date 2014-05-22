@@ -6,3 +6,5 @@ release/*.jar
 build/
 eclipse/
 out/
+run/
+versions/
