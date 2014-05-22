@@ -168,12 +168,15 @@ public class MinerInstance {
     }
 
     private boolean toolAllowedForBlock(ItemStack tool, BlockID block) {
+        boolean toolAllowed = false;
         for(ToolType type : ToolType.values()) {
             if(serverInstance.getConfigurationSettings().toolIsOfType(tool, type)) {
-                return serverInstance.getConfigurationSettings().whiteListHasBlockId(type, block);
+                if(serverInstance.getConfigurationSettings().whiteListHasBlockId(type, block)) {
+                    toolAllowed = true;
+                }
             }
         }
-        return false;
+        return toolAllowed;
     }
 
     private void mineBlock(int x, int y, int z) {
