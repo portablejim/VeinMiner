@@ -1,6 +1,6 @@
 [
 {
-  "modid": "veinminer",
+  "modid": "VeinMiner",
   "name": "Vein Miner",
   "description": "When a configured block is harvested a chain reaction is initiated to break connected blocks of the same type. Takes durability and health for each block mined.",
   "version": "${version}",
@@ -11,5 +11,19 @@
   "logoFile": "",
   "screenshots": [],
   "dependencies": ["Forge"]
+},
+{
+  "modid": "VeinMinerModSupport",
+  "name": "Mod Support",
+  "description": "Mod support for Vein Miner, improving inter-mod compatibility.",
+  "version": "${version}",
+  "url": "http://minecraft.curseforge.com/mc-mods/veinminer/",
+  "updateUrl": "",
+  "authors": ["portablejim"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "parent": "VeinMiner",
+  "dependencies": ["Forge", "VeinMiner"]
 }
 ]
