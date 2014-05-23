@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.12.2
+0.12.3
 ------
 Fixes:
 * Tools now work when they are part of multiple tools.
