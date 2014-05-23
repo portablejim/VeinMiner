@@ -72,6 +72,11 @@ public class EntityDropHook {
         boolean isItem;
 
         UniqueIdentifier uniqueId = GameRegistry.findUniqueIdentifierFor(entityItem.getEntityItem().getItem());
+
+        if(uniqueId == null) {
+            return;
+        }
+
         isBlock = GameRegistry.findBlock(uniqueId.modId, uniqueId.name) != null;
         isItem = GameRegistry.findItem(uniqueId.modId, uniqueId.name) != null;
 
