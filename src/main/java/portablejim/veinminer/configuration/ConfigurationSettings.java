@@ -374,6 +374,14 @@ public class ConfigurationSettings {
             preferredMode = PreferredMode.RELEASED;
             return true;
         }
+        else if("sneak".equals(modeString)) {
+            preferredMode = PreferredMode.SNEAK_ACTIVE;
+            return true;
+        }
+        else if("no_sneak".equals(modeString)) {
+            preferredMode = PreferredMode.SNEAK_INACTIVE;
+            return true;
+        }
 
         // No valid option.
         // Set to fallback
@@ -403,6 +411,10 @@ public class ConfigurationSettings {
                 return "pressed";
             case PreferredMode.RELEASED:
                 return "released";
+            case PreferredMode.SNEAK_ACTIVE:
+                return "sneak";
+            case PreferredMode.SNEAK_INACTIVE:
+                return "no_sneak";
         }
         return "";
     }

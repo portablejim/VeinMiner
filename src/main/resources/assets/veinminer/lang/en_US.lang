@@ -36,6 +36,8 @@ command.veinminer.permissionDenied=You don't have permission to use this sub-com
 
 # Preferred mode confirmation
 mod.veinminer.preferredmode.auto=Veinminer using client keybind. See mod config for details.
+mod.veinminer.preferredmode.sneak=Veinminer set to activate on sneak.
+mod.veinminer.preferredmode.nosneak=Veinminer set to deactivate on sneak.
 
 mod.veinminer.finished.tooHungry=You are too hungry to use VeinMiner.
 
@@ -65,6 +67,8 @@ gui.veinminer.config=Veinminer Configuration
 gui.veinminer.config.disabled=Disabled
 gui.veinminer.config.pressed=When keybind pressed
 gui.veinminer.config.released=When keybind released
+gui.veinminer.config.sneak=When sneaking
+gui.veinminer.config.nosneak=When not sneaking
 gui.veinminer.config.enable.text=Enable Veinminer:
 gui.veinminer.config.range=Range: %d blocks
 gui.veinminer.config.blocklimit=Block limit: %d blocks

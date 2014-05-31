@@ -37,7 +37,7 @@ public class ConfigGuiScreen extends GuiScreen implements IGuiElementValuePersis
     private GuiScreen parent;
 
     private ConfigurationSettings settings = VeinMiner.instance.configurationSettings;
-    private String[] currentModeStrings = { "disabled", "pressed", "released" };
+    private String[] currentModeStrings = { "disabled", "pressed", "released", "sneak", "nosneak" };
 
     public ConfigGuiScreen(GuiScreen parent) {
         this.parent = parent;
