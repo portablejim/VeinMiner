@@ -43,7 +43,7 @@ mod.veinminer.finished.tooHungry=You are too hungry to use VeinMiner.
 
 # Controls
 veinminer.key.category=Vein Miner
-veinminer.key.enable=Actiate Vein Miner
+veinminer.key.enable=Activate Vein Miner
 
 # Command help.
 command.veinminer.help1=Sub-commands available:
