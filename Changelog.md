@@ -1,6 +1,20 @@
 Changelog
 =========
 
+0.15.0
+------
+Changes:
+* Added back shift/no_shift mode.
+Fixes:
+* Spelling
+* Ex Nihilo hammers should now work.
+
+0.14.1
+------
+Fixes:
+* Tools now work when in multiple categories
+* No longer crash when mining in some circumstances.
+
 0.14.0
 ------
 Changes:
