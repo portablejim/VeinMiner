@@ -52,7 +52,7 @@ public class GuiElementSlider extends GuiButton {
     }
 
     @Override
-    protected int getHoverState(boolean val) {
+    public int getHoverState(boolean val) {
         return 0;
     }
 

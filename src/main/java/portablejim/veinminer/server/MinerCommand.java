@@ -167,7 +167,7 @@ public class MinerCommand extends CommandBase {
 
     private void needAdmin(EntityPlayerMP player) {
         MinecraftServer server = player.mcServer;
-        if(server.isDedicatedServer() && !server.getConfigurationManager().isPlayerOpped(player.getCommandSenderName())) {
+        if(server.isDedicatedServer() && !server.getConfigurationManager().func_152596_g(player.getGameProfile())) {
             boolean playerNoClient = !MinerServer.instance.playerHasClient(player.getUniqueID());
             String message = "command.veinminer.permissionDenied";
             if(playerNoClient) {
