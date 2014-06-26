@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.16.0
+------
+Changes:
+* Updated to Minecraft 1.7.10 Prerelease-4
+* Reduced message spam.
+
 0.15.0
 ------
 Changes:
