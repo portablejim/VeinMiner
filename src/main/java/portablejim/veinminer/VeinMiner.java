@@ -24,10 +24,10 @@ import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
-import cpw.mods.fml.common.event.FMLInterModComms;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -41,7 +41,7 @@ import portablejim.veinminer.configuration.ConfigurationSettings;
 import portablejim.veinminer.configuration.ConfigurationValues;
 import portablejim.veinminer.lib.MinerLogger;
 import portablejim.veinminer.lib.ModInfo;
-import portablejim.veinminer.network.ChannelHandler;
+import portablejim.veinminer.network.NetworkManager;
 import portablejim.veinminer.proxy.CommonProxy;
 import portablejim.veinminer.server.MinerCommand;
 import portablejim.veinminer.server.MinerServer;
@@ -65,7 +65,7 @@ public class VeinMiner {
     @SidedProxy(clientSide = ModInfo.PROXY_CLIENT_CLASS, serverSide = ModInfo.PROXY_SERVER_CLASS)
     public static CommonProxy proxy;
 
-    public final ChannelHandler channelHandler = new ChannelHandler();
+    public final NetworkManager networkManager = new NetworkManager();
 
     ConfigurationValues configurationValues;
     public ConfigurationSettings configurationSettings;
@@ -144,6 +144,7 @@ public class VeinMiner {
         serverCommandManger.registerCommand(new MinerCommand());
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     @Mod.EventHandler
     public void imcCallback(FMLInterModComms.IMCEvent event) {
         for(final FMLInterModComms.IMCMessage message : event.getMessages()) {

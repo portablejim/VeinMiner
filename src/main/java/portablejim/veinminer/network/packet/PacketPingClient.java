@@ -39,7 +39,7 @@ public class PacketPingClient implements IPacket {
     @Override
     public void handleClientSide(EntityClientPlayerMP player) {
         PacketClientPresent packet = new PacketClientPresent(VeinMiner.instance.configurationSettings.getPreferredMode());
-        VeinMiner.instance.channelHandler.sendToServer(packet);
+        VeinMiner.instance.networkManager.sendToServer(packet);
     }
 
     @Override

@@ -40,7 +40,7 @@ public class PlayerServerEvent {
     public void connected(PlayerLoggedInEvent event) {
         //new JoinServerTicker();
         PacketPingClient packet = new PacketPingClient();
-        VeinMiner.instance.channelHandler.sendToPlayer(event.player, packet);
+        VeinMiner.instance.networkManager.sendToPlayer(event.player, packet);
         MinerLogger.debug("Sent ping packet to client");
     }
 
