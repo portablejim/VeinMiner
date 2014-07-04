@@ -80,10 +80,27 @@ public class BlockID
         
         if (!(obj instanceof BlockID))
             return false;
-        
+
+        BlockID o = (BlockID) obj;
+        return name.equals(o.name);
+    }
+
+    /**
+     * Compare the objects using the metadata value of -1 to be a wildcard that matches all.
+     * @param obj The object to compare to this one
+     * @return Whether this object and obj are equal, using the wildcard value.
+     */
+    public boolean wildcardEquals(Object obj)
+    {
+        if (this == obj)
+            return true;
+
+        if (!(obj instanceof BlockID))
+            return false;
+
         BlockID o = (BlockID) obj;
         if (o.metadata == -1 || metadata == -1)
-            return name.equals(o.name);
+            return this.equals(obj);
         else
             return name.equals(o.name) && metadata == o.metadata;
     }

@@ -227,7 +227,7 @@ public class MinerInstance {
 
                     ConfigurationSettings configSettings = serverInstance.getConfigurationSettings();
 
-                    if(!newBlock.equals(targetBlock) && !configSettings.areBlocksCongruent(newBlock, targetBlock)
+                    if(!newBlock.wildcardEquals(targetBlock) && !configSettings.areBlocksCongruent(newBlock, targetBlock)
                             && !BlockLib.arePickBlockEqual(newBlock, targetBlock)) {
                         continue;
                     }

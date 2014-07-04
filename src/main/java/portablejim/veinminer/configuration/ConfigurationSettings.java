@@ -188,7 +188,14 @@ public class ConfigurationSettings {
     }
 
     public void removeBlockFromWhitelist(ToolType tool, BlockID block) {
-        blockWhitelist[tool.ordinal()].remove(block);
+        BlockID blockNoMeta = new BlockID(block.name, block.metadata);
+        blockNoMeta.metadata = -1;
+        if(blockWhitelist[tool.ordinal()].contains(block)) {
+            blockWhitelist[tool.ordinal()].remove(block);
+        }
+        else if(blockWhitelist[tool.ordinal()].contains(blockNoMeta)) {
+            blockWhitelist[tool.ordinal()].remove(blockNoMeta);
+        }
     }
 
     public String getBlockWhitelist(ToolType tool) {
@@ -204,7 +211,9 @@ public class ConfigurationSettings {
     }
 
     public boolean whiteListHasBlockId(ToolType tool, BlockID targetBlock) {
-        return blockWhitelist[tool.ordinal()].contains(targetBlock);
+        BlockID targetBlockNoMeta = new BlockID(targetBlock.name, targetBlock.metadata);
+        targetBlockNoMeta.metadata = -1;
+        return blockWhitelist[tool.ordinal()].contains(targetBlock) || blockWhitelist[tool.ordinal()].contains(targetBlockNoMeta);
     }
 
     /**
@@ -231,6 +240,7 @@ public class ConfigurationSettings {
 
                 newCongruentBlocks.add(newBlockId);
 
+                // TODO: Ensure congruence works properly.
                 if (blockCongruenceMap.containsKey(newBlockId)) {
                     newId = blockCongruenceMap.get(newBlockId);
                 }
