@@ -82,7 +82,7 @@ public class BlockID
             return false;
 
         BlockID o = (BlockID) obj;
-        return name.equals(o.name);
+        return name.equals(o.name) && metadata == o.metadata;
     }
 
     /**
