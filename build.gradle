@@ -52,7 +52,7 @@ processResources {
 
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
-        include 'version.properties'
+        exclude 'version.properties'
     }
 }
 
