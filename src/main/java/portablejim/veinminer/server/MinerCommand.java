@@ -20,6 +20,7 @@ package portablejim.veinminer.server;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -395,6 +396,6 @@ public class MinerCommand extends CommandBase {
     @Override
     public int compareTo(Object par1Obj)
     {
-        return this.compareTo((MinerCommand)par1Obj);
+        return this.compareTo((ICommand)par1Obj);
     }
 }
