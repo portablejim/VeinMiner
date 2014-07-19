@@ -18,6 +18,7 @@
 package portablejim.veinminer.proxy;
 
 import portablejim.veinminer.event.client.ActivateMinerKeybindManager;
+import portablejim.veinminer.event.client.ItemNameTooltip;
 
 /**
  * Client side implementation of proxy interface.
@@ -26,9 +27,11 @@ import portablejim.veinminer.event.client.ActivateMinerKeybindManager;
 @SuppressWarnings("UnusedDeclaration")
 public class ClientProxy extends CommonProxy {
     private ActivateMinerKeybindManager keybindManager;
+    private ItemNameTooltip itemNameTooltip;
 
     @Override
     public void registerClientEvents() {
         keybindManager = new ActivateMinerKeybindManager();
+        itemNameTooltip = new ItemNameTooltip();
     }
 }
