@@ -1,6 +1,22 @@
 Changelog
 =========
 
+0.17.0
+------
+Changes:
+* When ids are shown using F3 + H, show the internal name of the item/block.
+
+Fixes:
+* Fix /help
+* Fix crash when viewing config gui.
+
+
+0.16.1
+------
+Fixes:
+* Fix 1.7.10 errors
+* Make packets less leaky
+
 0.16.0
 ------
 Changes:
