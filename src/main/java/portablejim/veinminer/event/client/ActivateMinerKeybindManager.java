@@ -43,7 +43,7 @@ public class ActivateMinerKeybindManager {
 
     @SuppressWarnings("UnusedDeclaration")
     @SubscribeEvent
-    public void KeyEvent(InputEvent.KeyInputEvent event) {
+    public void KeyEvent(InputEvent event) {
         boolean sendPacket = false;
 
         int mode = VeinMiner.instance.configurationSettings.getPreferredMode();
