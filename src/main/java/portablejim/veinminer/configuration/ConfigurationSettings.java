@@ -18,10 +18,14 @@
 package portablejim.veinminer.configuration;
 
 import com.google.common.base.Joiner;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import portablejim.veinminer.api.ToolType;
+import portablejim.veinminer.configuration.json.Tool;
 import portablejim.veinminer.util.BlockID;
 import portablejim.veinminer.util.PreferredMode;
 
@@ -29,6 +33,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -61,10 +66,25 @@ public class ConfigurationSettings {
         blockCongruenceList = new ArrayList<Set<BlockID>>();
         blockCongruenceMap = new HashMap<BlockID, Integer>();
 
+        toolsAndBlocks = new HashMap<String, Tool>();
+
         parseConfigValues();
     }
 
     private void parseConfigValues() {
+        try {
+            JsonObject toolsJson = configValues.toolsAndBlocks.getAsJsonObject().getAsJsonObject("tools");
+            for(Map.Entry<String, JsonElement> entry: toolsJson.entrySet()) {
+                String toolName = entry.getKey();
+                Gson gson = new Gson();
+                Tool toolInstance = gson.fromJson(entry.getValue().getAsJsonObject(), Tool.class);
+                toolsAndBlocks.put(toolName, toolInstance);
+            }
+        }
+        catch (Exception ignored) {
+
+        }
+
         for(ToolType toolType : ToolType.values()) {
             setAutodetectBlocksToggle(toolType, configValues.toolConfig.get(toolType).autodetectToggle.value);
             setAutodetectBlocksList(toolType, configValues.toolConfig.get(toolType).autodetectList.value);
@@ -135,6 +155,8 @@ public class ConfigurationSettings {
     private boolean enableAllTools;
 
     private int preferredMode;
+
+    private Map<String, Tool> toolsAndBlocks;
 
     void setAutodetectBlocksToggle(ToolType tool, boolean value) {
         autoDetectBlocksToggle[tool.ordinal()] = value;

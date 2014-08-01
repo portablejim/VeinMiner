@@ -47,6 +47,7 @@ import portablejim.veinminer.server.MinerCommand;
 import portablejim.veinminer.server.MinerServer;
 import portablejim.veinminer.util.BlockID;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -77,7 +78,9 @@ public class VeinMiner {
     public void preInit(FMLPreInitializationEvent event) {
         logger = event.getModLog();
 
-        configurationValues = new ConfigurationValues(event.getSuggestedConfigurationFile());
+        File modDir = new File(event.getModConfigurationDirectory(), "veinminer");
+
+        configurationValues = new ConfigurationValues(new File(modDir, "general.cfg"), new File(modDir, "tools-and-blocks.json"));
         configurationValues.loadConfigFile();
         configurationSettings = new ConfigurationSettings(configurationValues);
         proxy.registerClientEvents();
