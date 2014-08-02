@@ -24,7 +24,6 @@ import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
@@ -32,7 +31,6 @@ import net.minecraft.command.ServerCommandManager;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.logging.log4j.Logger;
@@ -107,9 +105,11 @@ public class VeinMiner {
     @EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         String[] oreDictList = OreDictionary.getOreNames();
-        for(ToolType toolType : ToolType.values()) {
-            Set<String> autodetectValues = configurationSettings.getAutodetectBlocksList(toolType);
-            if(configurationSettings.getAutodetectBlocksToggle(toolType)) {
+        for(ToolType toolTypeEnum : ToolType.values()) {
+            Set<String> autodetectValues = configurationSettings.getAutodetectBlocksList(toolTypeEnum);
+            if(configurationSettings.getAutodetectBlocksToggle(toolTypeEnum)) {
+                String[] toolTypeLookup = new String[] { "axe", "hoe", "pickaxe", "shears", "shovel" };
+                String toolType = toolTypeLookup[toolTypeEnum.ordinal()];
                 for(String oreDictEntry : oreDictList) {
                     for(String autodetectValue : autodetectValues) {
                         if(!autodetectValue.isEmpty() && oreDictEntry.startsWith(autodetectValue)) {
@@ -120,7 +120,7 @@ public class VeinMiner {
                                     configurationSettings.addBlockToWhitelist(toolType, new BlockID(blockName, item.getItemDamage()));
                                     try {
                                         // Some mods raise an exception when calling getDisplayName on blocks.
-                                        MinerLogger.debug("Adding %s/%d (%s) to block whitelist for %s (%s:%s)", blockName, item.getItemDamage(), item.getDisplayName(), toolType.toString(), autodetectValue, oreDictEntry);
+                                        MinerLogger.debug("Adding %s/%d (%s) to block whitelist for %s (%s:%s)", blockName, item.getItemDamage(), item.getDisplayName(), toolType, autodetectValue, oreDictEntry);
                                     }
                                     catch (Exception e) {
                                         // Left over from 1.5/1.6 where some mods were throwing exceptions on item.getDisplayName()
@@ -147,7 +147,8 @@ public class VeinMiner {
         serverCommandManger.registerCommand(new MinerCommand());
     }
 
-    @SuppressWarnings("UnusedDeclaration")
+    // TODO: Re-do IMC stuff
+    /*@SuppressWarnings("UnusedDeclaration")
     @Mod.EventHandler
     public void imcCallback(FMLInterModComms.IMCEvent event) {
         for(final FMLInterModComms.IMCMessage message : event.getMessages()) {
@@ -173,5 +174,5 @@ public class VeinMiner {
 
             }
         }
-    }
+    }*/
 }
