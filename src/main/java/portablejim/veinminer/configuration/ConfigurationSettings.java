@@ -174,25 +174,6 @@ public class ConfigurationSettings {
         return autoDetectBlocksList[tool.ordinal()];
     }
 
-    /**
-     * Add the blocks mentioned in whitelist to the block whitelist for the specified tool.
-     * @param whitelist String of blocks with metadata value to add to whitelist. Format is
-     *                  'modName:block_name/metadata'. 'minecraft' is the modName for vanilla.
-     *                  Use ',' to separate blocks in whitelist.
-     *                  See {@link ConfigurationValues}.
-     * @param tool Tool to set the whitelist for.
-     */
-    void setBlockWhitelist(String tool, String whitelist) {
-        String[] blocksString = whitelist.split(",");
-
-        for (String blockString : blocksString ) {
-            BlockID newBlock = new BlockID(blockString);
-            if(!newBlock.name.isEmpty()) {
-                addBlockToWhitelist(tool, newBlock);
-            }
-        }
-    }
-
     public void addBlockToWhitelist(String tool, BlockID block) {
         if(!block.name.isEmpty()) {
             BlockID testBlock = new BlockID(block.name, -1);
@@ -212,10 +193,6 @@ public class ConfigurationSettings {
         else if(toolsAndBlocks.get(tool).blocklist.contains(blockNoMeta)) {
             toolsAndBlocks.put(tool, toolsAndBlocks.get(tool).removeBlock(blockNoMeta));
         }
-    }
-
-    public String getBlockWhitelist(String tool) {
-        return Joiner.on(',').join(toolsAndBlocks.get(tool).blocklist);
     }
 
     public ArrayList<String> getBlockIDArray(String toolType) {
@@ -319,10 +296,6 @@ public class ConfigurationSettings {
 
     public void removeTool(String tool, String name) {
         toolsAndBlocks.put(tool, toolsAndBlocks.get(tool).removeTool(name));
-    }
-
-    public String getToolIds(String tool) {
-        return Joiner.on(',').join(toolsAndBlocks.get(tool).toollist);
     }
 
     public Set<String> getToolTypes() {
