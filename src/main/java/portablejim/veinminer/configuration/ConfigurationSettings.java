@@ -326,7 +326,7 @@ public class ConfigurationSettings {
             radiusLimit = -1;
         }
         else if (radiusLimit > 1000) {
-            radiusLimit = 100;
+            radiusLimit = 1000;
         }
 
         this.radiusLimit = radiusLimit;
