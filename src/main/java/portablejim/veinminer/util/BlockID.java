@@ -32,7 +32,7 @@ import java.util.regex.Pattern;
  * mod, but some parts have been re-written.
  */
 
-public class BlockID
+public class BlockID implements Comparable<BlockID>
 {
     public String name;
     public int metadata;
@@ -115,5 +115,24 @@ public class BlockID
     public String toString()
     {
         return (metadata == -1 ? name + "" : name + "/" + metadata);
+    }
+
+    @Override
+    public int compareTo(BlockID blockID) {
+        if(name != null && !name.equals(blockID.name)) {
+            int result = name.compareTo(blockID.name);
+            if(result > 0) return 1;
+            else if (result < 0) return -1;
+            return 0;
+        }
+        else if(metadata < blockID.metadata) {
+            return -1;
+        }
+        else if(metadata > blockID.metadata) {
+            return 1;
+        }
+        else {
+            return 0;
+        }
     }
 }
