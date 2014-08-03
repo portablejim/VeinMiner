@@ -25,7 +25,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.config.Property;
 import portablejim.veinminer.VeinMiner;
 import portablejim.veinminer.api.ToolType;
 
@@ -48,10 +47,6 @@ public class ConfigurationValues {
 
     public static final String CONFIG_AUTODETECT = "autodetect";
     public static final String CONFIG_AUTODETECT_COMMENT = "Autodetect items and blocks during game start-up.";
-    public static final String CONFIG_BLOCKLIST = "blocklist";
-    public static final String CONFIG_BLOCKLIST_COMMENT = "Names of blocks to auto-mine.\nNames are formatted like 'modName:block_name/metadata'. Separate names (with metadata) with ','.\nUse 'minecraft' as the mod name for vanilla blocks.";
-    public static final String CONFIG_ITEMLIST = "itemlist";
-    public static final String CONFIG_ITEMLIST_COMMENT = "Tools to use to auto-mine with.\nNames are formatted like 'modName:tool_name/metadata'. Separate names (with metadata) with ','.\nUse 'minecraft' as the mod name for vanilla items.";
     public static final String CONFIG_LIMITS = "limit";
     public static final String CONFIG_MISC = "misc";
     public static final String CONFIG_OVERRIDE = "overrides";
@@ -151,18 +146,11 @@ public class ConfigurationValues {
         configFile.addCustomCategoryComment(CONFIG_AUTODETECT, CONFIG_AUTODETECT_COMMENT);
         AUTODETECT_TOOLS_TOGGLE = configFile.get(CONFIG_AUTODETECT, AUTODETECT_TOOLS_TOGGLE_CONFIGNAME, AUTODETECT_TOOLS_TOGGLE_DEFAULT, AUTODETECT_TOOLS_TOGGLE_DESCRIPTION).getBoolean(AUTODETECT_TOOLS_TOGGLE_DEFAULT);
 
-        configFile.addCustomCategoryComment(CONFIG_BLOCKLIST, CONFIG_BLOCKLIST_COMMENT);
-        configFile.addCustomCategoryComment(CONFIG_ITEMLIST, CONFIG_ITEMLIST_COMMENT);
-
         for(ToolType toolType : ToolType.values()) {
             ConfigOptionBoolean autoToggle = toolConfig.get(toolType).autodetectToggle;
             autoToggle.value = configFile.get(CONFIG_AUTODETECT, autoToggle.configName, autoToggle.valueDefault, autoToggle.description).getBoolean(autoToggle.valueDefault);
             ConfigOptionString autoList = toolConfig.get(toolType).autodetectList;
             autoList.value = configFile.get(CONFIG_AUTODETECT, autoList.configName, autoList.valueDefault, autoList.description).getString();
-            ConfigOptionString blockList = toolConfig.get(toolType).blockIdList;
-            blockList.value = configFile.get(CONFIG_BLOCKLIST, blockList.configName, blockList.valueDefault, blockList.description).getString();
-            ConfigOptionString toolList = toolConfig.get(toolType).toolIdList;
-            toolList.value = configFile.get(CONFIG_ITEMLIST, toolList.configName, toolList.valueDefault, toolList.description).getString();
         }
 
         BLOCK_LIMIT = configFile.get(CONFIG_LIMITS, BLOCK_LIMIT_CONFIGNAME, BLOCK_LIMIT_DEFAULT, BLOCK_LIMIT_DESCRIPTION).getInt(BLOCK_LIMIT_DEFAULT);
@@ -182,18 +170,6 @@ public class ConfigurationValues {
 
     public void saveConfigFile() {
         //configFile.load();
-
-        for(ToolType toolType : ToolType.values()) {
-            ConfigToolValue thisToolValue = toolConfig.get(toolType);
-            Property blockListProp = configFile.getCategory(CONFIG_BLOCKLIST).get(thisToolValue.blockIdList.configName);
-            if(blockListProp != null) {
-                blockListProp.set(thisToolValue.blockIdList.value);
-            }
-            Property itemListProp = configFile.getCategory(CONFIG_ITEMLIST).get(thisToolValue.toolIdList.configName);
-            if(itemListProp != null) {
-                itemListProp.set(thisToolValue.toolIdList.value);
-            }
-        }
 
         configFile.getCategory(CONFIG_LIMITS).get(BLOCK_LIMIT_CONFIGNAME).set(BLOCK_LIMIT);
         configFile.getCategory(CONFIG_LIMITS).get(RADIUS_LIMIT_CONFIGNAME).set(RADIUS_LIMIT);
