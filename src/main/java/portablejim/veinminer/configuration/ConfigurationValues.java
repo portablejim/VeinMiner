@@ -18,12 +18,15 @@
 package portablejim.veinminer.configuration;
 
 import com.google.common.io.Files;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
+import portablejim.veinminer.VeinMiner;
 import portablejim.veinminer.api.ToolType;
 
 import java.io.File;
@@ -41,6 +44,7 @@ import java.util.Map;
 public class ConfigurationValues {
 
     private Configuration configFile;
+    private File configFileJson;
 
     public static final String CONFIG_AUTODETECT = "autodetect";
     public static final String CONFIG_AUTODETECT_COMMENT = "Autodetect items and blocks during game start-up.";
@@ -101,6 +105,7 @@ public class ConfigurationValues {
 
     public ConfigurationValues(File defaultConfig, File toolsJson) {
         configFile = new Configuration(defaultConfig);
+        configFileJson = toolsJson;
 
         defaultTools = new HashMap<String, Tool>();
         defaultTools.put("axe", new Tool("Axe", "minecraft:diamond_axe",
@@ -203,6 +208,14 @@ public class ConfigurationValues {
 
         if(configFile.hasChanged()) {
             configFile.save();
+        }
+
+        Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+        String outputJson = gson.toJson(toolsAndBlocks);
+        try {
+            Files.write(outputJson, configFileJson, Charset.defaultCharset());
+        } catch (IOException e) {
+            VeinMiner.instance.logger.error("Error writing file %s!", configFileJson.toString());
         }
     }
 }
