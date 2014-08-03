@@ -153,6 +153,7 @@ public class ConfigGuiScreen extends GuiScreen implements IGuiElementValuePersis
                 floatValue = (Float)value;
                 settings.setRadiusLimit((int)floatValue);
                 settings.saveConfigs();
+                break;
             case 4:
                 floatValue = (Float)value;
                 intValue = Math.round(floatValue);
