@@ -17,12 +17,22 @@
 
 package portablejim.veinminer.configuration;
 
+import com.google.common.io.Files;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonParser;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.config.Property;
+import portablejim.veinminer.VeinMiner;
 import portablejim.veinminer.api.ToolType;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Stores the raw values of configs which are stored in the config file.
@@ -33,13 +43,10 @@ import java.util.HashMap;
 public class ConfigurationValues {
 
     private Configuration configFile;
+    private File configFileJson;
 
     public static final String CONFIG_AUTODETECT = "autodetect";
     public static final String CONFIG_AUTODETECT_COMMENT = "Autodetect items and blocks during game start-up.";
-    public static final String CONFIG_BLOCKLIST = "blocklist";
-    public static final String CONFIG_BLOCKLIST_COMMENT = "Names of blocks to auto-mine.\nNames are formatted like 'modName:block_name/metadata'. Separate names (with metadata) with ','.\nUse 'minecraft' as the mod name for vanilla blocks.";
-    public static final String CONFIG_ITEMLIST = "itemlist";
-    public static final String CONFIG_ITEMLIST_COMMENT = "Tools to use to auto-mine with.\nNames are formatted like 'modName:tool_name/metadata'. Separate names (with metadata) with ','.\nUse 'minecraft' as the mod name for vanilla items.";
     public static final String CONFIG_LIMITS = "limit";
     public static final String CONFIG_MISC = "misc";
     public static final String CONFIG_OVERRIDE = "overrides";
@@ -88,14 +95,47 @@ public class ConfigurationValues {
     public static final String CLIENT_PREFERRED_MODE_CONFIGNAME = "client.preferredMode";
     public static final String CLIENT_PREFERRED_MODE_DESCRIPTION = "What mode should the client use when joining a game.\nValid modes: [default: pressed]\n  'disabled' = don't enable, even when keybind pressed\n  'pressed' = enables when keybind is pressed\n  'released' = enables when keybind is released\n  'sneak' = enables when sneaking (ignores keybind)\n  'no_sneak' = enables when not sneaking (ignores keybind)";
 
-    public ConfigurationValues(File file) {
-        configFile = new Configuration(file);
+    public JsonElement toolsAndBlocks;
+    public Map<String, Tool> defaultTools;
 
-        toolConfig.put(ToolType.AXE, new ConfigToolValue("axe", true, "log,treeLeaves", "minecraft:log,minecraft:log2,minecraft:leaves,minecraft:leaves2,minecraft:fence", "minecraft:wooden_axe,minecraft:stone_axe,minecraft:golden_axe,minecraft:iron_axe,minecraft:diamond_axe"));
-        toolConfig.put(ToolType.HOE, new ConfigToolValue("hoe", false, "", "minecraft:wheat,minecraft:pumpkin,minecraft:melon_block,minecraft:carrots,minecraft:potatoes", "minecraft:wooden_hoe,minecraft:stone_hoe,minecraft:golden_hoe,minecraft:iron_hoe,minecraft:diamond_hoe"));
-        toolConfig.put(ToolType.PICKAXE, new ConfigToolValue("pickaxe", true, "ore", "minecraft:coal_ore,minecraft:gold_ore,minecraft:iron_ore,minecraft:diamond_ore,minecraft:lapis_ore,minecraft:emerald_ore,minecraft:quartz_ore,minecraft:redstone_ore,minecraft:lit_redstone_ore,minecraft:mossy_cobblestone,minecraft:glowstone,minecraft:obsidian,minecraft:nether_brick_fence,minecraft:cobblestone_wall", "minecraft:wooden_pickaxe,minecraft:stone_pickaxe,minecraft:golden_pickaxe,minecraft:iron_pickaxe,minecraft:diamond_pickaxe"));
-        toolConfig.put(ToolType.SHEARS, new ConfigToolValue("shears", true, "treeLeaves", "minecraft:leaves,minecraft:leaves2,minecraft:web,minecraft:tallgrass,minecraft:deadbush,minecraft:wool,minecraft:vine", "minecraft:shears"));
-        toolConfig.put(ToolType.SHOVEL, new ConfigToolValue("shovel", false, "", "minecraft:clay,minecraft:gravel", "minecraft:wooden_shovel,minecraft:stone_shovel,minecraft:golden_shovel,minecraft:iron_shovel,minecraft:diamond_shovel"));
+    public ConfigurationValues(File defaultConfig, File toolsJson) {
+        configFile = new Configuration(defaultConfig);
+        configFileJson = toolsJson;
+
+        defaultTools = new HashMap<String, Tool>();
+        defaultTools.put("axe", new Tool("Axe", "minecraft:diamond_axe",
+                new String[] {"minecraft:wooden_axe", "minecraft:stone_axe", "minecraft:golden_axe", "minecraft:iron_axe", "minecraft:diamond_axe"},
+                new String[] {"minecraft:log", "minecraft:log2", "minecraft:leaves", "minecraft:leaves2", "minecraft:fence"}));
+        defaultTools.put("hoe", new Tool("Hoe", "minecraft:diamond_hoe",
+                new String[] {"minecraft:wooden_hoe", "minecraft:stone_hoe", "minecraft:golden_hoe", "minecraft:iron_hoe", "minecraft:diamond_hoe"},
+                new String[] {"minecraft:wheat", "minecraft:pumpkin", "minecraft:melon_block", "minecraft:carrots", "minecraft:potatoes"}));
+        defaultTools.put("pickaxe", new Tool("Pickaxe", "minecraft:diamond_pickaxe",
+                new String[] {"minecraft:wooden_pickaxe", "minecraft:stone_pickaxe", "minecraft:golden_pickaxe", "minecraft:iron_pickaxe", "minecraft:diamond_pickaxe"},
+                new String[] {"minecraft:coal_ore", "minecraft:gold_ore", "minecraft:iron_ore", "minecraft:diamond_ore", "minecraft:lapis_ore", "minecraft:emerald_ore", "minecraft:quartz_ore", "minecraft:redstone_ore", "minecraft:lit_redstone_ore", "minecraft:mossy_cobblestone", "minecraft:glowstone", "minecraft:obsidian", "minecraft:nether_brick_fence", "minecraft:cobblestone_wall"}));
+        defaultTools.put("shears", new Tool("Shears", "minecraft:shears",
+                new String[] {"minecraft:shears"},
+                new String[] {"minecraft:leaves", "minecraft:leaves2", "minecraft:web", "minecraft:tallgrass", "minecraft:deadbush", "minecraft:wool", "minecraft:vine"}));
+        defaultTools.put("shovel", new Tool("Shovel", "minecraft:diamond_shovel",
+                new String[] {"minecraft:wooden_shovel", "minecraft:stone_shovel", "minecraft:golden_shovel", "minecraft:iron_shovel", "minecraft:diamond_shovel"},
+                new String[] {"minecraft:clay", "minecraft:gravel"}));
+
+        toolConfig.put(ToolType.AXE, new ConfigToolValue("axe", true, "log,treeLeaves", "", ""));
+        toolConfig.put(ToolType.HOE, new ConfigToolValue("hoe", false, "", "", ""));
+        toolConfig.put(ToolType.PICKAXE, new ConfigToolValue("pickaxe", true, "ore", "", ""));
+        toolConfig.put(ToolType.SHEARS, new ConfigToolValue("shears", true, "treeLeaves", "", ""));
+        toolConfig.put(ToolType.SHOVEL, new ConfigToolValue("shovel", false, "", "", ""));
+
+        toolsAndBlocks = new JsonObject();
+
+        try {
+            String toolsAndBlocksString = Files.toString(toolsJson, Charset.defaultCharset());
+            toolsAndBlocks = new JsonParser().parse(toolsAndBlocksString);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        catch(JsonParseException e) {
+            toolsAndBlocks = new JsonObject();
+        }
 
         loadConfigFile();
     }
@@ -106,18 +146,11 @@ public class ConfigurationValues {
         configFile.addCustomCategoryComment(CONFIG_AUTODETECT, CONFIG_AUTODETECT_COMMENT);
         AUTODETECT_TOOLS_TOGGLE = configFile.get(CONFIG_AUTODETECT, AUTODETECT_TOOLS_TOGGLE_CONFIGNAME, AUTODETECT_TOOLS_TOGGLE_DEFAULT, AUTODETECT_TOOLS_TOGGLE_DESCRIPTION).getBoolean(AUTODETECT_TOOLS_TOGGLE_DEFAULT);
 
-        configFile.addCustomCategoryComment(CONFIG_BLOCKLIST, CONFIG_BLOCKLIST_COMMENT);
-        configFile.addCustomCategoryComment(CONFIG_ITEMLIST, CONFIG_ITEMLIST_COMMENT);
-
         for(ToolType toolType : ToolType.values()) {
             ConfigOptionBoolean autoToggle = toolConfig.get(toolType).autodetectToggle;
             autoToggle.value = configFile.get(CONFIG_AUTODETECT, autoToggle.configName, autoToggle.valueDefault, autoToggle.description).getBoolean(autoToggle.valueDefault);
             ConfigOptionString autoList = toolConfig.get(toolType).autodetectList;
             autoList.value = configFile.get(CONFIG_AUTODETECT, autoList.configName, autoList.valueDefault, autoList.description).getString();
-            ConfigOptionString blockList = toolConfig.get(toolType).blockIdList;
-            blockList.value = configFile.get(CONFIG_BLOCKLIST, blockList.configName, blockList.valueDefault, blockList.description).getString();
-            ConfigOptionString toolList = toolConfig.get(toolType).toolIdList;
-            toolList.value = configFile.get(CONFIG_ITEMLIST, toolList.configName, toolList.valueDefault, toolList.description).getString();
         }
 
         BLOCK_LIMIT = configFile.get(CONFIG_LIMITS, BLOCK_LIMIT_CONFIGNAME, BLOCK_LIMIT_DEFAULT, BLOCK_LIMIT_DESCRIPTION).getInt(BLOCK_LIMIT_DEFAULT);
@@ -138,18 +171,6 @@ public class ConfigurationValues {
     public void saveConfigFile() {
         //configFile.load();
 
-        for(ToolType toolType : ToolType.values()) {
-            ConfigToolValue thisToolValue = toolConfig.get(toolType);
-            Property blockListProp = configFile.getCategory(CONFIG_BLOCKLIST).get(thisToolValue.blockIdList.configName);
-            if(blockListProp != null) {
-                blockListProp.set(thisToolValue.blockIdList.value);
-            }
-            Property itemListProp = configFile.getCategory(CONFIG_ITEMLIST).get(thisToolValue.toolIdList.configName);
-            if(itemListProp != null) {
-                itemListProp.set(thisToolValue.toolIdList.value);
-            }
-        }
-
         configFile.getCategory(CONFIG_LIMITS).get(BLOCK_LIMIT_CONFIGNAME).set(BLOCK_LIMIT);
         configFile.getCategory(CONFIG_LIMITS).get(RADIUS_LIMIT_CONFIGNAME).set(RADIUS_LIMIT);
         configFile.getCategory(CONFIG_LIMITS).get(BLOCKS_PER_TICK_CONFIGNAME).set(BLOCKS_PER_TICK);
@@ -163,6 +184,14 @@ public class ConfigurationValues {
 
         if(configFile.hasChanged()) {
             configFile.save();
+        }
+
+        Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+        String outputJson = gson.toJson(toolsAndBlocks);
+        try {
+            Files.write(outputJson, configFileJson, Charset.defaultCharset());
+        } catch (IOException e) {
+            VeinMiner.instance.logger.error("Error writing file %s!", configFileJson.toString());
         }
     }
 }

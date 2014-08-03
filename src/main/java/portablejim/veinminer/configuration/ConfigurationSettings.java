@@ -18,17 +18,25 @@
 package portablejim.veinminer.configuration;
 
 import com.google.common.base.Joiner;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import portablejim.veinminer.api.ToolType;
+import portablejim.veinminer.configuration.json.ToolStruct;
 import portablejim.veinminer.util.BlockID;
 import portablejim.veinminer.util.PreferredMode;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -43,33 +51,49 @@ public class ConfigurationSettings {
 
     public ConfigurationSettings(ConfigurationValues configValues) {
         this.configValues = configValues;
-        //noinspection unchecked
-        toolIds = new Set[ToolType.values().length];
-        for (ToolType tool : ToolType.values()) {
-            toolIds[tool.ordinal()] = new HashSet<String>();
-        }
-        //noinspection unchecked
-        blockWhitelist = new ArrayList[ToolType.values().length];
         autoDetectBlocksToggle = new boolean[ToolType.values().length];
         //noinspection unchecked
         autoDetectBlocksList = new HashSet[ToolType.values().length];
         for (ToolType tool : ToolType.values()) {
-            blockWhitelist[tool.ordinal()] = new ArrayList<BlockID>();
             autoDetectBlocksToggle[tool.ordinal()] = false;
             autoDetectBlocksList[tool.ordinal()] = new HashSet<String>();
         }
         blockCongruenceList = new ArrayList<Set<BlockID>>();
         blockCongruenceMap = new HashMap<BlockID, Integer>();
 
+        toolsAndBlocks = new HashMap<String, Tool>();
+
         parseConfigValues();
     }
 
     private void parseConfigValues() {
+        try {
+            JsonObject toolsJson = configValues.toolsAndBlocks.getAsJsonObject().getAsJsonObject("tools");
+            for(Map.Entry<String, JsonElement> entry: toolsJson.entrySet()) {
+                String toolName = entry.getKey();
+                Gson gson = new Gson();
+                ToolStruct toolInstance = gson.fromJson(entry.getValue().getAsJsonObject(), ToolStruct.class);
+                toolsAndBlocks.put(toolName, new Tool(toolInstance));
+            }
+        }
+        catch (Exception ignored) {
+
+        }
+
+        boolean defaultsAdded = false;
+        for(String defaultTool : configValues.defaultTools.keySet()) {
+            if(!toolsAndBlocks.containsKey(defaultTool)) {
+                toolsAndBlocks.put(defaultTool, configValues.defaultTools.get(defaultTool));
+                defaultsAdded = true;
+            }
+        }
+        if(defaultsAdded) {
+            saveConfigs();
+        }
+
         for(ToolType toolType : ToolType.values()) {
             setAutodetectBlocksToggle(toolType, configValues.toolConfig.get(toolType).autodetectToggle.value);
             setAutodetectBlocksList(toolType, configValues.toolConfig.get(toolType).autodetectList.value);
-            setBlockWhitelist(toolType, configValues.toolConfig.get(toolType).blockIdList.value);
-            setToolIds(toolType, configValues.toolConfig.get(toolType).toolIdList.value);
         }
 
         setBlockLimit(configValues.BLOCK_LIMIT);
@@ -104,11 +128,6 @@ public class ConfigurationSettings {
     private HashSet<String>[] autoDetectBlocksList;
 
     /**
-     * List of block IDs to whitelist for each tool.
-     */
-    private List<BlockID>[] blockWhitelist;
-
-    /**
      * Groups congruent block IDs together in an array.
      * Congruent blocks are blocks that should be treated as the same block.
      */
@@ -118,11 +137,6 @@ public class ConfigurationSettings {
      * A map to easily get the list of congruent block IDS for a specified block ID.
      */
     private HashMap<BlockID, Integer> blockCongruenceMap;
-
-    /**
-     * The items specified as each tool.
-     */
-    private Set<String>[] toolIds;
 
     private int blockLimit;
 
@@ -135,6 +149,8 @@ public class ConfigurationSettings {
     private boolean enableAllTools;
 
     private int preferredMode;
+
+    private Map<String, Tool> toolsAndBlocks;
 
     void setAutodetectBlocksToggle(ToolType tool, boolean value) {
         autoDetectBlocksToggle[tool.ordinal()] = value;
@@ -158,62 +174,39 @@ public class ConfigurationSettings {
         return autoDetectBlocksList[tool.ordinal()];
     }
 
-    /**
-     * Add the blocks mentioned in whitelist to the block whitelist for the specified tool.
-     * @param whitelist String of blocks with metadata value to add to whitelist. Format is
-     *                  'modName:block_name/metadata'. 'minecraft' is the modName for vanilla.
-     *                  Use ',' to separate blocks in whitelist.
-     *                  See {@link ConfigurationValues}.
-     * @param tool Tool to set the whitelist for.
-     */
-    void setBlockWhitelist(ToolType tool, String whitelist) {
-        String[] blocksString = whitelist.split(",");
-
-        for (String blockString : blocksString ) {
-            BlockID newBlock = new BlockID(blockString);
-            if(!newBlock.name.isEmpty()) {
-                addBlockToWhitelist(tool, newBlock);
-            }
-        }
-    }
-
-    public void addBlockToWhitelist(ToolType tool, BlockID block) {
+    public void addBlockToWhitelist(String tool, BlockID block) {
         if(!block.name.isEmpty()) {
             BlockID testBlock = new BlockID(block.name, -1);
-            if(!blockWhitelist[tool.ordinal()].contains(block) && !blockWhitelist[tool.ordinal()].contains(testBlock)) {
+            if(!toolsAndBlocks.get(tool).blocklist.contains(block) && !toolsAndBlocks.get(tool).blocklist.contains(testBlock)) {
                 block.metadata = block.metadata == OreDictionary.WILDCARD_VALUE ? -1 : block.metadata;
-                blockWhitelist[tool.ordinal()].add(block);
+                toolsAndBlocks.put(tool, toolsAndBlocks.get(tool).addBlock(block));
             }
         }
     }
 
-    public void removeBlockFromWhitelist(ToolType tool, BlockID block) {
+    public void removeBlockFromWhitelist(String tool, BlockID block) {
         BlockID blockNoMeta = new BlockID(block.name, block.metadata);
         blockNoMeta.metadata = -1;
-        if(blockWhitelist[tool.ordinal()].contains(block)) {
-            blockWhitelist[tool.ordinal()].remove(block);
+        if(toolsAndBlocks.get(tool).blocklist.contains(block)) {
+            toolsAndBlocks.put(tool, toolsAndBlocks.get(tool).removeBlock(block));
         }
-        else if(blockWhitelist[tool.ordinal()].contains(blockNoMeta)) {
-            blockWhitelist[tool.ordinal()].remove(blockNoMeta);
+        else if(toolsAndBlocks.get(tool).blocklist.contains(blockNoMeta)) {
+            toolsAndBlocks.put(tool, toolsAndBlocks.get(tool).removeBlock(blockNoMeta));
         }
     }
 
-    public String getBlockWhitelist(ToolType tool) {
-        return Joiner.on(',').join(blockWhitelist[tool.ordinal()]);
-    }
-
-    public ArrayList<String> getBlockIDArray(ToolType toolType) {
+    public ArrayList<String> getBlockIDArray(String toolType) {
         ArrayList<String> output = new ArrayList<String>();
-        for(BlockID blockID : blockWhitelist[toolType.ordinal()]) {
+        for(BlockID blockID : toolsAndBlocks.get(toolType).blocklist) {
             output.add(blockID.toString());
         }
         return output;
     }
 
-    public boolean whiteListHasBlockId(ToolType tool, BlockID targetBlock) {
+    public boolean whiteListHasBlockId(String tool, BlockID targetBlock) {
         BlockID targetBlockNoMeta = new BlockID(targetBlock.name, targetBlock.metadata);
         targetBlockNoMeta.metadata = -1;
-        return blockWhitelist[tool.ordinal()].contains(targetBlock) || blockWhitelist[tool.ordinal()].contains(targetBlockNoMeta);
+        return toolsAndBlocks.get(tool).blocklist.contains(targetBlock) || toolsAndBlocks.get(tool).blocklist.contains(targetBlockNoMeta);
     }
 
     /**
@@ -297,27 +290,20 @@ public class ConfigurationSettings {
         return targetBlock1 == targetBlock2;
     }
 
-    void setToolIds(ToolType tool, String ids) {
-        String[] toolsString = ids.split(",");
-
-        for (String nameString : toolsString) {
-            toolIds[tool.ordinal()].add(nameString);
-        }
+    public void addTool(String tool, String name) {
+        toolsAndBlocks.put(tool, toolsAndBlocks.get(tool).addTool(name));
     }
 
-    public void addTool(ToolType tool, String name) {
-        toolIds[tool.ordinal()].add(name);
+    public void removeTool(String tool, String name) {
+        toolsAndBlocks.put(tool, toolsAndBlocks.get(tool).removeTool(name));
     }
 
-    public void removeTool(ToolType tool, String name) {
-        toolIds[tool.ordinal()].remove(name);
+    public Set<String> getToolTypes() {
+        return toolsAndBlocks.keySet();
     }
 
-    public String getToolIds(ToolType tool) {
-        return Joiner.on(',').join(toolIds[tool.ordinal()]);
-    }
-    public ArrayList<String> getToolIdArray(ToolType tool) {
-        return new ArrayList<String>(toolIds[tool.ordinal()]);
+    public ArrayList<String> getToolIdArray(String tool) {
+        return new ArrayList<String>(toolsAndBlocks.get(tool).toollist);
     }
 
     public int getBlockLimit() {
@@ -361,8 +347,8 @@ public class ConfigurationSettings {
         this.blocksPerTick = blocksPerTick;
     }
 
-    public boolean toolIsOfType(ItemStack tool, ToolType type) {
-        return tool == null || this.toolIds[type.ordinal()].contains(Item.itemRegistry.getNameForObject(tool.getItem()));
+    public boolean toolIsOfType(ItemStack tool, String type) {
+        return tool == null || toolsAndBlocks.get(type).toollist.contains(Item.itemRegistry.getNameForObject(tool.getItem()));
     }
 
     /**
@@ -430,10 +416,7 @@ public class ConfigurationSettings {
     }
 
     public void saveConfigs() {
-        for(ToolType toolType : ToolType.values()) {
-            configValues.toolConfig.get(toolType).blockIdList.value = getBlockWhitelist(toolType);
-            configValues.toolConfig.get(toolType).toolIdList.value = getToolIds(toolType);
-        }
+        configValues.toolsAndBlocks = getToolsAndBlocksJson();
 
         configValues.BLOCK_LIMIT = getBlockLimit();
         configValues.BLOCKS_PER_TICK = getBlocksPerTick();
@@ -447,5 +430,41 @@ public class ConfigurationSettings {
         configValues.CLIENT_PREFERRED_MODE = getPreferredModeString();
 
         configValues.saveConfigFile();
+    }
+
+    public JsonObject getToolsAndBlocksJson() {
+        JsonObject jsonTools = new JsonObject();
+
+        List<String> sortedToolNames = new ArrayList<String>(toolsAndBlocks.keySet());
+        Collections.sort(sortedToolNames);
+        for(String toolName : sortedToolNames) {
+            Tool tool = toolsAndBlocks.get(toolName);
+
+            JsonArray toolList = new JsonArray();
+            List<String> sortedToolList = new ArrayList<String>(tool.toollist);
+            Collections.sort(sortedToolList);
+            for(String whiteListTool : sortedToolList) {
+                toolList.add(new JsonPrimitive(whiteListTool));
+            }
+            JsonArray blockList = new JsonArray();
+            List<BlockID> sortedBlockList= new ArrayList<BlockID>(tool.blocklist);
+            Collections.sort(sortedBlockList);
+            for(BlockID whitelistBlock : sortedBlockList) {
+                blockList.add(new JsonPrimitive(whitelistBlock.toString()));
+            }
+
+            JsonObject jsonTool = new JsonObject();
+            jsonTool.add("name", new JsonPrimitive(tool.name));
+            jsonTool.add("icon", new JsonPrimitive(tool.icon));
+            jsonTool.add("toollist", toolList);
+            jsonTool.add("blocklist", blockList);
+
+            jsonTools.add(toolName, jsonTool);
+        }
+
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.add("tools", jsonTools);
+
+        return jsonObject;
     }
 }

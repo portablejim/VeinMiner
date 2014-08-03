@@ -40,7 +40,7 @@ import java.util.ArrayList;
  */
 
 public class ItemlistConfigGuiScreen extends GuiScreen {
-    ToolType toolType;
+    String toolType;
     int mode;
     IconRenderer iconRenderer;
     GuiButton addButton;
@@ -54,13 +54,12 @@ public class ItemlistConfigGuiScreen extends GuiScreen {
     GuiElementSlotItemlist itemList;
     private Object parent;
 
-    public ItemlistConfigGuiScreen(GuiScreen parent, ToolType toolType, int mode) {
+    public ItemlistConfigGuiScreen(GuiScreen parent, String toolType, int mode) {
         this.toolType = toolType;
         this.mode = mode;
         this.parent = parent;
 
-        String[] toolNames = { "axe", "hoe", "pickaxe", "shears", "shovel"};
-        String toolName = toolNames[toolType.ordinal()];
+        String toolName = toolType;
         String[] modeNames = { "blocklist", "toollist" };
         String modeName = modeNames[mode];
 

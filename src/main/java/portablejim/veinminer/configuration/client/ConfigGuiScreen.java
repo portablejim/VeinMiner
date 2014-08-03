@@ -22,7 +22,6 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import portablejim.veinminer.VeinMiner;
-import portablejim.veinminer.api.ToolType;
 import portablejim.veinminer.configuration.ConfigurationSettings;
 import portablejim.veinminer.configuration.client.elements.GuiElementSliderLog;
 import portablejim.veinminer.configuration.client.elements.IGuiElementValuePersist;
@@ -88,43 +87,43 @@ public class ConfigGuiScreen extends GuiScreen implements IGuiElementValuePersis
                     par1GuiButton.displayString = I18n.format(String.format("gui.veinminer.config.%s", currentModeStrings[settings.getPreferredMode()]));
                     break;
                 case 5:
-                    newScreen = new ItemlistConfigGuiScreen(this, ToolType.AXE, 0);
+                    newScreen = new ItemlistConfigGuiScreen(this, "axe", 0);
                     mc.displayGuiScreen(newScreen);
                     break;
                 case 6:
-                    newScreen = new ItemlistConfigGuiScreen(this,ToolType.AXE, 1);
+                    newScreen = new ItemlistConfigGuiScreen(this, "axe", 1);
                     mc.displayGuiScreen(newScreen);
                     break;
                 case 7:
-                    newScreen = new ItemlistConfigGuiScreen(this, ToolType.HOE, 0);
+                    newScreen = new ItemlistConfigGuiScreen(this, "hoe", 0);
                     mc.displayGuiScreen(newScreen);
                     break;
                 case 8:
-                    newScreen = new ItemlistConfigGuiScreen(this,ToolType.HOE, 1);
+                    newScreen = new ItemlistConfigGuiScreen(this, "hoe", 1);
                     mc.displayGuiScreen(newScreen);
                     break;
                 case 9:
-                    newScreen = new ItemlistConfigGuiScreen(this, ToolType.PICKAXE, 0);
+                    newScreen = new ItemlistConfigGuiScreen(this, "pickaxe", 0);
                     mc.displayGuiScreen(newScreen);
                     break;
                 case 10:
-                    newScreen = new ItemlistConfigGuiScreen(this,ToolType.PICKAXE, 1);
+                    newScreen = new ItemlistConfigGuiScreen(this, "pickaxe", 1);
                     mc.displayGuiScreen(newScreen);
                     break;
                 case 11:
-                    newScreen = new ItemlistConfigGuiScreen(this, ToolType.SHEARS, 0);
+                    newScreen = new ItemlistConfigGuiScreen(this, "shears", 0);
                     mc.displayGuiScreen(newScreen);
                     break;
                 case 12:
-                    newScreen = new ItemlistConfigGuiScreen(this,ToolType.SHEARS, 1);
+                    newScreen = new ItemlistConfigGuiScreen(this, "shears", 1);
                     mc.displayGuiScreen(newScreen);
                     break;
                 case 13:
-                    newScreen = new ItemlistConfigGuiScreen(this, ToolType.SHOVEL, 0);
+                    newScreen = new ItemlistConfigGuiScreen(this, "shovel", 0);
                     mc.displayGuiScreen(newScreen);
                     break;
                 case 14:
-                    newScreen = new ItemlistConfigGuiScreen(this,ToolType.SHOVEL, 1);
+                    newScreen = new ItemlistConfigGuiScreen(this, "shovel", 1);
                     mc.displayGuiScreen(newScreen);
                     break;
             }
