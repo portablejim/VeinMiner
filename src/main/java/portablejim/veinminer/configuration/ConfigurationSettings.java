@@ -32,8 +32,10 @@ import portablejim.veinminer.util.BlockID;
 import portablejim.veinminer.util.PreferredMode;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -460,16 +462,21 @@ public class ConfigurationSettings {
     public JsonObject getToolsAndBlocksJson() {
         JsonObject jsonTools = new JsonObject();
 
-        for(Map.Entry<String, Tool> toolEntry : toolsAndBlocks.entrySet()) {
-            String toolName = toolEntry.getKey();
-            Tool tool = toolEntry.getValue();
+        List<String> sortedToolNames = new ArrayList<String>(toolsAndBlocks.keySet());
+        Collections.sort(sortedToolNames);
+        for(String toolName : sortedToolNames) {
+            Tool tool = toolsAndBlocks.get(toolName);
 
             JsonArray toolList = new JsonArray();
-            for(String whiteListTool : tool.toollist) {
+            List<String> sortedToolList = new ArrayList<String>(tool.toollist);
+            Collections.sort(sortedToolList);
+            for(String whiteListTool : sortedToolList) {
                 toolList.add(new JsonPrimitive(whiteListTool));
             }
             JsonArray blockList = new JsonArray();
-            for(BlockID whitelistBlock : tool.blocklist) {
+            List<BlockID> sortedBlockList= new ArrayList<BlockID>(tool.blocklist);
+            Collections.sort(sortedBlockList);
+            for(BlockID whitelistBlock : sortedBlockList) {
                 blockList.add(new JsonPrimitive(whitelistBlock.toString()));
             }
 
