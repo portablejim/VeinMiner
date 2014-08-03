@@ -17,6 +17,7 @@
 
 package portablejim.veinminer.server;
 
+import com.google.common.base.Joiner;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -29,13 +30,12 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.StatCollector;
-import portablejim.veinminer.api.ToolType;
+import portablejim.veinminer.VeinMiner;
 import portablejim.veinminer.configuration.ConfigurationSettings;
 import portablejim.veinminer.util.BlockID;
 import portablejim.veinminer.util.PlayerStatus;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Command so that clients can control VeinMiner settings for their player.
@@ -61,34 +61,6 @@ public class MinerCommand extends CommandBase {
     @Override
     public boolean canCommandSenderUseCommand(ICommandSender par1ICommandSender) {
         return par1ICommandSender instanceof EntityPlayerMP;
-    }
-
-    private ToolType commandTool(String[] commandString, String commandName) {
-        if(commandString.length == 1) {
-            showUsageError("command.veinminer." + commandName);
-        }
-
-        ToolType tool = ToolType.PICKAXE;
-        if("pickaxe".equals(commandString[1])) {
-            tool = ToolType.PICKAXE;
-        }
-        else if("axe".equals(commandString[1])) {
-            tool = ToolType.AXE;
-        }
-        else if("shovel".equals(commandString[1])) {
-            tool = ToolType.SHOVEL;
-        }
-        else if("hoe".equals(commandString[1])) {
-            tool = ToolType.HOE;
-        }
-        else if("shears".equals(commandString[1])) {
-            tool = ToolType.SHEARS;
-        }
-        else {
-            showUsageError("command.veinminer." + commandName);
-        }
-
-        return tool;
     }
 
     @Override
@@ -208,8 +180,25 @@ public class MinerCommand extends CommandBase {
     private void runCommandBlocklist(EntityPlayerMP senderPlayer, String[] astring) {
         ConfigurationSettings configSettings = MinerServer.instance.getConfigurationSettings();
 
-        ToolType tool = commandTool(astring, "blocklist");
-        String toolString = astring[1];
+        ConfigurationSettings settings = VeinMiner.instance.configurationSettings;
+        Set<String> toolsSet = settings.getToolTypes();
+        String toolsSlashed = Joiner.on("/").join(toolsSet);
+
+        if(astring.length == 1) {
+            showUsageError("command.veinminer.blocklist", toolsSlashed);
+        }
+
+        String tool;
+        if(toolsSet.contains(astring[1])) {
+            tool = astring[1];
+        }
+        else {
+            showUsageError("command.veinminer.blocklist", toolsSlashed);
+            return;
+        }
+
+        // TODO: [FEATURE] Get tool name instead of tool identifier;
+        String toolString = tool;
 
         commandAction(astring, "blockList");
         String action = astring[2];
@@ -245,8 +234,25 @@ public class MinerCommand extends CommandBase {
     private void runCommandToollist(EntityPlayerMP senderPlayer, String[] astring) {
         ConfigurationSettings configSettings = MinerServer.instance.getConfigurationSettings();
 
-        ToolType tool = commandTool(astring, "toollist");
-        String toolString = astring[1];
+        ConfigurationSettings settings = VeinMiner.instance.configurationSettings;
+        Set<String> toolsSet = settings.getToolTypes();
+        String toolsSlashed = Joiner.on("/").join(toolsSet);
+
+        if(astring.length == 1) {
+            showUsageError("command.veinminer.toollist", toolsSlashed);
+        }
+
+        String tool;
+        if(toolsSet.contains(astring[1])) {
+            tool = astring[1];
+        }
+        else {
+            showUsageError("command.veinminer.toollist", toolsSlashed);
+            return;
+        }
+
+        // TODO: [FEATURE] Get tool name instead of tool identifier;
+        String toolString = tool;
 
         commandAction(astring, "toollist");
         String action = astring[2];
@@ -366,7 +372,10 @@ public class MinerCommand extends CommandBase {
                     return getListOfStringsMatchingLastWord(arguments, modes);
                 }
                 else if(arguments[0].equals(commands[COMMAND_BLOCKLIST]) || arguments[0].equals(commands[COMMAND_TOOLLIST])) {
-                    String[] tools = { "pickaxe", "axe", "shovel", "hoe", "shears" };
+                    Set<String> toolsSet = VeinMiner.instance.configurationSettings.getToolTypes();
+                    String[] tools = new String[] {};
+                    tools = toolsSet.toArray(tools);
+                    Arrays.sort(tools);
 
                     return getListOfStringsMatchingLastWord(arguments, tools);
                 }
