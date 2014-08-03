@@ -86,7 +86,7 @@ public class ConfigurationValues {
     public String CLIENT_PREFERRED_MODE;
     public static final String CLIENT_PREFERRED_MODE_DEFAULT = "pressed";
     public static final String CLIENT_PREFERRED_MODE_CONFIGNAME = "client.preferredMode";
-    public static final String CLIENT_PREFERRED_MODE_DESCRIPTION = "What mode should the client use when joining a game.\nValid modes: [default: pressed]\n  'disabled' = don't enable, even when keybind pressed\n  'pressed' = enables when keybind is pressed\n  'released' = enables when keybind is released\n  'sneak' = enables when sneaking (ignores keybind)\n  'nosneak' = enables when not sneaking (ignores keybind)";
+    public static final String CLIENT_PREFERRED_MODE_DESCRIPTION = "What mode should the client use when joining a game.\nValid modes: [default: pressed]\n  'disabled' = don't enable, even when keybind pressed\n  'pressed' = enables when keybind is pressed\n  'released' = enables when keybind is released\n  'sneak' = enables when sneaking (ignores keybind)\n  'no_sneak' = enables when not sneaking (ignores keybind)";
 
     public ConfigurationValues(File file) {
         configFile = new Configuration(file);
