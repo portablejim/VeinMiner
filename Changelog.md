@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.17.1
+------
+Fixes:
+* Stop Veinminer from sticking on.
+* Fix client Preferred mode comment say "no_sneak" instead of "nosneak".
+
 0.17.0
 ------
 Changes:
