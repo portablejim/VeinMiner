@@ -78,6 +78,17 @@ public class ConfigurationSettings {
 
         }
 
+        boolean defaultsAdded = false;
+        for(String defaultTool : configValues.defaultTools.keySet()) {
+            if(!toolsAndBlocks.containsKey(defaultTool)) {
+                toolsAndBlocks.put(defaultTool, configValues.defaultTools.get(defaultTool));
+                defaultsAdded = true;
+            }
+        }
+        if(defaultsAdded) {
+            saveConfigs();
+        }
+
         for(ToolType toolType : ToolType.values()) {
             setAutodetectBlocksToggle(toolType, configValues.toolConfig.get(toolType).autodetectToggle.value);
             setAutodetectBlocksList(toolType, configValues.toolConfig.get(toolType).autodetectList.value);
@@ -310,6 +321,10 @@ public class ConfigurationSettings {
 
     public String getToolIds(String tool) {
         return Joiner.on(',').join(toolsAndBlocks.get(tool).toollist);
+    }
+
+    public Set<String> getToolTypes() {
+        return toolsAndBlocks.keySet();
     }
 
     public ArrayList<String> getToolIdArray(String tool) {

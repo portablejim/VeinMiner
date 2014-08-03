@@ -16,6 +16,17 @@ public class Tool {
     public Set<String> toollist;
     public Set<BlockID> blocklist;
 
+    public Tool(String name, String icon, String[] toollist, String[] blocklist) {
+	    this.name = name;
+	    this.icon = icon;
+        this.toollist = new HashSet<String>(toollist.length);
+        this.blocklist = new HashSet<BlockID>(blocklist.length);
+	    Collections.addAll(this.toollist, toollist);
+	    for(String block : blocklist) {
+	        this.blocklist.add(new BlockID(block));
+	    }
+    }
+
     public Tool(ToolStruct baseTool) {
         name = baseTool.name;
         icon = baseTool.icon;

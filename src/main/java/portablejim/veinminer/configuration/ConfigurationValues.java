@@ -30,6 +30,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Stores the raw values of configs which are stored in the config file.
@@ -96,15 +97,33 @@ public class ConfigurationValues {
     public static final String CLIENT_PREFERRED_MODE_DESCRIPTION = "What mode should the client use when joining a game.\nValid modes: [default: pressed]\n  'disabled' = don't enable, even when keybind pressed\n  'pressed' = enables when keybind is pressed\n  'released' = enables when keybind is released\n  'sneak' = enables when sneaking (ignores keybind)\n  'nosneak' = enables when not sneaking (ignores keybind)";
 
     public JsonElement toolsAndBlocks;
+    public Map<String, Tool> defaultTools;
 
     public ConfigurationValues(File defaultConfig, File toolsJson) {
         configFile = new Configuration(defaultConfig);
 
-        toolConfig.put(ToolType.AXE, new ConfigToolValue("axe", true, "log,treeLeaves", "minecraft:log,minecraft:log2,minecraft:leaves,minecraft:leaves2,minecraft:fence", "minecraft:wooden_axe,minecraft:stone_axe,minecraft:golden_axe,minecraft:iron_axe,minecraft:diamond_axe"));
-        toolConfig.put(ToolType.HOE, new ConfigToolValue("hoe", false, "", "minecraft:wheat,minecraft:pumpkin,minecraft:melon_block,minecraft:carrots,minecraft:potatoes", "minecraft:wooden_hoe,minecraft:stone_hoe,minecraft:golden_hoe,minecraft:iron_hoe,minecraft:diamond_hoe"));
-        toolConfig.put(ToolType.PICKAXE, new ConfigToolValue("pickaxe", true, "ore", "minecraft:coal_ore,minecraft:gold_ore,minecraft:iron_ore,minecraft:diamond_ore,minecraft:lapis_ore,minecraft:emerald_ore,minecraft:quartz_ore,minecraft:redstone_ore,minecraft:lit_redstone_ore,minecraft:mossy_cobblestone,minecraft:glowstone,minecraft:obsidian,minecraft:nether_brick_fence,minecraft:cobblestone_wall", "minecraft:wooden_pickaxe,minecraft:stone_pickaxe,minecraft:golden_pickaxe,minecraft:iron_pickaxe,minecraft:diamond_pickaxe"));
-        toolConfig.put(ToolType.SHEARS, new ConfigToolValue("shears", true, "treeLeaves", "minecraft:leaves,minecraft:leaves2,minecraft:web,minecraft:tallgrass,minecraft:deadbush,minecraft:wool,minecraft:vine", "minecraft:shears"));
-        toolConfig.put(ToolType.SHOVEL, new ConfigToolValue("shovel", false, "", "minecraft:clay,minecraft:gravel", "minecraft:wooden_shovel,minecraft:stone_shovel,minecraft:golden_shovel,minecraft:iron_shovel,minecraft:diamond_shovel"));
+        defaultTools = new HashMap<String, Tool>();
+        defaultTools.put("axe", new Tool("Axe", "minecraft:diamond_axe",
+                new String[] {"minecraft:wooden_axe", "minecraft:stone_axe", "minecraft:golden_axe", "minecraft:iron_axe", "minecraft:diamond_axe"},
+                new String[] {"minecraft:log", "minecraft:log2", "minecraft:leaves", "minecraft:leaves2", "minecraft:fence"}));
+        defaultTools.put("hoe", new Tool("Hoe", "minecraft:diamond_hoe",
+                new String[] {"minecraft:wooden_hoe", "minecraft:stone_hoe", "minecraft:golden_hoe", "minecraft:iron_hoe", "minecraft:diamond_hoe"},
+                new String[] {"minecraft:wheat", "minecraft:pumpkin", "minecraft:melon_block", "minecraft:carrots", "minecraft:potatoes"}));
+        defaultTools.put("pickaxe", new Tool("Pickaxe", "minecraft:diamond_pickaxe",
+                new String[] {"minecraft:wooden_pickaxe", "minecraft:stone_pickaxe", "minecraft:golden_pickaxe", "minecraft:iron_pickaxe", "minecraft:diamond_pickaxe"},
+                new String[] {"minecraft:coal_ore", "minecraft:gold_ore", "minecraft:iron_ore", "minecraft:diamond_ore", "minecraft:lapis_ore", "minecraft:emerald_ore", "minecraft:quartz_ore", "minecraft:redstone_ore", "minecraft:lit_redstone_ore", "minecraft:mossy_cobblestone", "minecraft:glowstone", "minecraft:obsidian", "minecraft:nether_brick_fence", "minecraft:cobblestone_wall"}));
+        defaultTools.put("shears", new Tool("Shears", "minecraft:shears",
+                new String[] {"minecraft:shears"},
+                new String[] {"minecraft:leaves", "minecraft:leaves2", "minecraft:web", "minecraft:tallgrass", "minecraft:deadbush", "minecraft:wool", "minecraft:vine"}));
+        defaultTools.put("shovel", new Tool("Shovel", "minecraft:diamond_shovel",
+                new String[] {"minecraft:wooden_shovel", "minecraft:stone_shovel", "minecraft:golden_shovel", "minecraft:iron_shovel", "minecraft:diamond_shovel"},
+                new String[] {"minecraft:clay", "minecraft:gravel"}));
+
+        toolConfig.put(ToolType.AXE, new ConfigToolValue("axe", true, "log,treeLeaves", "", ""));
+        toolConfig.put(ToolType.HOE, new ConfigToolValue("hoe", false, "", "", ""));
+        toolConfig.put(ToolType.PICKAXE, new ConfigToolValue("pickaxe", true, "ore", "", ""));
+        toolConfig.put(ToolType.SHEARS, new ConfigToolValue("shears", true, "treeLeaves", "", ""));
+        toolConfig.put(ToolType.SHOVEL, new ConfigToolValue("shovel", false, "", "", ""));
 
         toolsAndBlocks = new JsonObject();
 

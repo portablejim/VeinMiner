@@ -33,7 +33,6 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import portablejim.veinminer.api.Permission;
-import portablejim.veinminer.api.ToolType;
 import portablejim.veinminer.api.VeinminerHarvestFailedCheck;
 import portablejim.veinminer.api.VeinminerNoToolCheck;
 import portablejim.veinminer.api.VeinminerPostUseTool;
@@ -168,8 +167,9 @@ public class MinerInstance {
 
     private boolean toolAllowedForBlock(ItemStack tool, BlockID block) {
         boolean toolAllowed = false;
-        for(ToolType type : ToolType.values()) {
-            if(serverInstance.getConfigurationSettings().toolIsOfType(tool, type)) {
+        ConfigurationSettings settings = serverInstance.getConfigurationSettings();
+        for(String type : settings.getToolTypes()) {
+            if(settings.toolIsOfType(tool, type)) {
                 if(serverInstance.getConfigurationSettings().whiteListHasBlockId(type, block)) {
                     toolAllowed = true;
                 }
