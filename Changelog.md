@@ -1,6 +1,19 @@
 Changelog
 =========
 
+0.18.1
+------
+Changes:
+ * Make tool list and block list for tools defined in a JSON-based config file.
+     This allows custom tools to be defined.
+ * Extend command system to allow you to add tools and blocks to custom tools
+     defined in the config file.
+ * Move config files to a new 'veinminer' folder
+Fixes:
+* Make setting range too high result in the range set to max, instead of
+    setting it to something less.
+* Don't change block limit to radius when setting radius via gui.
+
 0.17.1
 ------
 Fixes:
