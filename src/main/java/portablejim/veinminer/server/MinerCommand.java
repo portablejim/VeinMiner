@@ -329,7 +329,7 @@ public class MinerCommand extends CommandBase {
             showUsageError("command.veinminer.pertick");
         }
 
-        MinerServer.instance.getConfigurationSettings().setRadiusLimit(newRate);
+        MinerServer.instance.getConfigurationSettings().setBlocksPerTick(newRate);
 
         int actualRate = MinerServer.instance.getConfigurationSettings().getRadiusLimit();
         sendProperChatToPlayer(senderPlayer, "command.veinminer.pertick.set", actualRate);
