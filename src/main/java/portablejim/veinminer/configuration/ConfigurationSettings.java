@@ -87,9 +87,6 @@ public class ConfigurationSettings {
                 defaultsAdded = true;
             }
         }
-        if(defaultsAdded) {
-            saveConfigs();
-        }
 
         for(ToolType toolType : ToolType.values()) {
             setAutodetectBlocksToggle(toolType, configValues.toolConfig.get(toolType).autodetectToggle.value);
@@ -106,6 +103,10 @@ public class ConfigurationSettings {
         setEnableAllTools(configValues.ENABLE_ALL_TOOLS);
 
         setPreferredMode(configValues.CLIENT_PREFERRED_MODE, ConfigurationValues.CLIENT_PREFERRED_MODE_DEFAULT);
+
+        if(defaultsAdded) {
+            saveConfigs();
+        }
     }
 
     public boolean getEnableAllBlocks() {

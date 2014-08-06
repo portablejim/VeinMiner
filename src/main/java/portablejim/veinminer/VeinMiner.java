@@ -77,6 +77,9 @@ public class VeinMiner {
         logger = event.getModLog();
 
         File modDir = new File(event.getModConfigurationDirectory(), "veinminer");
+        if(!modDir.exists()) {
+            modDir.mkdir();
+        }
 
         configurationValues = new ConfigurationValues(new File(modDir, "general.cfg"), new File(modDir, "tools-and-blocks.json"));
         configurationValues.loadConfigFile();

@@ -138,6 +138,7 @@ public class ConfigurationValues {
         }
 
         loadConfigFile();
+        saveConfigFile();
     }
 
     public void loadConfigFile() {
