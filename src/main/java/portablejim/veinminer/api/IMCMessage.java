@@ -6,21 +6,20 @@ import net.minecraft.nbt.NBTTagCompound;
 /**
  * Helper functions to send IMC messages to VeinMiner
  */
+@SuppressWarnings("UnusedDeclaration")
 public class IMCMessage {
-    public static void addTool(ToolType type, String itemName) {
-        sendMessage("item", type, itemName);
+    public static void addTool(String type, String itemName) {
+        sendWhitelistMessage("item", type, itemName);
     }
 
-    public static void addBlock(ToolType type, String blockName) {
-        sendMessage("block", type, blockName);
+    public static void addBlock(String type, String blockName) {
+        sendWhitelistMessage("block", type, blockName);
     }
 
-    private static void sendMessage(String itemType, ToolType type, String blockName) {
-        int toolType = type.ordinal();
-
+    private static void sendWhitelistMessage(String itemType, String toolType, String blockName) {
         NBTTagCompound message = new NBTTagCompound();
         message.setString("whitelistType", itemType);
-        message.setShort("toolType", (short) toolType);
+        message.setString("toolType", toolType);
         message.setString("blockName", blockName);
         FMLInterModComms.sendMessage("VeinMiner", "whitelist", message);
     }

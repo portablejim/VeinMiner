@@ -32,7 +32,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
 import portablejim.veinminer.api.IMCMessage;
 import portablejim.veinminer.api.Permission;
-import portablejim.veinminer.api.ToolType;
 import portablejim.veinminer.api.VeinminerHarvestFailedCheck;
 import portablejim.veinminer.api.VeinminerPostUseTool;
 
@@ -77,50 +76,50 @@ public class VeinMinerModSupport {
 
     private void addTools() {
         if(Loader.isModLoaded("IC2")) {
-            IMCMessage.addTool(ToolType.AXE, "IC2:itemToolBronzeAxe");
-            IMCMessage.addTool(ToolType.AXE, "IC2:itemToolChainsaw");
-            IMCMessage.addTool(ToolType.HOE, "IC2:itemToolBronzeHoe");
-            IMCMessage.addTool(ToolType.PICKAXE, "IC2:itemToolBronzePickaxe");
-            IMCMessage.addTool(ToolType.PICKAXE, "IC2:itemToolDrill");
-            IMCMessage.addTool(ToolType.PICKAXE, "IC2:itemToolDDrill");
-            IMCMessage.addTool(ToolType.PICKAXE, "IC2:itemToolIridiumDrill");
-            IMCMessage.addTool(ToolType.SHEARS, "IC2:itemToolBronzeHoe");
-            IMCMessage.addTool(ToolType.SHOVEL, "IC2:itemToolBronzeSpade");
+            IMCMessage.addTool("axe", "IC2:itemToolBronzeAxe");
+            IMCMessage.addTool("axe", "IC2:itemToolChainsaw");
+            IMCMessage.addTool("hoe", "IC2:itemToolBronzeHoe");
+            IMCMessage.addTool("pickaxe", "IC2:itemToolBronzePickaxe");
+            IMCMessage.addTool("pickaxe", "IC2:itemToolDrill");
+            IMCMessage.addTool("pickaxe", "IC2:itemToolDDrill");
+            IMCMessage.addTool("pickaxe", "IC2:itemToolIridiumDrill");
+            IMCMessage.addTool("shears", "IC2:itemToolBronzeHoe");
+            IMCMessage.addTool("shovel", "IC2:itemToolBronzeSpade");
         }
         if(Loader.isModLoaded("appliedenergistics2")) {
-            IMCMessage.addTool(ToolType.AXE, "appliedenergistics2:item.ToolCertusQuartzAxe");
-            IMCMessage.addTool(ToolType.HOE, "appliedenergistics2:item.ToolCertusQuartzHoe");
-            IMCMessage.addTool(ToolType.PICKAXE, "appliedenergistics2:item.ToolCertusQuartzPickaxe");
-            IMCMessage.addTool(ToolType.SHOVEL, "appliedenergistics2:item.ToolCertusQuartzSpade");
-            IMCMessage.addTool(ToolType.AXE, "appliedenergistics2:item.ToolNetherQuartzAxe");
-            IMCMessage.addTool(ToolType.HOE, "appliedenergistics2:item.ToolNetherQuartzHoe");
-            IMCMessage.addTool(ToolType.PICKAXE, "appliedenergistics2:item.ToolNetherQuartzPickaxe");
-            IMCMessage.addTool(ToolType.SHOVEL, "appliedenergistics2:item.ToolNetherQuartzSpade");
+            IMCMessage.addTool("axe", "appliedenergistics2:item.ToolCertusQuartzAxe");
+            IMCMessage.addTool("hoe", "appliedenergistics2:item.ToolCertusQuartzHoe");
+            IMCMessage.addTool("pickaxe", "appliedenergistics2:item.ToolCertusQuartzPickaxe");
+            IMCMessage.addTool("shovel", "appliedenergistics2:item.ToolCertusQuartzSpade");
+            IMCMessage.addTool("axe", "appliedenergistics2:item.ToolNetherQuartzAxe");
+            IMCMessage.addTool("hoe", "appliedenergistics2:item.ToolNetherQuartzHoe");
+            IMCMessage.addTool("pickaxe", "appliedenergistics2:item.ToolNetherQuartzPickaxe");
+            IMCMessage.addTool("shovel", "appliedenergistics2:item.ToolNetherQuartzSpade");
         }
         if(Loader.isModLoaded("BiomesOPlenty")) {
-            IMCMessage.addTool(ToolType.AXE, "BiomesOPlenty:axeMud");
-            IMCMessage.addTool(ToolType.HOE, "BiomesOPlenty:hoeMud");
-            IMCMessage.addTool(ToolType.PICKAXE, "BiomesOPlenty:pickaxeMud");
-            IMCMessage.addTool(ToolType.SHOVEL, "BiomesOPlenty:shovelMud");
-            IMCMessage.addTool(ToolType.AXE, "BiomesOPlenty:axeAmethyst");
-            IMCMessage.addTool(ToolType.HOE, "BiomesOPlenty:hoeAmethyst");
-            IMCMessage.addTool(ToolType.PICKAXE, "BiomesOPlenty:pickaxeAmethyst");
-            IMCMessage.addTool(ToolType.SHOVEL, "BiomesOPlenty:shovelAmethyst");
-            IMCMessage.addTool(ToolType.SHEARS, "BiomesOPlenty:scytheWood");
-            IMCMessage.addTool(ToolType.SHEARS, "BiomesOPlenty:scytheStone");
-            IMCMessage.addTool(ToolType.SHEARS, "BiomesOPlenty:scytheIron");
-            IMCMessage.addTool(ToolType.SHEARS, "BiomesOPlenty:scytheGold");
-            IMCMessage.addTool(ToolType.SHEARS, "BiomesOPlenty:scytheDiamond");
-            IMCMessage.addTool(ToolType.SHEARS, "BiomesOPlenty:scytheMud");
-            IMCMessage.addTool(ToolType.SHEARS, "BiomesOPlenty:scytheAmethyst");
+            IMCMessage.addTool("axe", "BiomesOPlenty:axeMud");
+            IMCMessage.addTool("hoe", "BiomesOPlenty:hoeMud");
+            IMCMessage.addTool("pickaxe", "BiomesOPlenty:pickaxeMud");
+            IMCMessage.addTool("shovel", "BiomesOPlenty:shovelMud");
+            IMCMessage.addTool("axe", "BiomesOPlenty:axeAmethyst");
+            IMCMessage.addTool("hoe", "BiomesOPlenty:hoeAmethyst");
+            IMCMessage.addTool("pickaxe", "BiomesOPlenty:pickaxeAmethyst");
+            IMCMessage.addTool("shovel", "BiomesOPlenty:shovelAmethyst");
+            IMCMessage.addTool("shears", "BiomesOPlenty:scytheWood");
+            IMCMessage.addTool("shears", "BiomesOPlenty:scytheStone");
+            IMCMessage.addTool("shears", "BiomesOPlenty:scytheIron");
+            IMCMessage.addTool("shears", "BiomesOPlenty:scytheGold");
+            IMCMessage.addTool("shears", "BiomesOPlenty:scytheDiamond");
+            IMCMessage.addTool("shears", "BiomesOPlenty:scytheMud");
+            IMCMessage.addTool("shears", "BiomesOPlenty:scytheAmethyst");
         }
         if(Loader.isModLoaded("TConstruct")) {
             devLog("Tinkers support loaded");
-            IMCMessage.addTool(ToolType.AXE, "TConstruct:hatchet");
-            IMCMessage.addTool(ToolType.HOE, "TConstruct:mattock");
-            IMCMessage.addTool(ToolType.PICKAXE, "TConstruct:pickaxe");
-            IMCMessage.addTool(ToolType.SHOVEL, "TConstruct:shovel");
-            IMCMessage.addTool(ToolType.SHOVEL, "TConstruct:mattock");
+            IMCMessage.addTool("axe", "TConstruct:hatchet");
+            IMCMessage.addTool("hoe", "TConstruct:mattock");
+            IMCMessage.addTool("pickaxe", "TConstruct:pickaxe");
+            IMCMessage.addTool("shovel", "TConstruct:shovel");
+            IMCMessage.addTool("shovel", "TConstruct:mattock");
         }
     }
 

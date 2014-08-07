@@ -24,6 +24,7 @@ import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
@@ -31,6 +32,7 @@ import net.minecraft.command.ServerCommandManager;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.logging.log4j.Logger;
@@ -78,6 +80,7 @@ public class VeinMiner {
 
         File modDir = new File(event.getModConfigurationDirectory(), "veinminer");
         if(!modDir.exists()) {
+            //noinspection ResultOfMethodCallIgnored
             modDir.mkdir();
         }
 
@@ -150,8 +153,7 @@ public class VeinMiner {
         serverCommandManger.registerCommand(new MinerCommand());
     }
 
-    // TODO: Re-do IMC stuff
-    /*@SuppressWarnings("UnusedDeclaration")
+    @SuppressWarnings("UnusedDeclaration")
     @Mod.EventHandler
     public void imcCallback(FMLInterModComms.IMCEvent event) {
         for(final FMLInterModComms.IMCMessage message : event.getMessages()) {
@@ -159,16 +161,16 @@ public class VeinMiner {
                 NBTTagCompound nbtMessage = message.getNBTValue();
 
                 String whitelistName = nbtMessage.getString("whitelistType");
-                ToolType toolType = ToolType.values()[nbtMessage.getShort("toolType")];
+                String toolType = nbtMessage.getString("toolType");
                 String toolName = nbtMessage.getString("blockName");
 
                 if("block".equalsIgnoreCase(whitelistName)) {
                     BlockID blockName = new BlockID(toolName);
-                    MinerLogger.debug("Adding block %s %s to whitelist because of IMC", toolType.toString(), blockName.toString());
+                    MinerLogger.debug("Adding block %s %s to whitelist because of IMC", toolType, blockName.toString());
                     configurationSettings.addBlockToWhitelist(toolType, blockName);
                 }
                 else if("item".equalsIgnoreCase(whitelistName)) {
-                    MinerLogger.debug("Adding item/tool %s %s to whitelist because of IMC", toolType.toString(), toolName);
+                    MinerLogger.debug("Adding item/tool %s %s to whitelist because of IMC", toolType, toolName);
                     configurationSettings.addTool(toolType, toolName);
                 }
                 configurationSettings.saveConfigs();
@@ -177,5 +179,5 @@ public class VeinMiner {
 
             }
         }
-    }*/
+    }
 }
