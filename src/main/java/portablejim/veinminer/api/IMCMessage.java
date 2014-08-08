@@ -24,7 +24,11 @@ public class IMCMessage {
         FMLInterModComms.sendMessage("VeinMiner", "whitelist", message);
     }
 
-    public static void addToForceWhitelist(String toolName) {
-
+    public static void addToolType(String type, String name, String icon) {
+        NBTTagCompound message = new NBTTagCompound();
+        message.setString("toolType", type);
+        message.setString("toolName", name);
+        message.setString("toolIcon", icon);
+        FMLInterModComms.sendMessage("VeinMiner", "addTool", message);
     }
 }

@@ -175,8 +175,13 @@ public class VeinMiner {
                 }
                 configurationSettings.saveConfigs();
             }
-            if("forceTool".equalsIgnoreCase(message.key) && message.isStringMessage()) {
-
+            if("addTool".equalsIgnoreCase(message.key) && message.isStringMessage()) {
+                NBTTagCompound nbtMessage = message.getNBTValue();
+                String newToolType = nbtMessage.getString("toolType");
+                String newToolName = nbtMessage.getString("toolName");
+                String newToolIcon = nbtMessage.getString("toolIcon");
+                configurationSettings.addToolType(newToolType, newToolName, newToolIcon);
+                configurationSettings.saveConfigs();
             }
         }
     }

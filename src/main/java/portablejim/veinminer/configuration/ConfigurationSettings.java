@@ -175,6 +175,13 @@ public class ConfigurationSettings {
         return autoDetectBlocksList[tool.ordinal()];
     }
 
+    public void addToolType(String newType, String name, String icon) {
+        if(!newType.isEmpty() && !toolsAndBlocks.containsKey(newType)) {
+            Tool newTool = new Tool(name, icon, new String[]{}, new String[]{});
+            toolsAndBlocks.put(newType, newTool);
+        }
+    }
+
     public void addBlockToWhitelist(String tool, BlockID block) {
         if(!block.name.isEmpty()) {
             BlockID testBlock = new BlockID(block.name, -1);
