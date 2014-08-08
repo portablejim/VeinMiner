@@ -26,7 +26,6 @@ import com.google.gson.JsonPrimitive;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
-import portablejim.veinminer.api.ToolType;
 import portablejim.veinminer.configuration.json.ToolStruct;
 import portablejim.veinminer.util.BlockID;
 import portablejim.veinminer.util.PreferredMode;

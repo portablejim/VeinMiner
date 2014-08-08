@@ -25,7 +25,6 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import portablejim.veinminer.api.ToolType;
 import portablejim.veinminer.configuration.client.ItemlistConfigGuiScreen;
 import portablejim.veinminer.lib.IconRenderer;
 import portablejim.veinminer.util.BlockID;

@@ -26,7 +26,6 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import net.minecraftforge.common.config.Configuration;
 import portablejim.veinminer.VeinMiner;
-import portablejim.veinminer.api.ToolType;
 
 import java.io.File;
 import java.io.IOException;

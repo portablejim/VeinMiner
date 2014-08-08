@@ -28,7 +28,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import portablejim.veinminer.VeinMiner;
-import portablejim.veinminer.api.ToolType;
 import portablejim.veinminer.configuration.client.elements.GuiElementSlotItemlist;
 import portablejim.veinminer.lib.IconRenderer;
 import portablejim.veinminer.util.BlockID;
@@ -59,11 +58,10 @@ public class ItemlistConfigGuiScreen extends GuiScreen {
         this.mode = mode;
         this.parent = parent;
 
-        String toolName = toolType;
         String[] modeNames = { "blocklist", "toollist" };
         String modeName = modeNames[mode];
 
-        this.titleString = String.format("gui.veinminer.title.%s.%s", modeName, toolName);
+        this.titleString = String.format("gui.veinminer.title.%s.%s", modeName, toolType);
     }
 
     @SuppressWarnings("unchecked")
