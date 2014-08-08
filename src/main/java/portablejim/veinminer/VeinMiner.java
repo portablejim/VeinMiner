@@ -180,7 +180,7 @@ public class VeinMiner {
                 }
                 configurationSettings.saveConfigs();
             }
-            if("addTool".equalsIgnoreCase(message.key) && message.isStringMessage()) {
+            if("addTool".equalsIgnoreCase(message.key) && message.isNBTMessage()) {
                 NBTTagCompound nbtMessage = message.getNBTValue();
                 String newToolType = nbtMessage.getString("toolType");
                 String newToolName = nbtMessage.getString("toolName");
