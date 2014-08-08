@@ -197,8 +197,7 @@ public class MinerCommand extends CommandBase {
             return;
         }
 
-        // TODO: [FEATURE] Get tool name instead of tool identifier;
-        String toolString = tool;
+        String toolString = settings.getToolTypeName(tool);
 
         commandAction(astring, "blockList");
         String action = astring[2];
@@ -251,8 +250,7 @@ public class MinerCommand extends CommandBase {
             return;
         }
 
-        // TODO: [FEATURE] Get tool name instead of tool identifier;
-        String toolString = tool;
+        String toolString = settings.getToolTypeName(tool);
 
         commandAction(astring, "toollist");
         String action = astring[2];

@@ -94,9 +94,6 @@ public class VeinMiner {
     @SuppressWarnings("UnusedDeclaration")
     @EventHandler
     public void init(@SuppressWarnings("UnusedParameters") FMLInitializationEvent event) {
-        //TODO: Enable when EntityDropHook added.
-        //MinecraftForge.EVENT_BUS.register(new EntityDropHook());
-
         ModContainer thisMod = Loader.instance().getIndexedModList().get(ModInfo.MODID);
         if(thisMod != null) {
             String fileName = thisMod.getSource().getName();
@@ -180,7 +177,7 @@ public class VeinMiner {
                 }
                 configurationSettings.saveConfigs();
             }
-            if("addTool".equalsIgnoreCase(message.key) && message.isNBTMessage()) {
+            else if("addTool".equalsIgnoreCase(message.key) && message.isNBTMessage()) {
                 NBTTagCompound nbtMessage = message.getNBTValue();
                 String newToolType = nbtMessage.getString("toolType");
                 String newToolName = nbtMessage.getString("toolName");
@@ -191,7 +188,7 @@ public class VeinMiner {
                 configurationSettings.addToolType(newToolType, newToolName, newToolIcon);
                 configurationSettings.saveConfigs();
             }
-            if("addEqualBlocks".equalsIgnoreCase(message.key) && message.isNBTMessage()) {
+            else if("addEqualBlocks".equalsIgnoreCase(message.key) && message.isNBTMessage()) {
                 NBTTagCompound nbtMessage = message.getNBTValue();
                 String block1 = nbtMessage.getString("existingBlock");
                 String block2 = nbtMessage.getString("newBlock");

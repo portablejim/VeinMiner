@@ -80,7 +80,6 @@ public class EntityDropHook {
         isBlock = GameRegistry.findBlock(uniqueId.modId, uniqueId.name) != null;
         isItem = GameRegistry.findItem(uniqueId.modId, uniqueId.name) != null;
 
-        //TODO: Redo pickup of entities
         StackTraceElement[] stackTrace = (new Throwable()).getStackTrace();
         boolean veinminerMethod = false;
         for(StackTraceElement element : stackTrace) {

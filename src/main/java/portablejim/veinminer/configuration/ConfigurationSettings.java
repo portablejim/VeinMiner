@@ -243,8 +243,6 @@ public class ConfigurationSettings {
                 BlockID newBlockId = new BlockID(blockString);
 
                 newCongruentBlocks.add(newBlockId);
-
-                // TODO: Ensure congruence works properly.
                 if (blockCongruenceMap.containsKey(newBlockId)) {
                     newId = blockCongruenceMap.get(newBlockId);
                 }
@@ -311,6 +309,14 @@ public class ConfigurationSettings {
 
     public Set<String> getToolTypes() {
         return toolsAndBlocks.keySet();
+    }
+
+    public String getToolTypeName(String toolType) {
+        return toolsAndBlocks.get(toolType).name;
+    }
+
+    public String getToolTypeIcon(String toolType) {
+        return toolsAndBlocks.get(toolType).icon;
     }
 
     public ArrayList<String> getToolIdArray(String tool) {
