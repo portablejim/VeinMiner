@@ -121,6 +121,28 @@ public class VeinMinerModSupport {
             IMCMessage.addTool("shovel", "TConstruct:shovel");
             IMCMessage.addTool("shovel", "TConstruct:mattock");
         }
+        if(Loader.isModLoaded("exnihilo")) {
+            devLog("Ex Nihilo support loaded");
+            IMCMessage.addToolType("crook", "Crook", "exnihilo:crook");
+            IMCMessage.addTool("crook", "exnihilo:crook");
+            IMCMessage.addTool("crook", "exnihilo:crook_bone");
+            IMCMessage.addToolType("hammer", "Hammer", "exnihilo:hammer_stone");
+            IMCMessage.addTool("hammer", "exnihilo:hammer_wood");
+            IMCMessage.addTool("hammer", "exnihilo:hammer_stone");
+            IMCMessage.addTool("hammer", "exnihilo:hammer_iron");
+            IMCMessage.addTool("hammer", "exnihilo:hammer_gold");
+            IMCMessage.addTool("hammer", "exnihilo:hammer_diamond");
+
+            IMCMessage.addBlock("crook", "minecraft:leaves");
+            IMCMessage.addBlock("crook", "minecraft:leaves2");
+            IMCMessage.addBlock("crook", "minecraft:tallgrass");
+            IMCMessage.addBlock("crook", "minecraft:vine");
+            IMCMessage.addBlock("crook", "minecraft:web");
+            IMCMessage.addBlock("crook", "minecraft:wool");
+            IMCMessage.addBlock("hammer", "minecraft:cobblestone");
+            IMCMessage.addBlock("hammer", "minecraft:gravel");
+            IMCMessage.addBlock("hammer", "minecraft:sand");
+        }
     }
 
     @SuppressWarnings("UnusedDeclaration")
