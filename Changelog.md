@@ -1,6 +1,15 @@
 Changelog
 =========
 
+0.19.0
+------
+Changes:
+* Re-enable IMC support (forgot to tell you I disabled it).
+* API
+   + Now uses string tool names
+   + Now allows you to add tool types
+* [Mod support] Add Ex Nihilo crooks and hammers by default if installed.
+
 0.18.1
 ------
 Changes:
