@@ -216,6 +216,10 @@ public class ConfigurationSettings {
         return toolsAndBlocks.get(tool).blocklist.contains(targetBlock) || toolsAndBlocks.get(tool).blocklist.contains(targetBlockNoMeta);
     }
 
+    public void addCongruentBlocks(String existingBlock, String newBlock) {
+        setBlockCongruenceList(String.format("%s=%s", existingBlock, newBlock));
+    }
+
     /**
      * Add groups of blocks mentioned in congruenceList to a set of blocks to be considered equal.
      * @param congruenceList String of groups of blocks with metadata value to be added to congruence list. Format is

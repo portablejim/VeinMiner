@@ -31,4 +31,11 @@ public class IMCMessage {
         message.setString("toolIcon", icon);
         FMLInterModComms.sendMessage("VeinMiner", "addTool", message);
     }
+
+    public static void addBlockEquivalence(String existingBlock, String newBlock) {
+        NBTTagCompound message = new NBTTagCompound();
+        message.setString("existingBlock", existingBlock);
+        message.setString("newBlock", newBlock);
+        FMLInterModComms.sendMessage("VeinMiner", "addEqualBlocks", message);
+    }
 }

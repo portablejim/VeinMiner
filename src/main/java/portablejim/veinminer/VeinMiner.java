@@ -191,6 +191,13 @@ public class VeinMiner {
                 configurationSettings.addToolType(newToolType, newToolName, newToolIcon);
                 configurationSettings.saveConfigs();
             }
+            if("addEqualBlocks".equalsIgnoreCase(message.key) && message.isNBTMessage()) {
+                NBTTagCompound nbtMessage = message.getNBTValue();
+                String block1 = nbtMessage.getString("existingBlock");
+                String block2 = nbtMessage.getString("newBlock");
+
+                configurationSettings.addCongruentBlocks(block1, block2);
+            }
         }
     }
 }
