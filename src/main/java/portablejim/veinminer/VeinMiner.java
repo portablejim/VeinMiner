@@ -164,6 +164,11 @@ public class VeinMiner {
                 String toolType = nbtMessage.getString("toolType");
                 String toolName = nbtMessage.getString("blockName");
 
+                if(!configurationSettings.getToolTypes().contains(toolType)) {
+                    MinerLogger.debug("Tool %s does not exist. Cannot add %s", toolType, toolName);
+                    continue;
+                }
+
                 if("block".equalsIgnoreCase(whitelistName)) {
                     BlockID blockName = new BlockID(toolName);
                     MinerLogger.debug("Adding block %s %s to whitelist because of IMC", toolType, blockName.toString());
@@ -171,7 +176,7 @@ public class VeinMiner {
                 }
                 else if("item".equalsIgnoreCase(whitelistName)) {
                     MinerLogger.debug("Adding item/tool %s %s to whitelist because of IMC", toolType, toolName);
-                    configurationSettings.addTool(toolType, toolName);
+                        configurationSettings.addTool(toolType, toolName);
                 }
                 configurationSettings.saveConfigs();
             }
@@ -180,6 +185,9 @@ public class VeinMiner {
                 String newToolType = nbtMessage.getString("toolType");
                 String newToolName = nbtMessage.getString("toolName");
                 String newToolIcon = nbtMessage.getString("toolIcon");
+
+                MinerLogger.debug("Adding '%s' (Name: '%s' Icon: '%s')as a tool", newToolType, newToolName, newToolIcon);
+
                 configurationSettings.addToolType(newToolType, newToolName, newToolIcon);
                 configurationSettings.saveConfigs();
             }
