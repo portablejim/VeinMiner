@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.20.0
+------
+Changes:
+* API: Add ability to set equal blocks.
+* Redo configuration GUI to allow customisation of all defined tool types.
+
 0.19.0
 ------
 Changes:
