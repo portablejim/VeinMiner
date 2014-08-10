@@ -161,7 +161,7 @@ public class VeinMiner {
                 String toolType = nbtMessage.getString("toolType");
                 String toolName = nbtMessage.getString("blockName");
 
-                if(!configurationSettings.getToolTypes().contains(toolType)) {
+                if(!configurationSettings.getToolTypeNames().contains(toolType)) {
                     MinerLogger.debug("Tool %s does not exist. Cannot add %s", toolType, toolName);
                     continue;
                 }

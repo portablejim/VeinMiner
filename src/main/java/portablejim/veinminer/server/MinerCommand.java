@@ -181,7 +181,7 @@ public class MinerCommand extends CommandBase {
         ConfigurationSettings configSettings = MinerServer.instance.getConfigurationSettings();
 
         ConfigurationSettings settings = VeinMiner.instance.configurationSettings;
-        Set<String> toolsSet = settings.getToolTypes();
+        Set<String> toolsSet = settings.getToolTypeNames();
         String toolsSlashed = Joiner.on("/").join(toolsSet);
 
         if(astring.length == 1) {
@@ -234,7 +234,7 @@ public class MinerCommand extends CommandBase {
         ConfigurationSettings configSettings = MinerServer.instance.getConfigurationSettings();
 
         ConfigurationSettings settings = VeinMiner.instance.configurationSettings;
-        Set<String> toolsSet = settings.getToolTypes();
+        Set<String> toolsSet = settings.getToolTypeNames();
         String toolsSlashed = Joiner.on("/").join(toolsSet);
 
         if(astring.length == 1) {
@@ -370,7 +370,7 @@ public class MinerCommand extends CommandBase {
                     return getListOfStringsMatchingLastWord(arguments, modes);
                 }
                 else if(arguments[0].equals(commands[COMMAND_BLOCKLIST]) || arguments[0].equals(commands[COMMAND_TOOLLIST])) {
-                    Set<String> toolsSet = VeinMiner.instance.configurationSettings.getToolTypes();
+                    Set<String> toolsSet = VeinMiner.instance.configurationSettings.getToolTypeNames();
                     String[] tools = new String[] {};
                     tools = toolsSet.toArray(tools);
                     Arrays.sort(tools);

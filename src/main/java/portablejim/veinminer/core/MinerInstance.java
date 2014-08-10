@@ -168,7 +168,7 @@ public class MinerInstance {
     private boolean toolAllowedForBlock(ItemStack tool, BlockID block) {
         boolean toolAllowed = false;
         ConfigurationSettings settings = serverInstance.getConfigurationSettings();
-        for(String type : settings.getToolTypes()) {
+        for(String type : settings.getToolTypeNames()) {
             if(settings.toolIsOfType(tool, type)) {
                 if(serverInstance.getConfigurationSettings().whiteListHasBlockId(type, block)) {
                     toolAllowed = true;

@@ -307,7 +307,7 @@ public class ConfigurationSettings {
         toolsAndBlocks.put(tool, toolsAndBlocks.get(tool).removeTool(name));
     }
 
-    public Set<String> getToolTypes() {
+    public Set<String> getToolTypeNames() {
         return toolsAndBlocks.keySet();
     }
 
