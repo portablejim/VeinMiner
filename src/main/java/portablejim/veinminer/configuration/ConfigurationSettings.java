@@ -72,6 +72,10 @@ public class ConfigurationSettings {
                 String toolName = entry.getKey();
                 Gson gson = new Gson();
                 ToolStruct toolInstance = gson.fromJson(entry.getValue().getAsJsonObject(), ToolStruct.class);
+                if(toolInstance.name == null) toolInstance.name = toolName;
+                if(toolInstance.icon == null) toolInstance.icon = "";
+                if(toolInstance.blocklist == null) toolInstance.blocklist = new String[]{};
+                if(toolInstance.toollist == null) toolInstance.toollist = new String[]{};
                 toolsAndBlocks.put(toolName, new Tool(toolInstance));
             }
         }
