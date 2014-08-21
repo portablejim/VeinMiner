@@ -18,12 +18,14 @@
 package portablejim.veinminermodsupport;
 
 import bluedart.api.IBreakable;
+import com.google.common.io.Files;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -35,8 +37,11 @@ import portablejim.veinminer.api.Permission;
 import portablejim.veinminer.api.VeinminerHarvestFailedCheck;
 import portablejim.veinminer.api.VeinminerPostUseTool;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.charset.Charset;
 
 import static cpw.mods.fml.common.Mod.EventHandler;
 import static cpw.mods.fml.common.Mod.Instance;
@@ -57,6 +62,25 @@ public class VeinMinerModSupport {
 
     public boolean forceConsumerAvailable;
 
+    private Boolean configLoaded = false;
+
+    @SuppressWarnings("UnusedDeclaration")
+    @EventHandler
+    public void preInit(FMLPreInitializationEvent event) {
+        File configDir = new File(event.getModConfigurationDirectory(), "veinminer");
+        File loadedFile = new File(configDir, "modSupport.cfg");
+        if(loadedFile.exists()) {
+            configLoaded = true;
+        }
+        else {
+            try {
+                //noinspection ResultOfMethodCallIgnored
+                loadedFile.createNewFile();
+                Files.write("#Nothing to see here!\n", loadedFile, Charset.defaultCharset());
+            } catch (IOException ignored) { }
+        }
+    }
+
     @EventHandler
     public void init(@SuppressWarnings("UnusedParameters") FMLInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(this);
@@ -71,7 +95,9 @@ public class VeinMinerModSupport {
         }
         forceConsumerAvailable = false;
 
-        addTools();
+        if(!configLoaded) {
+            addTools();
+        }
     }
 
     private void addTools() {
