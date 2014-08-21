@@ -76,6 +76,7 @@ gui.veinminer.config.blocklimit.infinite=Block limit: Infinite blocks
 gui.veinminer.config.toolTypes=Tool Types
 gui.veinminer.config.blocklist=Block List
 gui.veinminer.config.toollist=Tool List
+gui.veinminer.unknown=<Unknown>
 gui.veinminer.item.delete=Delete from list
 gui.veinminer.item.add=Add
 gui.veinminer.item.clear=Clear

@@ -111,7 +111,16 @@ public class GuiElementSlotItemlist extends GuiScrollingList {
             iconRenderer.renderItemStackIcon(this.listWidth / 2 - 148, var3 - 1 , itemStack);
         }
 
-        this.parent.getFontRenderer().drawString(I18n.format(displayName + ".name"), this.listWidth / 2 + 60, var3 + 5, 0xFFFFFF);
+
+        String displayNameString;
+        if(displayName.isEmpty()) {
+            displayNameString = "gui.veinminer.unknown";
+        }
+        else {
+            displayNameString = displayName + ".name";
+        }
+
+        this.parent.getFontRenderer().drawString(I18n.format(displayNameString), this.listWidth / 2 + 60, var3 + 5, 0xFFFFFF);
         this.parent.getFontRenderer().drawString(entry, this.listWidth / 2 - 120, var3 + 5, 0xFFFFFF);
     }
 }
