@@ -80,6 +80,7 @@ public class ItemlistConfigGuiScreen extends GuiScreen {
         iconRenderer = new IconRenderer(mc, zLevel, fontRendererObj, mc.getTextureManager());
 
         textFieldAdd = new GuiTextField(this.getFontRenderer(), this.width / 2 - 128, 34, 176, 20);
+        textFieldAdd.setMaxStringLength(128);
         textFieldAdd.setEnabled(true);
         textFieldAdd.setFocused(true);
     }
