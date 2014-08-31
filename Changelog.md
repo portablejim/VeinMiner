@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.21.0
+------
+Changes:
+* Stop VeinMiner Mod Support adding tools after first launch (via detecting if its config file is present)
+* Increase number of characters allowed in the block/tool configuration GUI.
+
 0.20.0
 ------
 Changes:
