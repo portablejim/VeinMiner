@@ -38,7 +38,7 @@ public class ItemNameTooltip {
             return;
         }
         GameRegistry.UniqueIdentifier uniqueIdentifierFor = GameRegistry.findUniqueIdentifierFor(event.itemStack.getItem());
-        if(event.showAdvancedItemTooltips)
+        if(uniqueIdentifierFor != null && event.showAdvancedItemTooltips)
             event.toolTip.add(uniqueIdentifierFor.toString());
     }
 }
