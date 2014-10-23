@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.21.1
+------
+Fixes:
+* Several null pointer exceptions
+
 0.21.0
 ------
 Changes:
