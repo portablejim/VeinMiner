@@ -34,7 +34,7 @@ public class ItemNameTooltip {
     @SuppressWarnings("UnusedDeclaration")
     @SubscribeEvent
     public void addTooltip(ItemTooltipEvent event) {
-        if(event.itemStack == null || event.itemStack.getItem() == null) {
+        if(event.itemStack == null || event.itemStack.getItem() == null || event.toolTip == null) {
             return;
         }
         GameRegistry.UniqueIdentifier uniqueIdentifierFor = GameRegistry.findUniqueIdentifierFor(event.itemStack.getItem());
