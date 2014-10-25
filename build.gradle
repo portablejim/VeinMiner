@@ -16,6 +16,7 @@ buildscript {
 }
 
 apply plugin: 'forge'
+apply plugin: 'maven'
 
 ext.configFile = file "build.properties"
 
@@ -63,6 +64,11 @@ jar {
     }
 }
 
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    classifier = 'dev'
+}
+
 //noinspection GrUnresolvedAccess
 task release(type: Copy) {
     dependsOn "build"
@@ -70,4 +76,39 @@ task release(type: Copy) {
     from project.tasks.jar.archivePath
     into "release/"
 }
+
+build.dependsOn deobfJar
+
+artifacts {
+    archives deobfJar
+}
+
+configurations {
+    deployerJars
+}
+
+uploadArchives {
+    dependsOn 'reobf'
+
+    repositories {
+        if(project.hasProperty("pushMaven")) {
+            logger.info("Pushing to maven repo")
+
+            mavenDeployer {
+                configuration = configurations.deployerJars
+
+                repository(url: "file://localhost/home/public_html/maven.jamesmckay.id.au/htdocs/")
+
+                pom {
+                    groupId = project.group
+                    version = project.version
+                    artifactId = project.archivesBaseName
+                    packaging = 'jar'
+                    description 'VeinMiner Mod'
+                }
+            }
+        }
+    }
+}
+
 
