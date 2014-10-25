@@ -64,6 +64,12 @@ jar {
     }
 }
 
+task apiJar(type: Jar) {
+    from sourceSets.main.output
+    classifier = 'api'
+    include "portablejim/veinminer/api/**"
+}
+
 task deobfJar(type: Jar) {
     from sourceSets.main.output
     classifier = 'dev'
@@ -77,7 +83,7 @@ task release(type: Copy) {
     into "release/"
 }
 
-build.dependsOn deobfJar
+build.dependsOn apiJar, deobfJar
 
 artifacts {
     archives deobfJar
