@@ -133,6 +133,7 @@ public class ConfigurationValues {
             e.printStackTrace();
         }
         catch(JsonParseException e) {
+            VeinMiner.instance.logger.error(String.format("Error parsing %s; Json error: %s", toolsJson.getName(), e.getLocalizedMessage()));
             toolsAndBlocks = new JsonObject();
         }
 
