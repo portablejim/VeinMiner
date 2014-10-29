@@ -24,6 +24,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
+import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraftforge.common.config.Configuration;
 import portablejim.veinminer.VeinMiner;
 
@@ -127,14 +128,20 @@ public class ConfigurationValues {
         toolsAndBlocks = new JsonObject();
 
         try {
-            String toolsAndBlocksString = Files.toString(toolsJson, Charset.defaultCharset());
-            toolsAndBlocks = new JsonParser().parse(toolsAndBlocksString);
+            if(toolsJson.exists()) {
+                String toolsAndBlocksString = Files.toString(toolsJson, Charset.defaultCharset());
+                toolsAndBlocks = new JsonParser().parse(toolsAndBlocksString);
+            }
+            else {
+                VeinMiner.instance.logger.info("tools-and-blocks.json missing. Creating.");
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
         catch(JsonParseException e) {
             VeinMiner.instance.logger.error(String.format("Error parsing %s; Json error: %s", toolsJson.getName(), e.getLocalizedMessage()));
-            toolsAndBlocks = new JsonObject();
+            VeinMiner.instance.logger.error("Asking java to exit");
+            FMLCommonHandler.instance().exitJava(1, false);
         }
 
         loadConfigFile();
