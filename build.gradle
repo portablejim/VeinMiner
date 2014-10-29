@@ -57,10 +57,14 @@ processResources {
     }
 }
 
-jar {
-    manifest {
+ext.sharedmanifest = manifest {
         attributes 'FMLCorePlugin': 'portablejim.veinminer.asm.VeinMinerCorePlugin'
         attributes 'FMLCorePluginContainsFMLMod': 'true'
+}
+
+jar {
+    manifest = project.manifest {
+        from sharedmanifest
     }
 }
 
@@ -72,6 +76,9 @@ task apiJar(type: Jar) {
 
 task deobfJar(type: Jar) {
     from sourceSets.main.output
+    manifest = project.manifest {
+        from sharedmanifest
+    }
     classifier = 'dev'
 }
 
