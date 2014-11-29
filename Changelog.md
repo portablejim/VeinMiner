@@ -1,6 +1,13 @@
 Changelog
 =========
 
+0.21.2
+------
+Changes:
+* Now crashes minecraft on invalid config.
+Fixes:
+* Update '/veinminer mode' help.
+
 0.21.1
 ------
 Fixes:
