@@ -1,6 +1,6 @@
 # Command usage/error
 command.veinminer=/veinminer mode/blocklist/toollist/blocklimit/radius/per_tick/saveconfig/help
-command.veinminer.enable=/veinminer mode disable/auto/sneak/no_sneak
+command.veinminer.enable=/veinminer mode auto/sneak/no_sneak
 command.veinminer.blocklist=/veinminer blocklist %s add/remove <mod id>:<block name> <metadata>
 command.veinminer.toollist=/veinminer toollist %s add/remove <tool id>
 
@@ -56,10 +56,9 @@ command.veinminer.help7='per_tick': Set the rate at which blocks are destroyed b
 command.veinminer.help8='saveconfig': Save current config values to config file
 command.veinminer.help9='help': This text
 command.veinminer.help.enable1=Available activation modes:
-command.veinminer.help.enable2='disable': Completely disable
-command.veinminer.help.enable3='auto': Activate on keybind (useless without mod on client)
-command.veinminer.help.enable4='sneak': Activate while sneaking
-command.veinminer.help.enable5='no_sneak': Activate while not sneaking
+command.veinminer.help.enable2='auto': Activate on keybind (useless without mod on client).
+command.veinminer.help.enable3='sneak': Activate while sneaking
+command.veinminer.help.enable4='no_sneak': Activate while not sneaking
 
 # GUI config
 gui.veinminer.back=Back

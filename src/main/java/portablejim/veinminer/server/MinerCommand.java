@@ -345,7 +345,7 @@ public class MinerCommand extends CommandBase {
                 sendProperChatToPlayer(senderPlayer, "command.veinminer.help.enable2");
                 sendProperChatToPlayer(senderPlayer, "command.veinminer.help.enable3");
                 sendProperChatToPlayer(senderPlayer, "command.veinminer.help.enable4");
-                sendProperChatToPlayer(senderPlayer, "command.veinminer.help.enable5");
+                //sendProperChatToPlayer(senderPlayer, "command.veinminer.help.enable5");
             }
         }
         else {
