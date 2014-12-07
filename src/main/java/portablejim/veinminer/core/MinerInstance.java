@@ -94,6 +94,10 @@ public class MinerInstance {
         FMLCommonHandler.instance().bus().register(this);
     }
 
+    public void cleanUp() {
+        FMLCommonHandler.instance().bus().unregister(this);
+    }
+
     private boolean shouldContinue() {
         // Item equipped
         if(!serverInstance.getConfigurationSettings().getEnableAllTools() && player.getCurrentEquippedItem() == null) {
@@ -268,6 +272,7 @@ public class MinerInstance {
                 // All blocks have been mined. This is done last.
                 serverInstance.removeInstance(this);
                 spawnDrops();
+                cleanUp();
                 return;
             }
         }
