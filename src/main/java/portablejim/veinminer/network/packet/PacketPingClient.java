@@ -18,7 +18,7 @@
 package portablejim.veinminer.network.packet;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayerMP;
 import portablejim.veinminer.VeinMiner;
 
@@ -37,7 +37,7 @@ public class PacketPingClient implements IPacket {
     public void readBytes(ByteBuf buffer) { }
 
     @Override
-    public void handleClientSide(EntityClientPlayerMP player) {
+    public void handleClientSide(EntityPlayerSP player) {
         PacketClientPresent packet = new PacketClientPresent(VeinMiner.instance.configurationSettings.getPreferredMode());
         VeinMiner.instance.networkManager.sendToServer(packet);
     }

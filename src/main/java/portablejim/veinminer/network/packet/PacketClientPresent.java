@@ -18,7 +18,7 @@
 package portablejim.veinminer.network.packet;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ChatComponentTranslation;
 import portablejim.veinminer.server.MinerServer;
@@ -67,7 +67,7 @@ public class PacketClientPresent implements IPacket {
     }
 
     @Override
-    public void handleClientSide(EntityClientPlayerMP player) { }
+    public void handleClientSide(EntityPlayerSP player) { }
 
     @Override
     public void handleServerSide(EntityPlayerMP player) {

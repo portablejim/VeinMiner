@@ -18,7 +18,7 @@
 package portablejim.veinminer.network.packet;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayerMP;
 import portablejim.veinminer.server.MinerServer;
 import portablejim.veinminer.util.PlayerStatus;
@@ -51,7 +51,7 @@ public class PacketMinerActivate implements IPacket {
     }
 
     @Override
-    public void handleClientSide(EntityClientPlayerMP player) { }
+    public void handleClientSide(EntityPlayerSP player) { }
 
     @Override
     public void handleServerSide(EntityPlayerMP player) {

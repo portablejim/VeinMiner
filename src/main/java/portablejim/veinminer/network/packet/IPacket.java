@@ -18,7 +18,7 @@
 package portablejim.veinminer.network.packet;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 /**
@@ -28,6 +28,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 public interface IPacket {
     public void writeBytes(ByteBuf buffer);
     public void readBytes(ByteBuf buffer);
-    public void handleClientSide(EntityClientPlayerMP player);
+    public void handleClientSide(EntityPlayerSP player);
     public void handleServerSide(EntityPlayerMP player);
 }
