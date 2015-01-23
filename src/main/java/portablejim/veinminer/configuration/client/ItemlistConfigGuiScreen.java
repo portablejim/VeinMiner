@@ -17,8 +17,8 @@
 
 package portablejim.veinminer.configuration.client;
 
-import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;

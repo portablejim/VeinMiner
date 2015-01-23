@@ -17,8 +17,8 @@
 
 package portablejim.veinminer.configuration.client.elements;
 
-import cpw.mods.fml.client.GuiScrollingList;
-import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.client.GuiScrollingList;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.Item;

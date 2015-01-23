@@ -18,7 +18,7 @@
 package portablejim.veinminer.server;
 
 import com.google.common.base.Joiner;
-import cpw.mods.fml.common.registry.LanguageRegistry;
+import net.minecraftforge.fml.common.registry.LanguageRegistry;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;

@@ -1,6 +1,6 @@
 package portablejim.veinminer.api;
 
-import cpw.mods.fml.common.event.FMLInterModComms;
+import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraft.nbt.NBTTagCompound;
 
 /**

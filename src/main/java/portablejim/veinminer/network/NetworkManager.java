@@ -17,16 +17,16 @@
 
 package portablejim.veinminer.network;
 
-import cpw.mods.fml.common.network.FMLEmbeddedChannel;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.relauncher.Side;
+import net.minecraftforge.fml.common.network.FMLEmbeddedChannel;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.relauncher.Side;
 import net.minecraft.entity.player.EntityPlayer;
 import portablejim.veinminer.lib.ModInfo;
 import portablejim.veinminer.network.packet.IPacket;
 
 import java.util.EnumMap;
 
-import static cpw.mods.fml.common.network.FMLOutboundHandler.*;
+import static net.minecraftforge.fml.common.network.FMLOutboundHandler.*;
 
 /**
  * Manage network related stuff. Setup channel and send packets when asked.

@@ -17,7 +17,7 @@
 
 package portablejim.veinminer.network;
 
-import cpw.mods.fml.common.network.FMLIndexedMessageToMessageCodec;
+import net.minecraftforge.fml.common.network.FMLIndexedMessageToMessageCodec;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import portablejim.veinminer.network.packet.IPacket;
