@@ -17,14 +17,11 @@
 
 package portablejim.veinminer.core;
 
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
@@ -32,6 +29,9 @@ import net.minecraft.util.FoodStats;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
 import portablejim.veinminer.api.Permission;
 import portablejim.veinminer.api.VeinminerHarvestFailedCheck;
 import portablejim.veinminer.api.VeinminerNoToolCheck;
@@ -185,7 +185,8 @@ public class MinerInstance {
     private void mineBlock(int x, int y, int z) {
         Point newPoint = new Point(x, y, z);
         awaitingEntityDrop.add(newPoint);
-        boolean success = player.theItemInWorldManager.tryHarvestBlock(x, y, z);
+        //boolean success = player.theItemInWorldManager.tryHarvestBlock(x, y, z);
+        boolean success = player.theItemInWorldManager.func_180237_b(newPoint.toBlockPos());
         numBlocksMined++;
 
         VeinminerPostUseTool toolUsedEvent = new VeinminerPostUseTool(player);
@@ -222,7 +223,7 @@ public class MinerInstance {
                     }
 
                     Point newBlockPos = new Point(x + dx, y + dy, z + dz);
-                    BlockID newBlock = new BlockID(world, x + dx, y + dy, z + dz);
+                    BlockID newBlock = new BlockID(world, newBlockPos.toBlockPos());
 
                     // Ensure valid block
                     if(Block.getBlockFromName(newBlock.name) == null) {
@@ -281,21 +282,23 @@ public class MinerInstance {
     private void spawnDrops() {
         for(Map.Entry<ItemStackID, Integer> schedDrop : drops.entrySet()) {
             ItemStackID itemStack = schedDrop.getKey();
-            String[] itemNames = itemStack.getItemId().split(":", 2);
+            String itemName = itemStack.getItemId();
 
-            if(itemNames.length < 2 || GameRegistry.findItemStack(itemNames[0], itemNames[1], 1) == null) {
+            Item foundItem = Item.getByNameOrId(itemName);
+            if(foundItem == null) {
                 continue;
             }
 
+            int itemDamage = itemStack.getDamage();
+
             int numItems = schedDrop.getValue();
             while (numItems > itemStack.getMaxStackSize()) {
-                ItemStack newItemStack = GameRegistry.findItemStack(itemNames[0], itemNames[1], itemStack.getMaxStackSize());
-                newItemStack.setItemDamage(itemStack.getDamage());
+                ItemStack newItemStack = new ItemStack(foundItem, itemStack.getMaxStackSize(), itemDamage);
                 EntityItem newEntityItem = new EntityItem(world, initalBlock.getX(), initalBlock.getY(), initalBlock.getZ(), newItemStack);
                 world.spawnEntityInWorld(newEntityItem);
                 numItems -= itemStack.getMaxStackSize();
             }
-            ItemStack newItemStack = GameRegistry.findItemStack(itemNames[0], itemNames[1], numItems);
+            ItemStack newItemStack = new ItemStack(foundItem, numItems, itemDamage);
             newItemStack.setItemDamage(itemStack.getDamage());
             EntityItem newEntityItem = new EntityItem(world, initalBlock.getX(), initalBlock.getY(), initalBlock.getZ(), newItemStack);
             world.spawnEntityInWorld(newEntityItem);

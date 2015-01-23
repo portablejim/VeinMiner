@@ -17,7 +17,6 @@
 
 package portablejim.veinminer.lib;
 
-import net.minecraft.block.Block;
 import portablejim.veinminer.util.BlockID;
 
 /**
@@ -37,11 +36,8 @@ public class BlockLib {
             return false;
         }
 
-        Block firstBlock = Block.getBlockFromName(first.name);
-        Block secondBlock = Block.getBlockFromName(second.name);
-
-        int firstResultMeta = firstBlock.damageDropped(first.metadata);
-        int secondResultMeta = secondBlock.damageDropped(second.metadata);
+        int firstResultMeta = first.state.getBlock().getMetaFromState(first.state);
+        int secondResultMeta = second.state.getBlock().getMetaFromState(second.state);
 
         return first.name.equals(second.name) && firstResultMeta == secondResultMeta;
     }
