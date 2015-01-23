@@ -117,10 +117,11 @@ public class VeinMiner {
                 for(String oreDictEntry : oreDictList) {
                     for(String autodetectValue : autodetectValues) {
                         if(!autodetectValue.isEmpty() && oreDictEntry.startsWith(autodetectValue)) {
-                            ArrayList<ItemStack> itemStacks = OreDictionary.getOres(oreDictEntry);
+                            List<ItemStack> itemStacks = OreDictionary.getOres(oreDictEntry);
                             for(ItemStack item : itemStacks) {
                                 if(item.getItem() instanceof ItemBlock) {
-                                    String blockName = Item.itemRegistry.getNameForObject(item.getItem());
+                                    // TODO: Check
+                                    String blockName = (String) Item.itemRegistry.getNameForObject(item.getItem());
                                     configurationSettings.addBlockToWhitelist(toolType, new BlockID(blockName, item.getItemDamage()));
                                     try {
                                         // Some mods raise an exception when calling getDisplayName on blocks.

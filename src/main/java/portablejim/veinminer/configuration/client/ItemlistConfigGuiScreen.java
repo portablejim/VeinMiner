@@ -32,6 +32,7 @@ import portablejim.veinminer.configuration.client.elements.GuiElementSlotItemlis
 import portablejim.veinminer.lib.IconRenderer;
 import portablejim.veinminer.util.BlockID;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -79,7 +80,7 @@ public class ItemlistConfigGuiScreen extends GuiScreen {
 
         iconRenderer = new IconRenderer(mc, zLevel, fontRendererObj, mc.getTextureManager());
 
-        textFieldAdd = new GuiTextField(this.getFontRenderer(), this.width / 2 - 128, 34, 176, 20);
+        textFieldAdd = new GuiTextField(5, this.getFontRenderer(), this.width / 2 - 128, 34, 176, 20);
         textFieldAdd.setMaxStringLength(128);
         textFieldAdd.setEnabled(true);
         textFieldAdd.setFocused(true);
@@ -173,7 +174,11 @@ public class ItemlistConfigGuiScreen extends GuiScreen {
 
     @Override
     protected void mouseClicked(int par1, int par2, int par3) {
-        super.mouseClicked(par1, par2, par3);
+        try {
+            super.mouseClicked(par1, par2, par3);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         this.textFieldAdd.mouseClicked(par1, par2, par3);
     }
 
