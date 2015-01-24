@@ -72,7 +72,7 @@ public class BlockID implements Comparable<BlockID>
     }
 
     public BlockID(IBlockState state) {
-        this((String)Block.blockRegistry.getNameForObject(state.getBlock()), state.getBlock().getMetaFromState(state));
+        this(Block.blockRegistry.getNameForObject(state.getBlock()).toString(), state.getBlock().getMetaFromState(state));
         this.state = state;
     }
 

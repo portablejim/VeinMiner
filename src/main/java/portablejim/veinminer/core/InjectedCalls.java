@@ -19,6 +19,7 @@ package portablejim.veinminer.core;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import portablejim.veinminer.VeinMiner;
@@ -36,8 +37,8 @@ import portablejim.veinminer.util.BlockID;
 @SuppressWarnings("UnusedDeclaration")
 public class InjectedCalls {
     @SuppressWarnings("UnusedDeclaration")
-    public static void blockMined(World world, EntityPlayerMP player, int x, int y, int z, boolean harvestBlockSuccess, BlockID blockName) {
-        MinerLogger.debug("Block mined at %d,%d,%d, result %s, block id is %s/%d", x, y, z, harvestBlockSuccess, blockName.name, blockName.metadata);
+    public static void blockMined(World world, EntityPlayerMP player, BlockPos blockPos, boolean harvestBlockSuccess, BlockID blockName) {
+        MinerLogger.debug("Block mined at %d,%d,%d, result %s, block id is %s/%d", blockPos.getX(), blockPos.getY(), blockPos.getZ(), harvestBlockSuccess, blockName.name, blockName.metadata);
 
         if(blockName.name.isEmpty() || Block.getBlockFromName(blockName.name) == null  || !player.canHarvestBlock(Block.getBlockFromName(blockName.name))) {
             return;
@@ -61,8 +62,8 @@ public class InjectedCalls {
             radiusLimit = Math.min(startConfig.radiusLimit, radiusLimit);
             blockLimit = Math.min(startConfig.blockLimit, blockLimit);
 
-            MinerInstance ins = new MinerInstance(world, player, x, y, z, blockName, MinerServer.instance, radiusLimit, blockLimit);
-            ins.mineVein(x, y, z);
+            MinerInstance ins = new MinerInstance(world, player, blockPos.getX(), blockPos.getY(), blockPos.getZ(), blockName, MinerServer.instance, radiusLimit, blockLimit);
+            ins.mineVein(blockPos.getX(), blockPos.getY(), blockPos.getZ());
         }
     }
 }

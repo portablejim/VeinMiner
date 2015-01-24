@@ -55,17 +55,26 @@ public class ItemInWorldManagerTransformer extends GenericTransformer implements
     final String targetClassName = "portablejim/veinminer/core/InjectedCalls";
     final String targetClassType = "Lportablejim/veinminer/core/InjectedCalls;";
     final String targetMethodName = "blockMined";
-    final String targetMethodType = "(%s%sIIIZ%s)V";
+    final String targetMethodType = "(%s%s%sZ%s)V";
     final String blockIdClassName = "portablejim/veinminer/util/BlockID";
 
     public  ItemInWorldManagerTransformer() {
         super();
         srgMappings = new HashMap<String, String>();
-        srgMappings.put("uncheckedTryHarvestBlock", "func_73082_a");
-        srgMappings.put("tryHarvestBlock", "func_73084_b");
+        srgMappings.put("uncheckedTryHarvestBlock", "func_180785_a");
+        srgMappings.put("tryHarvestBlock", "func_180237_b");
         srgMappings.put("theWorld", "field_73092_a");
         srgMappings.put("thisPlayerMP", "field_73090_b");
-        srgMappings.put("onBlockClicked", "func_73074_a");
+        srgMappings.put("onBlockClicked", "func_180784_a");
+        srgMappings.put("field_180240_f", "field_180240_f");
+
+        // Compatibility info for when function names are not in properly.
+        // uncheckedTryHarvestBlock
+        srgMappings.put("func_180785_a", "func_180785_a");
+        // tryHarvestBlock
+        srgMappings.put("func_180237_b", "func_180237_b");
+        // onBlockClicked
+        srgMappings.put("func_180784_a", "func_180784_a");
     }
 
     @Override
@@ -78,16 +87,14 @@ public class ItemInWorldManagerTransformer extends GenericTransformer implements
         return bytes;
     }
 
-    private InsnList buildBlockIdFunctionCall(String obfuscatedClassName, String worldType, int blockVarIndex) {
+    private InsnList buildBlockIdFunctionCall(String obfuscatedClassName, String worldType, String blockposType, int blockVarIndex) {
         InsnList blockIdFunctionCall = new InsnList();
         blockIdFunctionCall.add(new TypeInsnNode(Opcodes.NEW, blockIdClassName));
         blockIdFunctionCall.add(new InsnNode(Opcodes.DUP));
         blockIdFunctionCall.add(new VarInsnNode(Opcodes.ALOAD, 0));
         blockIdFunctionCall.add(new FieldInsnNode(Opcodes.GETFIELD, obfuscatedClassName.replace(".", "/"), getCorrectName("theWorld"), typemap.get(getCorrectName("theWorld"))));
-        blockIdFunctionCall.add(new VarInsnNode(Opcodes.ILOAD, 1));
-        blockIdFunctionCall.add(new VarInsnNode(Opcodes.ILOAD, 2));
-        blockIdFunctionCall.add(new VarInsnNode(Opcodes.ILOAD, 3));
-        blockIdFunctionCall.add(new MethodInsnNode(Opcodes.INVOKESPECIAL, blockIdClassName, "<init>", String.format("(%sIII)V", worldType)));
+        blockIdFunctionCall.add(new VarInsnNode(Opcodes.ALOAD, 1));
+        blockIdFunctionCall.add(new MethodInsnNode(Opcodes.INVOKESPECIAL, blockIdClassName, "<init>", String.format("(%s%s)V", worldType, blockposType), false));
 
         blockIdFunctionCall.add(new VarInsnNode(Opcodes.ASTORE, blockVarIndex));
 
@@ -103,8 +110,9 @@ public class ItemInWorldManagerTransformer extends GenericTransformer implements
 
         String worldType = typemap.get(getCorrectName("theWorld"));
         String playerType = typemap.get(getCorrectName("thisPlayerMP"));
+        String blockposType = typemap.get(getCorrectName("field_180240_f"));
 
-        while(!isMethodWithName(curMethod.instructions.get(startIndex), "tryHarvestBlock")) {
+        while(!isMethodWithName(curMethod.instructions.get(startIndex), srgMappings.get("tryHarvestBlock"))) {
             ++startIndex;
         }
 
@@ -115,10 +123,10 @@ public class ItemInWorldManagerTransformer extends GenericTransformer implements
 
 
         int blockVarIndex = varSorter.newLocal(Type.getType(BlockID.class));
-        curMethod.instructions.insert(curMethod.instructions.get(startIndex), buildBlockIdFunctionCall(obfuscatedClassName, worldType, blockVarIndex));
+        curMethod.instructions.insert(curMethod.instructions.get(startIndex), buildBlockIdFunctionCall(obfuscatedClassName, worldType, blockposType, blockVarIndex));
         ++startIndex;
 
-        while(!isMethodWithName(curMethod.instructions.get(startIndex), "tryHarvestBlock")) {
+        while(!isMethodWithName(curMethod.instructions.get(startIndex), srgMappings.get("tryHarvestBlock"))) {
             ++startIndex;
         }
 
@@ -134,14 +142,12 @@ public class ItemInWorldManagerTransformer extends GenericTransformer implements
         veinMinerFunctionCall.add(new FieldInsnNode(Opcodes.GETFIELD, obfuscatedClassName.replace(".", "/"), getCorrectName("theWorld"), typemap.get(getCorrectName("theWorld"))));
         veinMinerFunctionCall.add(new VarInsnNode(Opcodes.ALOAD, 0));
         veinMinerFunctionCall.add(new FieldInsnNode(Opcodes.GETFIELD, obfuscatedClassName.replace(".", "/"), getCorrectName("thisPlayerMP"), typemap.get(getCorrectName("thisPlayerMP"))));
-        veinMinerFunctionCall.add(new VarInsnNode(Opcodes.ILOAD, 1));
-        veinMinerFunctionCall.add(new VarInsnNode(Opcodes.ILOAD, 2));
-        veinMinerFunctionCall.add(new VarInsnNode(Opcodes.ILOAD, 3));
+        veinMinerFunctionCall.add(new VarInsnNode(Opcodes.ALOAD, 1));
         veinMinerFunctionCall.add(new VarInsnNode(Opcodes.ILOAD, newVarIndex));
         veinMinerFunctionCall.add(new VarInsnNode(Opcodes.ALOAD, blockVarIndex));
 
         String blockIdClassType = String.format("L%s;", blockIdClassName);
-        veinMinerFunctionCall.add(new MethodInsnNode(Opcodes.INVOKESTATIC, targetClassName, targetMethodName, String.format(targetMethodType, worldType, playerType, blockIdClassType)));
+        veinMinerFunctionCall.add(new MethodInsnNode(Opcodes.INVOKESTATIC, targetClassName, targetMethodName, String.format(targetMethodType, worldType, playerType, blockposType, blockIdClassType), false));
         curMethod.instructions.insert(curMethod.instructions.get(startIndex), veinMinerFunctionCall);
         ++startIndex;
 
@@ -163,7 +169,8 @@ public class ItemInWorldManagerTransformer extends GenericTransformer implements
         for(FieldNode variable : classNode.fields) {
             String srgVariableName = FMLDeobfuscatingRemapper.INSTANCE.mapFieldName(obfuscatedClassName, variable.name, variable.desc);
             if(getCorrectName("theWorld").equals(srgVariableName) ||
-                    getCorrectName("thisPlayerMP").equals(srgVariableName)) {
+                    getCorrectName("thisPlayerMP").equals(srgVariableName) ||
+                    getCorrectName("field_180240_f").equals(srgVariableName)) {
                 typemap.put(srgVariableName, variable.desc);
             }
         }
@@ -172,11 +179,11 @@ public class ItemInWorldManagerTransformer extends GenericTransformer implements
             for (MethodNode curMethod : classNode.methods) {
                 String srgFunctionName = FMLDeobfuscatingRemapper.INSTANCE.mapMethodName(obfuscatedClassName, curMethod.name, curMethod.desc);
 
-                if (getCorrectName("uncheckedTryHarvestBlock").equals(srgFunctionName)) {
+                if (getCorrectName(srgMappings.get("uncheckedTryHarvestBlock")).equals(srgFunctionName)) {
                     MinerLogger.debug("Inserting call to uncheckedTryHarvestBlock (%s)", srgFunctionName);
                     insertCallAfterTryHarvestBlockFunction(curMethod, obfuscatedClassName);
                 }
-                else if (getCorrectName("onBlockClicked").equals(srgFunctionName)) {
+                else if (getCorrectName(srgMappings.get("onBlockClicked")).equals(srgFunctionName)) {
                     MinerLogger.debug("Inserting call to onBlockClicked (%s)", srgFunctionName);
                     int afterFirst = insertCallAfterTryHarvestBlockFunction(curMethod, obfuscatedClassName);
                     insertCallAfterTryHarvestBlockFunction(curMethod, obfuscatedClassName, afterFirst);
