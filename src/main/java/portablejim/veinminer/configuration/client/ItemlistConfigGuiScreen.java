@@ -193,9 +193,16 @@ public class ItemlistConfigGuiScreen extends GuiScreen {
         if(renderIcon) {
             BlockID testBlockId = new BlockID(textFieldText);
 
-            String[] testItemName = testBlockId.name.split(":", 2);
-            if(testItemName.length == 2) {
-                ItemStack itemStack = GameRegistry.findItemStack(testItemName[0], testItemName[1], 1);
+            Item testItem = Item.getByNameOrId(testBlockId.name);
+            Block testBlock = Block.getBlockFromName(testBlockId.name);
+            ItemStack itemStack = null;
+            if(testItem != null) {
+                itemStack = new ItemStack(testItem);
+            }
+            else if(testBlock != null){
+                itemStack = new ItemStack(testBlock);
+            }
+            if(itemStack != null) {
                 itemStack.setItemDamage(testBlockId.metadata == -1 ? 0 : testBlockId.metadata);
                 iconRenderer.renderItemStackIcon(this.width / 2 - 152, 34, itemStack);
             }
