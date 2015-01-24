@@ -369,7 +369,7 @@ public class ConfigurationSettings {
     }
 
     public boolean toolIsOfType(ItemStack tool, String type) {
-        return tool == null || toolsAndBlocks.get(type).toollist.contains(Item.itemRegistry.getNameForObject(tool.getItem()));
+        return tool == null || toolsAndBlocks.get(type).toollist.contains(Item.itemRegistry.getNameForObject(tool.getItem()).toString());
     }
 
     /**
