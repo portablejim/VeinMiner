@@ -64,7 +64,7 @@ public class MinerCommand extends CommandBase {
     }
 
     @Override
-    public void processCommand(ICommandSender icommandsender, String[] astring) {
+    public void processCommand(ICommandSender icommandsender, String[] astring) throws CommandException {
         EntityPlayerMP senderPlayer;
         if(icommandsender instanceof EntityPlayerMP) {
             senderPlayer = (EntityPlayerMP) icommandsender;
@@ -133,12 +133,12 @@ public class MinerCommand extends CommandBase {
         throw new WrongUsageException(message);
     }
 
-    private void showUsageError(String errorKey, Object... params) {
+    private void showUsageError(String errorKey, Object... params) throws WrongUsageException {
         String message = StatCollector.translateToLocalFormatted(errorKey, params);
         throw new WrongUsageException(message);
     }
 
-    private void needAdmin(EntityPlayerMP player) {
+    private void needAdmin(EntityPlayerMP player) throws CommandException {
         MinecraftServer server = player.mcServer;
         if(server.isDedicatedServer() && !server.getConfigurationManager().func_152596_g(player.getGameProfile())) {
             boolean playerNoClient = !MinerServer.instance.playerHasClient(player.getUniqueID());
@@ -150,7 +150,7 @@ public class MinerCommand extends CommandBase {
         }
     }
 
-    private void commandAction(String[] commandString, String commandName) {
+    private void commandAction(String[] commandString, String commandName) throws WrongUsageException {
         if (commandString.length < 3 || (!"add".equals(commandString[2]) && !"remove".equals(commandString[2]))) {
             showUsageError("command.veinminer." + commandName + ".actionerror", commandString[1]);
         }
@@ -177,7 +177,7 @@ public class MinerCommand extends CommandBase {
         }
     }
 
-    private void runCommandBlocklist(EntityPlayerMP senderPlayer, String[] astring) {
+    private void runCommandBlocklist(EntityPlayerMP senderPlayer, String[] astring) throws WrongUsageException {
         ConfigurationSettings configSettings = MinerServer.instance.getConfigurationSettings();
 
         ConfigurationSettings settings = VeinMiner.instance.configurationSettings;
@@ -230,7 +230,7 @@ public class MinerCommand extends CommandBase {
         }
     }
 
-    private void runCommandToollist(EntityPlayerMP senderPlayer, String[] astring) {
+    private void runCommandToollist(EntityPlayerMP senderPlayer, String[] astring) throws WrongUsageException {
         ConfigurationSettings configSettings = MinerServer.instance.getConfigurationSettings();
 
         ConfigurationSettings settings = VeinMiner.instance.configurationSettings;
@@ -276,7 +276,7 @@ public class MinerCommand extends CommandBase {
         }
     }
 
-    private void runCommandBlocklimit(EntityPlayerMP senderPlayer, String[] astring) {
+    private void runCommandBlocklimit(EntityPlayerMP senderPlayer, String[] astring) throws WrongUsageException {
         if(astring.length == 1) {
             showUsageError("command.veinminer.blocklimit");
         }
@@ -295,7 +295,7 @@ public class MinerCommand extends CommandBase {
         sendProperChatToPlayer(senderPlayer, "command.veinminer.blocklimit.set", actualBlockPerTick);
     }
 
-    private void runCommandRange(EntityPlayerMP senderPlayer, String[] astring) {
+    private void runCommandRange(EntityPlayerMP senderPlayer, String[] astring) throws WrongUsageException {
         if(astring.length == 1) {
             showUsageError("command.veinminer.range");
         }
@@ -314,7 +314,7 @@ public class MinerCommand extends CommandBase {
         sendProperChatToPlayer(senderPlayer, "command.veinminer.range.set", actualRange);
     }
 
-    private void runCommandPerTick(EntityPlayerMP senderPlayer, String[] astring) {
+    private void runCommandPerTick(EntityPlayerMP senderPlayer, String[] astring) throws WrongUsageException {
         if(astring.length == 1) {
             showUsageError("command.veinminer.pertick");
         }
