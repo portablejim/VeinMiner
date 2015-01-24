@@ -140,7 +140,7 @@ public class MinerCommand extends CommandBase {
 
     private void needAdmin(EntityPlayerMP player) throws CommandException {
         MinecraftServer server = player.mcServer;
-        if(server.isDedicatedServer() && !server.getConfigurationManager().func_152596_g(player.getGameProfile())) {
+        if(server.isDedicatedServer() && !server.getConfigurationManager().canSendCommands(player.getGameProfile())) {
             boolean playerNoClient = !MinerServer.instance.playerHasClient(player.getUniqueID());
             String message = "command.veinminer.permissionDenied";
             if(playerNoClient) {
@@ -361,6 +361,7 @@ public class MinerCommand extends CommandBase {
         }
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     public List addTabCompletionOptions(ICommandSender par1ICommandSender, String[] arguments) {
         switch (arguments.length) {
             case 1:
@@ -395,6 +396,7 @@ public class MinerCommand extends CommandBase {
         return StatCollector.translateToLocal("command.veinminer");
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     public int compareTo(MinerCommand par1ICommand)
     {
         return this.getCommandName().compareTo(par1ICommand.getCommandName());
