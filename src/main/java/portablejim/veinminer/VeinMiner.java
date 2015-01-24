@@ -17,10 +17,15 @@
 
 package portablejim.veinminer;
 
+import net.minecraft.command.ServerCommandManager;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -28,17 +33,11 @@ import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
-import net.minecraft.command.ServerCommandManager;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.logging.log4j.Logger;
-import portablejim.veinminer.configuration.ToolType;
 import portablejim.veinminer.configuration.ConfigurationSettings;
 import portablejim.veinminer.configuration.ConfigurationValues;
+import portablejim.veinminer.configuration.ToolType;
 import portablejim.veinminer.lib.MinerLogger;
 import portablejim.veinminer.lib.ModInfo;
 import portablejim.veinminer.network.NetworkManager;
@@ -48,7 +47,6 @@ import portablejim.veinminer.server.MinerServer;
 import portablejim.veinminer.util.BlockID;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -120,8 +118,7 @@ public class VeinMiner {
                             List<ItemStack> itemStacks = OreDictionary.getOres(oreDictEntry);
                             for(ItemStack item : itemStacks) {
                                 if(item.getItem() instanceof ItemBlock) {
-                                    // TODO: Check
-                                    String blockName = (String) Item.itemRegistry.getNameForObject(item.getItem());
+                                    String blockName = Item.itemRegistry.getNameForObject(item.getItem()).toString();
                                     configurationSettings.addBlockToWhitelist(toolType, new BlockID(blockName, item.getItemDamage()));
                                     try {
                                         // Some mods raise an exception when calling getDisplayName on blocks.
