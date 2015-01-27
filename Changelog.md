@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.22.0
+------
+Changes:
+* Veinminer can now be configured from the server console.
+
 0.21.2
 ------
 Changes:
