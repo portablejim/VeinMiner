@@ -38,6 +38,7 @@ import portablejim.veinminer.api.VeinminerNoToolCheck;
 import portablejim.veinminer.api.VeinminerPostUseTool;
 import portablejim.veinminer.configuration.ConfigurationSettings;
 import portablejim.veinminer.lib.BlockLib;
+import portablejim.veinminer.lib.MinerLogger;
 import portablejim.veinminer.server.MinerServer;
 import portablejim.veinminer.util.BlockID;
 import portablejim.veinminer.util.ItemStackID;
@@ -245,7 +246,8 @@ public class MinerInstance {
                         continue;
                     }
 
-                    int blockLimit = serverInstance.getConfigurationSettings().getBlockLimit();
+                    //int blockLimit = serverInstance.getConfigurationSettings().getBlockLimit();
+                    MinerLogger.debug("Block limit is: %d | Blocks mined: %d", blockLimit, numBlocksMined);
                     if (numBlocksMined >= blockLimit && blockLimit != -1) {
                         continue;
                     }
