@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.23.0
+------
+Fixes:
+* Fix checking of the blocklimit when mining.
+
 0.22.0
 ------
 Changes:
