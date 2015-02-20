@@ -32,7 +32,8 @@ version = config.mod_version
 archivesBaseName = "VeinMiner"
 
 minecraft {
-    version = config.minecraft_version + "-" + config.forge_version + "-" + config.minecraft_version
+    version = config.minecraft_version + "-" + config.forge_version
+    mappings = "snapshot_20150220"
 }
 
 String buildNumber = "unknown"
@@ -88,6 +89,10 @@ task release(type: Copy) {
 
     from project.tasks.jar.archivePath
     into "release/"
+}
+
+runClient {
+    jvmArgs "-Dfml.coreMods.load=portablejim.veinminer.asm.VeinMinerCorePlugin"
 }
 
 build.dependsOn apiJar, deobfJar
