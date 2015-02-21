@@ -27,6 +27,8 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.network.NetworkCheckHandler;
+import cpw.mods.fml.relauncher.Side;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -42,6 +44,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
+import java.util.Map;
 
 import static cpw.mods.fml.common.Mod.EventHandler;
 import static cpw.mods.fml.common.Mod.Instance;
@@ -63,6 +66,11 @@ public class VeinMinerModSupport {
     public boolean forceConsumerAvailable;
 
     private Boolean configLoaded = false;
+
+    @NetworkCheckHandler
+    public boolean checkClientModVersion(Map<String, String> mods, Side side) {
+        return true;
+    }
 
     @SuppressWarnings("UnusedDeclaration")
     @EventHandler
