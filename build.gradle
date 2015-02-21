@@ -17,6 +17,7 @@ buildscript {
 
 apply plugin: 'forge'
 apply plugin: 'maven'
+//apply plugin: 'curseforge'
 
 ext.configFile = file "build.properties"
 
@@ -123,5 +124,12 @@ uploadArchives {
         }
     }
 }
+
+/*curse {
+    projectId = '67133'
+    apiKey = project.cureForgeApiKey
+    releaseType = 'alpha'
+    changelog = new File('Changelog.md').getText('UTF-8')
+}*/
 
 
