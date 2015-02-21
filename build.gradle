@@ -1,3 +1,4 @@
+
 buildscript {
     repositories {
         mavenCentral()
@@ -68,6 +69,9 @@ jar {
         from sharedmanifest
     }
 }
+
+sourceCompatibility = 6
+targetCompatibility = 6
 
 task apiJar(type: Jar) {
     from sourceSets.main.output
