@@ -32,6 +32,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.network.NetworkCheckHandler;
+import net.minecraftforge.fml.relauncher.Side;
 import portablejim.veinminer.api.IMCMessage;
 import portablejim.veinminer.api.Permission;
 import portablejim.veinminer.api.VeinminerHarvestFailedCheck;
@@ -42,6 +44,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
+import java.util.Map;
 
 import static net.minecraftforge.fml.common.Mod.EventHandler;
 import static net.minecraftforge.fml.common.Mod.Instance;
@@ -63,6 +66,11 @@ public class VeinMinerModSupport {
     public boolean forceConsumerAvailable;
 
     private Boolean configLoaded = false;
+
+    @NetworkCheckHandler
+    public boolean checkClientModVersion(Map<String, String> mods, Side side) {
+        return true;
+    }
 
     @SuppressWarnings("UnusedDeclaration")
     @EventHandler

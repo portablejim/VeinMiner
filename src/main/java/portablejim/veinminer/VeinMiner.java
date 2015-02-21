@@ -21,6 +21,7 @@ import net.minecraft.command.ServerCommandManager;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.launchwrapper.LogWrapper;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.common.Loader;
@@ -33,8 +34,11 @@ import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
+import net.minecraftforge.fml.common.network.NetworkCheckHandler;
+import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.logging.log4j.Logger;
+import portablejim.veinminer.configuration.ToolType;
 import portablejim.veinminer.configuration.ConfigurationSettings;
 import portablejim.veinminer.configuration.ConfigurationValues;
 import portablejim.veinminer.configuration.ToolType;
@@ -48,6 +52,8 @@ import portablejim.veinminer.util.BlockID;
 
 import java.io.File;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -71,6 +77,55 @@ public class VeinMiner {
     public ConfigurationSettings configurationSettings;
 
     public Logger logger;
+
+    @NetworkCheckHandler
+    public boolean checkClientModVersion(Map<String, String> mods, Side side) {
+        LogWrapper.fine("Check Version");
+        /*
+         * Accept vanilla clients and servers.
+         * Vanilla server: No check packet will come.
+         * Vanilla client: Won't respond to ping packets. But it will work if forge works I think.
+         */
+        if(mods.size() == 0) {
+            return true;
+        }
+        else {
+            if(mods.containsKey(ModInfo.MODID)) {
+                String clientVersion = mods.get(ModInfo.MODID);
+                // Connect with matching versions or if one side is a dev build.
+                if(ModInfo.VERSION.equals(clientVersion) || ModInfo.VERSION.startsWith("${version}") || clientVersion.startsWith("${version}")) {
+                    return true;
+                }
+                int clientMajor = 0, clientMinor = 0, major = 0, minor = 0;
+                String[] splitVersion = clientVersion.split(".");
+                if (splitVersion.length >= 2) {
+                    clientMajor = Integer.parseInt(splitVersion[0]);
+                    clientMinor = Integer.parseInt(splitVersion[1]);
+                }
+                String[] splitOurVersion = ModInfo.VERSION.split(".");
+                if(splitOurVersion.length >= 2) {
+                    major = Integer.parseInt(splitOurVersion[0]);
+                    minor = Integer.parseInt(splitOurVersion[1]);
+                }
+
+                // After version 1, don't check minor versions.
+                return !(major != clientMajor || (major == 0 && minor != clientMinor) || (major == 0 && minor == 0));
+            }
+        }
+        if(side == Side.CLIENT) {
+            // Client side checks.
+            if(!mods.containsKey(ModInfo.MODID)) {
+                return true;
+            }
+        }
+        if(side == Side.SERVER) {
+            // Client side checks.
+            if(!mods.containsKey(ModInfo.MODID)) {
+                return true;
+            }
+        }
+        return true;
+    }
 
     @SuppressWarnings("UnusedDeclaration")
     @EventHandler

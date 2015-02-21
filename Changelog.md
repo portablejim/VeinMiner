@@ -1,12 +1,19 @@
 Changelog
 =========
 
-0.22.0 [1.8]
+0.25.0
+------
+Changes:
+* Now have Veinminer API as api annotation.
+* Veinminer can now be configured from the server console.
+Fixes:
+* Fix connecting to a server with Veinminer without having it on the client.
+* Fix checking of the blocklimit when mining.
+
+0.22.0
 ------
 Changes:
 * Update to Minecraft 1.8
-
-Will sync the versions soon.
 
 0.21.2
 ------
