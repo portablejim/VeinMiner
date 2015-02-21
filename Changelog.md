@@ -1,6 +1,13 @@
 Changelog
 =========
 
+0.25.0
+------
+Changes:
+* Now have Veinminer API as api annotation.
+Fixes:
+* Fix connecting to a server with Veinminer without having it on the client.
+
 0.23.0
 ------
 Fixes:
