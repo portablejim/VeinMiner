@@ -47,7 +47,7 @@ public class ActivateMinerKeybindManager {
         boolean sendPacket = false;
 
         int mode = VeinMiner.instance.configurationSettings.getPreferredMode();
-        boolean pressed = keyBinding.getIsKeyPressed();
+        boolean pressed = keyBinding.isPressed();
         if(mode == PreferredMode.DISABLED) {
             statusEnabled = false;
             sendPacket = true; // If enabled when changing, notify server that it is disabled.

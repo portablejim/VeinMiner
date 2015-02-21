@@ -18,13 +18,11 @@
 package portablejim.veinminer.lib;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.RenderItem;
-import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
@@ -37,14 +35,12 @@ import org.lwjgl.opengl.GL12;
 public class IconRenderer {
     private final Minecraft minecraft;
     private final double zLevel;
-    private final FontRenderer fontRenderer;
     private RenderItem itemRenderer;
 
-    public IconRenderer(Minecraft minecraft, double zLevel, FontRenderer fontRenderer, TextureManager textureManager) {
+    public IconRenderer(Minecraft minecraft, double zLevel) {
 
         this.minecraft = minecraft;
         this.zLevel = zLevel;
-        this.fontRenderer = fontRenderer;
         this.itemRenderer = minecraft.getRenderItem();
     }
 
@@ -56,7 +52,7 @@ public class IconRenderer {
         {
             RenderHelper.enableGUIStandardItemLighting();
             //this.itemRenderer.renderItemIntoGUI(this.fontRenderer, textureManager, itemStack, renderX + 2, renderY + 2);
-            this.itemRenderer.func_175030_a(this.fontRenderer, itemStack, renderX + 2, renderY + 2);
+            this.itemRenderer.renderItemIntoGUI(itemStack, renderX + 2, renderY + 2);
             RenderHelper.disableStandardItemLighting();
         }
         GL11.glDisable(GL12.GL_RESCALE_NORMAL);
@@ -73,6 +69,6 @@ public class IconRenderer {
         wr.addVertexWithUV((double) (xBase + 18), (double) (yBase + 18), zLevel, (double) ((float) (uBase + 18) * 0.0078125F), (double) ((float) (vBase + 18) * 0.0078125F));
         wr.addVertexWithUV((double) (xBase + 18), (double) (yBase), zLevel, (double) ((float) (uBase + 18) * 0.0078125F), (double) ((float) (vBase) * 0.0078125F));
         wr.addVertexWithUV((double) (xBase), (double) (yBase), zLevel, (double) ((float) (uBase) * 0.0078125F), (double) ((float) (vBase) * 0.0078125F));
-        wr.draw();
+        wr.finishDrawing();
     }
 }

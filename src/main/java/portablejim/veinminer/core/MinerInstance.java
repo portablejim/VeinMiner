@@ -185,8 +185,7 @@ public class MinerInstance {
     private void mineBlock(int x, int y, int z) {
         Point newPoint = new Point(x, y, z);
         awaitingEntityDrop.add(newPoint);
-        //boolean success = player.theItemInWorldManager.tryHarvestBlock(x, y, z);
-        boolean success = player.theItemInWorldManager.func_180237_b(newPoint.toBlockPos());
+        boolean success = player.theItemInWorldManager.tryHarvestBlock(newPoint.toBlockPos());
         numBlocksMined++;
 
         VeinminerPostUseTool toolUsedEvent = new VeinminerPostUseTool(player);

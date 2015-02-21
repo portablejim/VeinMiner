@@ -78,7 +78,7 @@ public class ItemlistConfigGuiScreen extends GuiScreen {
         clearButton.enabled = false;
         this.buttonList.add(clearButton);
 
-        iconRenderer = new IconRenderer(mc, zLevel, fontRendererObj, mc.getTextureManager());
+        iconRenderer = new IconRenderer(mc, zLevel);
 
         textFieldAdd = new GuiTextField(5, this.getFontRenderer(), this.width / 2 - 128, 34, 176, 20);
         textFieldAdd.setMaxStringLength(128);
