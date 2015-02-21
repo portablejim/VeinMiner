@@ -1,6 +1,13 @@
 Changelog
 =========
 
+0.22.0 [1.8]
+------
+Changes:
+* Update to Minecraft 1.8
+
+Will sync the versions soon.
+
 0.21.2
 ------
 Changes:
