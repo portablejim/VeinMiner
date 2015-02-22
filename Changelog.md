@@ -1,17 +1,24 @@
 Changelog
 =========
 
-0.25.1
+0.26.0
 ------
 Fixes:
 * Fix bug in version checker.
+* Fix title
+
+0.25.1
+------
+Fails to implement version checker correctly.
+Known issues: Can't connect to servers.
 
 0.25.0
 ------
 Changes:
 * Now have Veinminer API as api annotation.
 Fixes:
-* Fix connecting to a server with Veinminer without having it on the client.
+* Fail at fixing connecting to a server with Veinminer without having it on the client.
+Known issues: Can't connect to servers.
 
 0.23.0
 ------
