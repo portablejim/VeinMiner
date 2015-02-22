@@ -1,0 +1,83 @@
+# Command usage/error
+command.veinminer=/veinminer mode/blocklist/toollist/blocklimit/radius/per_tick/saveconfig/help
+command.veinminer.enable=/veinminer mode auto/sneak/no_sneak
+command.veinminer.blocklist=/veinminer blocklist %s add/remove <mod id>:<block name> <metadata>
+command.veinminer.toollist=/veinminer toollist %s add/remove <tool id>
+
+# Command result/Mode status
+command.veinminer.set.disable=Etat Veinminer: désactivé
+command.veinminer.set.auto=Etat Veinminer: utilise le raccourcis du client
+command.veinminer.set.sneak=Etat Veinminer: lorque le joueur s'accroupi
+command.veinminer.set.nosneak=Etat Veinminer: lorque le joueur ne s'accroupi pas
+
+# Command blocklist
+command.veinminer.blocklist.actionerror=/veinminer blocklist %s add/remove <mod id>:<block name> <metadata>
+command.veinminer.blocklist.itemerror=/veinminer blocklist %s %s  <mod id>:<block name> <metadata>
+command.veinminer.blocklist.add=Added %s/%d to the %s block whitelist
+command.veinminer.blocklist.remove=Removed %s/%d from the %s block whitelist
+
+# Command toollist
+command.veinminer.toollist.actionerror=/veinminer toollist %s add/remove <tool id>
+command.veinminer.toollist.itemerror=/veinminer toollist %s %s <tool id>
+command.veinminer.toollist.add=Added %s to the %s tool list
+command.veinminer.toollist.remove=Removed %s from the %s tool list
+
+command.veinminer.blocklimit=/veinminer blocklimit [-1 - 2147483647]
+command.veinminer.blocklimit.set=Set block limit to %d blocks
+command.veinminer.range=/veinminer radius [-1 - 1000]
+command.veinminer.range.set=Set radius limit to %d blocks away
+command.veinminer.pertick=/veinminer per_tick <# blocks to destroy each tick>
+command.veinminer.pertick.set=Set to destroy %d blocks per tick
+
+command.veinminer.saveconfig=Saved settings to config file
+
+command.veinminer.cannotuse=Les non joueur ne peuvent pas utiliser les commandes veinminer
+command.veinminer.permissionDenied=Vous n'avez pas la permission d'utiliser cette sous-commande
+
+# Preferred mode confirmation
+mod.veinminer.preferredmode.auto=Veinminer utilise le raccourcis du client. Voir la configuration du mod pour plus de détails.
+mod.veinminer.preferredmode.sneak=Veinminer est activé lorque le joueur s'accroupi.
+mod.veinminer.preferredmode.nosneak=Veinminer est désactivé lorque le joueur s'accroupi.
+
+mod.veinminer.finished.tooHungry=Vous êtes trop affamé pour utiliser VeinMiner.
+
+# Controls
+veinminer.key.category=Vein Miner
+veinminer.key.enable=Activer Vein Miner
+
+# Command help.
+command.veinminer.help1=Sous-commandes disponible:
+command.veinminer.help2='mode': change VeinMiner de mode d'activation
+command.veinminer.help3='blocklist': Ajoute ou supprime des blocs de la liste blanche de VeinMiner
+command.veinminer.help4='toollist': Ajoute ou supprime les outils a utiliser avec VeinMiner
+command.veinminer.help5='blocklimit': Met la limite de nombre de bloc qui peuvent être détruit a chaque coup de VeinMiner
+command.veinminer.help6='radius': Met la distance maximum que Veinminer récoltera les blocs depuis le premier bloc détruit
+command.veinminer.help7='per_tick': Met la vitesse à laquelle les blocs sont détruit par VeinMiner
+command.veinminer.help8='saveconfig': Enregitre les valeur actuelles dans le fichier de configuration
+command.veinminer.help9='help': Ce texte
+command.veinminer.help.enable1=Modes d'activation disponibles:
+command.veinminer.help.enable2='auto': Active par raccoucis (inutile sans le mod sur le client).
+command.veinminer.help.enable3='sneak': Active lorque le joueur s'accroupi
+command.veinminer.help.enable4='no_sneak': Active lorque le joueur ne s'accroupi pas
+
+# GUI config
+gui.veinminer.back=Back
+gui.veinminer.config=Configuration Veinminer 
+gui.veinminer.config.disabled=Désactivé
+gui.veinminer.config.pressed=Quand le raccroucis est appuyé
+gui.veinminer.config.released=Quand le raccroucis est relaché
+gui.veinminer.config.sneak=lorque le joueur s'accroupi
+gui.veinminer.config.nosneak=lorque le joueur ne s'accroupi pa
+gui.veinminer.config.enable.text=Active Veinminer:
+gui.veinminer.config.range=Range: %d blocs
+gui.veinminer.config.blocklimit=Block limit: %d blocs
+gui.veinminer.config.blocklimit.infinite=Limite de bloc: Infinie
+gui.veinminer.config.toolTypes=Type d'outils
+gui.veinminer.config.blocklist=Liste de blocs
+gui.veinminer.config.toollist=Liste d'outils
+gui.veinminer.unknown=<Inconnu>
+gui.veinminer.item.delete=Supprimer de la liste
+gui.veinminer.item.add=Ajouter
+gui.veinminer.item.clear=Effacer
+gui.veinminer.title.toollist=%s Outils en liste
+gui.veinminer.title.blocklist=%s Blocs en liste
