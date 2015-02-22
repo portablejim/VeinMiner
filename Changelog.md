@@ -9,6 +9,7 @@ Changes:
 Fixes:
 * Fix connecting to a server with Veinminer without having it on the client.
 * Fix checking of the blocklimit when mining.
+* Make keybind more reliable.
 
 0.22.0
 ------
