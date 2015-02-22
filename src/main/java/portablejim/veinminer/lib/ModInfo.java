@@ -32,6 +32,7 @@ public class ModInfo {
 
     public static final String MODID = "VeinMiner";
     public static final String VERSION;
+    public static final String VERSION_RAW;
     static {
         Properties prop = new Properties();
 
@@ -45,6 +46,7 @@ public class ModInfo {
         }
 
         VERSION = String.format("%s_build-%s", prop.getProperty("version"), prop.getProperty("build_number"));
+        VERSION_RAW = String.format("%s", prop.getProperty("version"));
     }
     public static final String COREMOD_ID = "VeinMiner_coremod";
     public static final String COREMOD_NAME = "Core mod";

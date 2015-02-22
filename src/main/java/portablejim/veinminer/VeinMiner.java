@@ -92,7 +92,7 @@ public class VeinMiner {
             if(mods.containsKey(ModInfo.MODID)) {
                 String clientVersion = mods.get(ModInfo.MODID);
                 // Connect with matching versions or if one side is a dev build.
-                if(ModInfo.VERSION.equals(clientVersion) || ModInfo.VERSION.startsWith("${version}") || clientVersion.startsWith("${version}")) {
+                if(ModInfo.VERSION_RAW.equals(clientVersion) || ModInfo.VERSION_RAW.startsWith("${version}") || clientVersion.startsWith("${version}")) {
                     return true;
                 }
                 int clientMajor = 0, clientMinor = 0, major = 0, minor = 0;
@@ -101,7 +101,7 @@ public class VeinMiner {
                     clientMajor = Integer.parseInt(splitVersion[0]);
                     clientMinor = Integer.parseInt(splitVersion[1]);
                 }
-                String[] splitOurVersion = ModInfo.VERSION.split(".");
+                String[] splitOurVersion = ModInfo.VERSION_RAW.split(".");
                 if(splitOurVersion.length >= 2) {
                     major = Integer.parseInt(splitOurVersion[0]);
                     minor = Integer.parseInt(splitOurVersion[1]);
