@@ -17,6 +17,7 @@
 
 package portablejim.veinminer;
 
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -34,14 +35,13 @@ import net.minecraft.command.ServerCommandManager;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.launchwrapper.LogWrapper;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.logging.log4j.Logger;
-import portablejim.veinminer.configuration.ToolType;
 import portablejim.veinminer.configuration.ConfigurationSettings;
 import portablejim.veinminer.configuration.ConfigurationValues;
+import portablejim.veinminer.configuration.ToolType;
 import portablejim.veinminer.lib.MinerLogger;
 import portablejim.veinminer.lib.ModInfo;
 import portablejim.veinminer.network.NetworkManager;
@@ -79,7 +79,7 @@ public class VeinMiner {
 
     @NetworkCheckHandler
     public boolean checkClientModVersion(Map<String, String> mods, Side side) {
-        LogWrapper.fine("Check Version");
+        FMLLog.fine("Check Version");
         /*
          * Accept vanilla clients and servers.
          * Vanilla server: No check packet will come.
@@ -92,16 +92,17 @@ public class VeinMiner {
             if(mods.containsKey(ModInfo.MODID)) {
                 String clientVersion = mods.get(ModInfo.MODID);
                 // Connect with matching versions or if one side is a dev build.
-                if(ModInfo.VERSION_RAW.equals(clientVersion) || ModInfo.VERSION_RAW.startsWith("${version}") || clientVersion.startsWith("${version}")) {
+                String ourVersionString = Loader.instance().activeModContainer().getVersion();
+                if(ourVersionString.equals(clientVersion) || ourVersionString.startsWith("${version}") || clientVersion.startsWith("${version}")) {
                     return true;
                 }
                 int clientMajor = 0, clientMinor = 0, major = 0, minor = 0;
-                String[] splitVersion = clientVersion.split(".");
+                String[] splitVersion = clientVersion.split("\\.");
                 if (splitVersion.length >= 2) {
                     clientMajor = Integer.parseInt(splitVersion[0]);
                     clientMinor = Integer.parseInt(splitVersion[1]);
                 }
-                String[] splitOurVersion = ModInfo.VERSION_RAW.split(".");
+                String[] splitOurVersion = ourVersionString.split("\\.");
                 if(splitOurVersion.length >= 2) {
                     major = Integer.parseInt(splitOurVersion[0]);
                     minor = Integer.parseInt(splitOurVersion[1]);
