@@ -87,7 +87,7 @@ public class ItemInWorldManagerTransformer extends GenericTransformer implements
         blockIdFunctionCall.add(new VarInsnNode(Opcodes.ILOAD, 1));
         blockIdFunctionCall.add(new VarInsnNode(Opcodes.ILOAD, 2));
         blockIdFunctionCall.add(new VarInsnNode(Opcodes.ILOAD, 3));
-        blockIdFunctionCall.add(new MethodInsnNode(Opcodes.INVOKESPECIAL, blockIdClassName, "<init>", String.format("(%sIII)V", worldType)));
+        blockIdFunctionCall.add(new MethodInsnNode(Opcodes.INVOKESPECIAL, blockIdClassName, "<init>", String.format("(%sIII)V", worldType), false));
 
         blockIdFunctionCall.add(new VarInsnNode(Opcodes.ASTORE, blockVarIndex));
 
@@ -141,7 +141,7 @@ public class ItemInWorldManagerTransformer extends GenericTransformer implements
         veinMinerFunctionCall.add(new VarInsnNode(Opcodes.ALOAD, blockVarIndex));
 
         String blockIdClassType = String.format("L%s;", blockIdClassName);
-        veinMinerFunctionCall.add(new MethodInsnNode(Opcodes.INVOKESTATIC, targetClassName, targetMethodName, String.format(targetMethodType, worldType, playerType, blockIdClassType)));
+        veinMinerFunctionCall.add(new MethodInsnNode(Opcodes.INVOKESTATIC, targetClassName, targetMethodName, String.format(targetMethodType, worldType, playerType, blockIdClassType), false));
         curMethod.instructions.insert(curMethod.instructions.get(startIndex), veinMinerFunctionCall);
         ++startIndex;
 
