@@ -43,11 +43,11 @@ public class ActivateMinerKeybindManager {
 
     @SuppressWarnings("UnusedDeclaration")
     @SubscribeEvent
-    public void KeyEvent(InputEvent event) {
+    public void KeyEvent(InputEvent.KeyInputEvent event) {
         boolean sendPacket = false;
 
         int mode = VeinMiner.instance.configurationSettings.getPreferredMode();
-        boolean pressed = keyBinding.isPressed();
+        boolean pressed = keyBinding.isKeyDown();
         if(mode == PreferredMode.DISABLED) {
             statusEnabled = false;
             sendPacket = true; // If enabled when changing, notify server that it is disabled.
