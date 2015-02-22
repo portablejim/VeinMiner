@@ -27,6 +27,7 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import org.apache.commons.lang3.StringUtils;
 import portablejim.veinminer.VeinMiner;
 import portablejim.veinminer.configuration.client.elements.GuiElementSlotItemlist;
 import portablejim.veinminer.lib.IconRenderer;
@@ -61,7 +62,7 @@ public class ItemlistConfigGuiScreen extends GuiScreen {
         String[] modeNames = { "blocklist", "toollist" };
         String modeName = modeNames[mode];
 
-        this.titleString = String.format("gui.veinminer.title.%s.%s", modeName, toolType);
+        this.titleString = String.format("gui.veinminer.title.%s", modeName);
     }
 
     @SuppressWarnings("unchecked")
@@ -181,7 +182,7 @@ public class ItemlistConfigGuiScreen extends GuiScreen {
     public void drawScreen(int par1, int par2, float par3) {
         drawDefaultBackground();
         itemList.drawScreen(par1, par2, par3);
-        drawCenteredString(getFontRenderer(), I18n.format(titleString), this.width / 2, 14, 0xFFFFFF);
+        drawCenteredString(getFontRenderer(), I18n.format(titleString, StringUtils.capitalize(toolType)), this.width / 2, 14, 0xFFFFFF);
         clearButton.enabled = !textFieldText.isEmpty();
         textFieldAdd.drawTextBox();
         super.drawScreen(par1, par2, par3);
