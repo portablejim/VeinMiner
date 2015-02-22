@@ -3,6 +3,8 @@ Changelog
 
 0.26.0
 ------
+Changes:
+* Add french translations.
 Fixes:
 * Fix bug in version checker.
 * Fix title
