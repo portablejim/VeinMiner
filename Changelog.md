@@ -1,6 +1,17 @@
 Changelog
 =========
 
+0.26.0
+------
+Fixes:
+* Fix bug in version checker.
+* Fix title
+
+0.25.1
+------
+Fails to implement version checker correctly.
+Known issues: Can't connect to servers.
+
 0.25.0
 ------
 Changes:
@@ -8,6 +19,8 @@ Changes:
 * Veinminer can now be configured from the server console.
 Fixes:
 * Fix connecting to a server with Veinminer without having it on the client.
+* Fail at fixing connecting to a server with Veinminer without having it on the client.
+Known issues: Can't connect to servers.
 * Fix checking of the blocklimit when mining.
 * Make keybind more reliable.
 
