@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.25.1
+------
+Fixes:
+* Fix bug in version checker.
+
 0.25.0
 ------
 Changes:
