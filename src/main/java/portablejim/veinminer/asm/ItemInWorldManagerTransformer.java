@@ -61,20 +61,12 @@ public class ItemInWorldManagerTransformer extends GenericTransformer implements
     public  ItemInWorldManagerTransformer() {
         super();
         srgMappings = new HashMap<String, String>();
-        srgMappings.put("uncheckedTryHarvestBlock", "func_180785_a");
+        srgMappings.put("blockRemoving", "func_180785_a");
         srgMappings.put("tryHarvestBlock", "func_180237_b");
         srgMappings.put("theWorld", "field_73092_a");
         srgMappings.put("thisPlayerMP", "field_73090_b");
         srgMappings.put("onBlockClicked", "func_180784_a");
         srgMappings.put("field_180240_f", "field_180240_f");
-
-        // Compatibility info for when function names are not in properly.
-        // uncheckedTryHarvestBlock
-        srgMappings.put("func_180785_a", "func_180785_a");
-        // tryHarvestBlock
-        srgMappings.put("func_180237_b", "func_180237_b");
-        // onBlockClicked
-        srgMappings.put("func_180784_a", "func_180784_a");
     }
 
     @Override
@@ -112,7 +104,7 @@ public class ItemInWorldManagerTransformer extends GenericTransformer implements
         String playerType = typemap.get(getCorrectName("thisPlayerMP"));
         String blockposType = typemap.get(getCorrectName("field_180240_f"));
 
-        while(!isMethodWithName(curMethod.instructions.get(startIndex), srgMappings.get("tryHarvestBlock"))) {
+        while(!isMethodWithName(curMethod.instructions.get(startIndex), "tryHarvestBlock")) {
             ++startIndex;
         }
 
@@ -126,7 +118,7 @@ public class ItemInWorldManagerTransformer extends GenericTransformer implements
         curMethod.instructions.insert(curMethod.instructions.get(startIndex), buildBlockIdFunctionCall(obfuscatedClassName, worldType, blockposType, blockVarIndex));
         ++startIndex;
 
-        while(!isMethodWithName(curMethod.instructions.get(startIndex), srgMappings.get("tryHarvestBlock"))) {
+        while(!isMethodWithName(curMethod.instructions.get(startIndex), "tryHarvestBlock")) {
             ++startIndex;
         }
 
@@ -179,11 +171,11 @@ public class ItemInWorldManagerTransformer extends GenericTransformer implements
             for (MethodNode curMethod : classNode.methods) {
                 String srgFunctionName = FMLDeobfuscatingRemapper.INSTANCE.mapMethodName(obfuscatedClassName, curMethod.name, curMethod.desc);
 
-                if (getCorrectName(srgMappings.get("uncheckedTryHarvestBlock")).equals(srgFunctionName)) {
-                    MinerLogger.debug("Inserting call to uncheckedTryHarvestBlock (%s)", srgFunctionName);
+                if (getCorrectName("blockRemoving").equals(srgFunctionName)) {
+                    MinerLogger.debug("Inserting call to blockRemoving (%s)", srgFunctionName);
                     insertCallAfterTryHarvestBlockFunction(curMethod, obfuscatedClassName);
                 }
-                else if (getCorrectName(srgMappings.get("onBlockClicked")).equals(srgFunctionName)) {
+                else if (getCorrectName("onBlockClicked").equals(srgFunctionName)) {
                     MinerLogger.debug("Inserting call to onBlockClicked (%s)", srgFunctionName);
                     int afterFirst = insertCallAfterTryHarvestBlockFunction(curMethod, obfuscatedClassName);
                     insertCallAfterTryHarvestBlockFunction(curMethod, obfuscatedClassName, afterFirst);
