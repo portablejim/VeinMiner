@@ -18,7 +18,7 @@ buildscript {
 
 apply plugin: 'forge'
 apply plugin: 'maven'
-//apply plugin: 'curseforge'
+apply plugin: 'curseforge'
 
 ext.configFile = file "build.properties"
 
@@ -129,11 +129,41 @@ uploadArchives {
     }
 }
 
-/*curse {
-    projectId = '67133'
-    apiKey = project.cureForgeApiKey
-    releaseType = 'alpha'
-    changelog = new File('Changelog.md').getText('UTF-8')
-}*/
+ext.curseForgeReleaseType = null
+
+task ('curseGeneral') << {
+    curse {
+        projectId = '67133'
+        if (project.hasProperty('curseForgeApiKey')) apiKey = project.curseForgeApiKey
+        else apiKey = 0
+        releaseType = curseForgeReleaseType
+        changelog = new File('Changelog.md').getText('utf-8').split('\n-{3,8}|\n\n')[2]
+        displayName = String.format('VeinMiner %s [MC%s; build %s]', config.mod_version, config.compatible_versions, buildNumber)
+        additionalArtifact deobfJar, apiJar
+
+        for (String newVersion : config.compatible_versions.split(",")) {
+            addGameVersion newVersion
+        }
+    }.execute()
+}
+
+task setCurseAlpha << {
+    print('Set alpha')
+    curseForgeReleaseType = 'alpha'
+}
+
+task setCurseRelease << {
+    print('Set release')
+    curseForgeReleaseType = 'release'
+}
+
+task curseAlpha(dependsOn: 'curseGeneral') {
+    curseGeneral.dependsOn setCurseAlpha
+}
+
+task curseRelease(dependsOn: 'curseGeneral') {
+    curseGeneral.dependsOn setCurseRelease
+
+}
 
 
