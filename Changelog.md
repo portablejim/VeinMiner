@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.26.1
+------
+Fixes:
+* Make blocklimit and range commands work correctly (or at least, work better).
+
 0.26.0
 ------
 Changes:

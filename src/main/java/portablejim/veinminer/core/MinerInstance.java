@@ -164,6 +164,7 @@ public class MinerInstance {
 
         // Within mined block limits
         if (numBlocksMined >= blockLimit && blockLimit != -1) {
+            MinerLogger.debug("Blocks mined: %d; Blocklimit: %d. Forcing finish.", numBlocksMined, blockLimit);
             this.finished = true;
         }
 
@@ -238,6 +239,7 @@ public class MinerInstance {
                     }
 
                     if(!newBlockPos.isWithinRange(initalBlock, radiusLimit) && radiusLimit > 0) {
+                        MinerLogger.debug("Initial block: %d,%d,%d; New block: %d,%d,%d; Radius: %.2f; Raidus limit: %d.", initalBlock.getX(), initalBlock.getY(), initalBlock.getZ(), newBlockPos.getX(), newBlockPos.getY(), newBlockPos.getZ(), Math.sqrt(initalBlock.distanceFrom(newBlockPos)), radiusLimit);
                         continue;
                     }
 
@@ -247,8 +249,8 @@ public class MinerInstance {
                     }
 
                     //int blockLimit = serverInstance.getConfigurationSettings().getBlockLimit();
-                    MinerLogger.debug("Block limit is: %d | Blocks mined: %d", blockLimit, numBlocksMined);
                     if (numBlocksMined >= blockLimit && blockLimit != -1) {
+                        MinerLogger.debug("Block limit is: %d; Blocks mined: %d", blockLimit, numBlocksMined);
                         continue;
                     }
 
