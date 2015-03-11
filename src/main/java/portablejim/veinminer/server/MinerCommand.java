@@ -26,7 +26,6 @@ import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraft.util.StatCollector;
-import portablejim.veinminer.VeinMiner;
 import portablejim.veinminer.configuration.ConfigurationSettings;
 import portablejim.veinminer.util.BlockID;
 import portablejim.veinminer.util.PlayerStatus;
@@ -172,7 +171,7 @@ public class MinerCommand extends CommandBase {
     private void runCommandBlocklist(ICustomCommandSender senderPlayer, String[] astring) {
         ConfigurationSettings configSettings = MinerServer.instance.getConfigurationSettings();
 
-        ConfigurationSettings settings = VeinMiner.instance.configurationSettings;
+        ConfigurationSettings settings = MinerServer.instance.getConfigurationSettings();
         Set<String> toolsSet = settings.getToolTypeNames();
         String toolsSlashed = Joiner.on("/").join(toolsSet);
 
@@ -225,7 +224,7 @@ public class MinerCommand extends CommandBase {
     private void runCommandToollist(ICustomCommandSender senderPlayer, String[] astring) {
         ConfigurationSettings configSettings = MinerServer.instance.getConfigurationSettings();
 
-        ConfigurationSettings settings = VeinMiner.instance.configurationSettings;
+        ConfigurationSettings settings = MinerServer.instance.getConfigurationSettings();
         Set<String> toolsSet = settings.getToolTypeNames();
         String toolsSlashed = Joiner.on("/").join(toolsSet);
 
@@ -362,7 +361,7 @@ public class MinerCommand extends CommandBase {
                     return getListOfStringsMatchingLastWord(arguments, modes);
                 }
                 else if(arguments[0].equals(commands[COMMAND_BLOCKLIST]) || arguments[0].equals(commands[COMMAND_TOOLLIST])) {
-                    Set<String> toolsSet = VeinMiner.instance.configurationSettings.getToolTypeNames();
+                    Set<String> toolsSet = MinerServer.instance.getConfigurationSettings().getToolTypeNames();
                     String[] tools = new String[] {};
                     tools = toolsSet.toArray(tools);
                     Arrays.sort(tools);

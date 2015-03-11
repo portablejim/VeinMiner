@@ -21,7 +21,6 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import portablejim.veinminer.VeinMiner;
 import portablejim.veinminer.api.VeinminerHarvestFailedCheck;
 import portablejim.veinminer.api.VeinminerInitalToolCheck;
 import portablejim.veinminer.configuration.ConfigurationSettings;
@@ -51,7 +50,7 @@ public class InjectedCalls {
             }
         }
 
-        ConfigurationSettings configurationSettings = VeinMiner.instance.configurationSettings;
+        ConfigurationSettings configurationSettings = MinerServer.instance.getConfigurationSettings();
         int radiusLimit = configurationSettings.getRadiusLimit();
         int blockLimit = configurationSettings.getBlockLimit();
 
