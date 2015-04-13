@@ -15,10 +15,12 @@
  *    If not, see <http://www.gnu.org/licenses/>.
  */
 
-package portablejim.veinminer.network.packet;
+package portablejim.veinminer.network;
 
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.entity.player.EntityPlayerMP;
 import portablejim.veinminer.server.MinerServer;
 import portablejim.veinminer.util.PlayerStatus;
@@ -30,7 +32,7 @@ import java.util.UUID;
  * for the player that sent it.
  */
 
-public class PacketMinerActivate implements IPacket {
+public class PacketMinerActivate implements IMessage {
     public boolean keyActive;
 
     @SuppressWarnings("UnusedDeclaration")
@@ -41,32 +43,33 @@ public class PacketMinerActivate implements IPacket {
     }
 
     @Override
-    public void writeBytes(ByteBuf buffer) {
+    public void toBytes(ByteBuf buffer) {
         buffer.writeBoolean(keyActive);
     }
 
     @Override
-    public void readBytes(ByteBuf buffer) {
+    public void fromBytes(ByteBuf buffer) {
         keyActive = buffer.readBoolean();
     }
 
-    @Override
-    public void handleClientSide(EntityClientPlayerMP player) { }
+    public static class Handler implements IMessageHandler<PacketMinerActivate, IMessage> {
+        @Override
+        public IMessage onMessage(PacketMinerActivate packetMinerActivate, MessageContext context) {
+            EntityPlayerMP player = context.getServerHandler().playerEntity;
+            UUID playerName = player.getUniqueID();
 
-    @Override
-    public void handleServerSide(EntityPlayerMP player) {
-        UUID playerName = player.getUniqueID();
+            PlayerStatus status = MinerServer.instance.getPlayerStatus(playerName);
+            if (packetMinerActivate.keyActive) {
+                if (status == PlayerStatus.INACTIVE) {
+                    MinerServer.instance.setPlayerStatus(playerName, PlayerStatus.ACTIVE);
+                }
+            } else {
+                if (status == PlayerStatus.ACTIVE) {
+                    MinerServer.instance.setPlayerStatus(playerName, PlayerStatus.INACTIVE);
+                }
+            }
 
-        PlayerStatus status = MinerServer.instance.getPlayerStatus(playerName);
-        if(keyActive) {
-            if(status == PlayerStatus.INACTIVE) {
-                MinerServer.instance.setPlayerStatus(playerName, PlayerStatus.ACTIVE);
-            }
-        }
-        else {
-            if(status == PlayerStatus.ACTIVE) {
-                MinerServer.instance.setPlayerStatus(playerName, PlayerStatus.INACTIVE);
-            }
+            return null;
         }
     }
 }
