@@ -17,13 +17,14 @@
 
 package portablejim.veinminer.event.server;
 
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import portablejim.veinminer.VeinMiner;
 import portablejim.veinminer.lib.MinerLogger;
-import portablejim.veinminer.network.packet.PacketPingClient;
+import portablejim.veinminer.network.PacketPingClient;
 import portablejim.veinminer.server.MinerServer;
 
 /**
@@ -39,9 +40,15 @@ public class PlayerServerEvent {
     @SubscribeEvent
     public void connected(PlayerLoggedInEvent event) {
         //new JoinServerTicker();
-        PacketPingClient packet = new PacketPingClient();
-        VeinMiner.instance.networkManager.sendToPlayer(event.player, packet);
-        MinerLogger.debug("Sent ping packet to client");
+        if(event.player instanceof EntityPlayerMP) {
+            EntityPlayerMP player = (EntityPlayerMP) event.player;
+            PacketPingClient packet = new PacketPingClient();
+            VeinMiner.instance.networkWrapper.sendTo(packet, player);
+            MinerLogger.debug("Sent ping packet to client");
+        }
+        else if(event.player != null){
+            MinerLogger.debug("Somehow %s is not an EntityPlayerMP", event.player.toString());
+        }
     }
 
     @SuppressWarnings("UnusedDeclaration")

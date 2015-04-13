@@ -15,11 +15,12 @@
  *    If not, see <http://www.gnu.org/licenses/>.
  */
 
-package portablejim.veinminer.network.packet;
+package portablejim.veinminer.network;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import portablejim.veinminer.VeinMiner;
 
 /**
@@ -29,19 +30,20 @@ import portablejim.veinminer.VeinMiner;
  * @see PacketClientPresent
  */
 
-public class PacketPingClient implements IPacket {
-    @Override
-    public void writeBytes(ByteBuf buffer) { }
+public class PacketPingClient implements IMessage {
+
+    public PacketPingClient() {}
 
     @Override
-    public void readBytes(ByteBuf buffer) { }
+    public void fromBytes(ByteBuf buf) { }
 
     @Override
-    public void handleClientSide(EntityPlayerSP player) {
-        PacketClientPresent packet = new PacketClientPresent(VeinMiner.instance.configurationSettings.getPreferredMode());
-        VeinMiner.instance.networkManager.sendToServer(packet);
+    public void toBytes(ByteBuf buf) { }
+
+    public static class Handler implements IMessageHandler<PacketPingClient, PacketClientPresent> {
+        @Override
+        public PacketClientPresent onMessage(PacketPingClient packetPingClient, MessageContext context) {
+            return new PacketClientPresent(VeinMiner.instance.configurationSettings.getPreferredMode());
+        }
     }
-
-    @Override
-    public void handleServerSide(EntityPlayerMP player) { }
 }

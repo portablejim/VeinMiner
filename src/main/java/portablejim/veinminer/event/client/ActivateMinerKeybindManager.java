@@ -24,7 +24,7 @@ import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraft.client.settings.KeyBinding;
 import org.lwjgl.input.Keyboard;
 import portablejim.veinminer.VeinMiner;
-import portablejim.veinminer.network.packet.PacketMinerActivate;
+import portablejim.veinminer.network.PacketMinerActivate;
 import portablejim.veinminer.util.PreferredMode;
 
 /**
@@ -61,7 +61,7 @@ public class ActivateMinerKeybindManager {
         }
         if (sendPacket) {
             PacketMinerActivate packet = new PacketMinerActivate(statusEnabled);
-            VeinMiner.instance.networkManager.sendToServer(packet);
+            VeinMiner.instance.networkWrapper.sendToServer(packet);
         }
     }
 }

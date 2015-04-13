@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.27.0
+------
+Changes:
+* Re-implement networking code. Should cause less problems.
+
 0.26.1
 ------
 Fixes:
