@@ -43,7 +43,7 @@ public class PlayerServerEvent {
         if(event.player instanceof EntityPlayerMP) {
             EntityPlayerMP player = (EntityPlayerMP) event.player;
             PacketPingClient packet = new PacketPingClient();
-            VeinMiner.instance.networkManager.sendToPlayer(packet, player);
+            VeinMiner.instance.networkWrapper.sendTo(packet, player);
             MinerLogger.debug("Sent ping packet to client");
         }
         else if(event.player != null){
