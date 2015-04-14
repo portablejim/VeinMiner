@@ -23,6 +23,7 @@ import net.minecraft.util.ChatComponentTranslation;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import portablejim.veinminer.lib.MinerLogger;
 import portablejim.veinminer.server.MinerServer;
 import portablejim.veinminer.util.PlayerStatus;
 import portablejim.veinminer.util.PreferredMode;
@@ -72,6 +73,7 @@ public class PacketClientPresent implements IMessage {
         @Override
         public IMessage onMessage(PacketClientPresent packetClientPresent, MessageContext context) {
             EntityPlayerMP player = context.getServerHandler().playerEntity;
+            MinerLogger.debug("Received a PacketClientPresent");
             UUID playerName = player.getUniqueID();
 
             MinerServer.instance.addClientPlayer(playerName);
