@@ -30,7 +30,6 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.network.NetworkCheckHandler;
-import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
 import net.minecraft.command.ServerCommandManager;
@@ -46,9 +45,7 @@ import portablejim.veinminer.configuration.ConfigurationValues;
 import portablejim.veinminer.configuration.ToolType;
 import portablejim.veinminer.lib.MinerLogger;
 import portablejim.veinminer.lib.ModInfo;
-import portablejim.veinminer.network.PacketClientPresent;
-import portablejim.veinminer.network.PacketMinerActivate;
-import portablejim.veinminer.network.PacketPingClient;
+import portablejim.veinminer.network.NetworkManager;
 import portablejim.veinminer.proxy.CommonProxy;
 import portablejim.veinminer.server.MinerCommand;
 import portablejim.veinminer.server.MinerServer;
@@ -74,7 +71,7 @@ public class VeinMiner {
     @SidedProxy(clientSide = ModInfo.PROXY_CLIENT_CLASS, serverSide = ModInfo.PROXY_SERVER_CLASS)
     public static CommonProxy proxy;
 
-    public SimpleNetworkWrapper networkWrapper;
+    public NetworkManager networkManager;
 
     ConfigurationValues configurationValues;
     public ConfigurationSettings configurationSettings;
@@ -136,7 +133,8 @@ public class VeinMiner {
     public void preInit(FMLPreInitializationEvent event) {
         logger = event.getModLog();
 
-        setupNetworking();
+        networkManager = new NetworkManager();
+        networkManager.setupNetworking();
 
         File modDir = new File(event.getModConfigurationDirectory(), "veinminer");
         if(!modDir.exists()) {
@@ -149,13 +147,6 @@ public class VeinMiner {
         configurationSettings = new ConfigurationSettings(configurationValues);
         proxy.registerClientEvents();
         proxy.registerCommonEvents();
-    }
-
-    public void setupNetworking() {
-        networkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel(ModInfo.CHANNEL);
-        networkWrapper.registerMessage(PacketPingClient.Handler.class, PacketPingClient.class, 0, Side.CLIENT);
-        networkWrapper.registerMessage(PacketClientPresent.Handler.class, PacketClientPresent.class, 1, Side.SERVER);
-        networkWrapper.registerMessage(PacketMinerActivate.Handler.class, PacketMinerActivate.class, 2, Side.SERVER);
     }
 
     @SuppressWarnings("UnusedDeclaration")
