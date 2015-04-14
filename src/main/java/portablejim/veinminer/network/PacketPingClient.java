@@ -40,10 +40,11 @@ public class PacketPingClient implements IMessage {
     @Override
     public void toBytes(ByteBuf buf) { }
 
-    public static class Handler implements IMessageHandler<PacketPingClient, PacketClientPresent> {
+    public static class Handler extends GenericHandler<PacketPingClient> {
         @Override
-        public PacketClientPresent onMessage(PacketPingClient packetPingClient, MessageContext context) {
-            return new PacketClientPresent(VeinMiner.instance.configurationSettings.getPreferredMode());
+        public void processMessage(PacketPingClient message, MessageContext context) {
+            PacketClientPresent p = new PacketClientPresent(VeinMiner.instance.configurationSettings.getPreferredMode());
+            VeinMiner.instance.networkWrapper.sendToServer(p);
         }
     }
 }
