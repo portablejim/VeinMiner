@@ -23,6 +23,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -34,6 +35,8 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
 import net.minecraftforge.fml.common.network.NetworkCheckHandler;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.logging.log4j.Logger;
@@ -42,7 +45,9 @@ import portablejim.veinminer.configuration.ConfigurationValues;
 import portablejim.veinminer.configuration.ToolType;
 import portablejim.veinminer.lib.MinerLogger;
 import portablejim.veinminer.lib.ModInfo;
-import portablejim.veinminer.network.NetworkManager;
+import portablejim.veinminer.network.PacketClientPresent;
+import portablejim.veinminer.network.PacketMinerActivate;
+import portablejim.veinminer.network.PacketPingClient;
 import portablejim.veinminer.proxy.CommonProxy;
 import portablejim.veinminer.server.MinerCommand;
 import portablejim.veinminer.server.MinerServer;
@@ -68,7 +73,7 @@ public class VeinMiner {
     @SidedProxy(clientSide = ModInfo.PROXY_CLIENT_CLASS, serverSide = ModInfo.PROXY_SERVER_CLASS)
     public static CommonProxy proxy;
 
-    public NetworkManager networkManager;
+    public SimpleNetworkWrapper networkWrapper;
 
     ConfigurationValues configurationValues;
     public ConfigurationSettings configurationSettings;
@@ -77,6 +82,7 @@ public class VeinMiner {
 
     @NetworkCheckHandler
     public boolean checkClientModVersion(Map<String, String> mods, Side side) {
+        FMLLog.fine("Check Version");
         /*
          * Accept vanilla clients and servers.
          * Vanilla server: No check packet will come.
@@ -129,8 +135,7 @@ public class VeinMiner {
     public void preInit(FMLPreInitializationEvent event) {
         logger = event.getModLog();
 
-        networkManager = new NetworkManager();
-        networkManager.setupNetworking();
+        setupNetworking();
 
         File modDir = new File(event.getModConfigurationDirectory(), "veinminer");
         if(!modDir.exists()) {
@@ -143,6 +148,13 @@ public class VeinMiner {
         configurationSettings = new ConfigurationSettings(configurationValues);
         proxy.registerClientEvents();
         proxy.registerCommonEvents();
+    }
+
+    public void setupNetworking() {
+        networkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel(ModInfo.CHANNEL);
+        networkWrapper.registerMessage(PacketPingClient.Handler.class, PacketPingClient.class, 0, Side.CLIENT);
+        networkWrapper.registerMessage(PacketClientPresent.Handler.class, PacketClientPresent.class, 1, Side.SERVER);
+        networkWrapper.registerMessage(PacketMinerActivate.Handler.class, PacketMinerActivate.class, 2, Side.SERVER);
     }
 
     @SuppressWarnings("UnusedDeclaration")

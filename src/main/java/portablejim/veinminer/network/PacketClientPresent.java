@@ -69,9 +69,9 @@ public class PacketClientPresent implements IMessage {
         mode = buffer.readShort();
     }
 
-    public static class Handler implements IMessageHandler<PacketClientPresent, IMessage> {
+    public static class Handler extends GenericHandler<PacketClientPresent> {
         @Override
-        public IMessage onMessage(PacketClientPresent packetClientPresent, MessageContext context) {
+        public void processMessage(PacketClientPresent packetClientPresent, MessageContext context) {
             EntityPlayerMP player = context.getServerHandler().playerEntity;
             MinerLogger.debug("Received a PacketClientPresent");
             UUID playerName = player.getUniqueID();
@@ -91,8 +91,6 @@ public class PacketClientPresent implements IMessage {
                 default:
                     MinerServer.instance.setPlayerStatus(playerName, PlayerStatus.INACTIVE);
             }
-
-            return null;
         }
     }
 }

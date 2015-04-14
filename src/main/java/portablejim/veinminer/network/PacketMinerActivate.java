@@ -52,9 +52,9 @@ public class PacketMinerActivate implements IMessage {
         keyActive = buffer.readBoolean();
     }
 
-    public static class Handler implements IMessageHandler<PacketMinerActivate, IMessage> {
+    public static class Handler extends GenericHandler<PacketMinerActivate> {
         @Override
-        public IMessage onMessage(PacketMinerActivate packetMinerActivate, MessageContext context) {
+        public void processMessage(PacketMinerActivate packetMinerActivate, MessageContext context) {
             EntityPlayerMP player = context.getServerHandler().playerEntity;
             UUID playerName = player.getUniqueID();
 
@@ -68,8 +68,6 @@ public class PacketMinerActivate implements IMessage {
                     MinerServer.instance.setPlayerStatus(playerName, PlayerStatus.INACTIVE);
                 }
             }
-
-            return null;
         }
     }
 }

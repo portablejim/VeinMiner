@@ -22,7 +22,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import portablejim.veinminer.VeinMiner;
-import portablejim.veinminer.lib.MinerLogger;
 
 /**
  * Packet the server sends the client on logging in.
@@ -41,11 +40,11 @@ public class PacketPingClient implements IMessage {
     @Override
     public void toBytes(ByteBuf buf) { }
 
-    public static class Handler implements IMessageHandler<PacketPingClient, PacketClientPresent> {
+    public static class Handler extends GenericHandler<PacketPingClient> {
         @Override
-        public PacketClientPresent onMessage(PacketPingClient packetPingClient, MessageContext context) {
-            MinerLogger.debug("Sending PacketClientPresent to server");
-            return new PacketClientPresent(VeinMiner.instance.configurationSettings.getPreferredMode());
+        public void processMessage(PacketPingClient message, MessageContext context) {
+            PacketClientPresent p = new PacketClientPresent(VeinMiner.instance.configurationSettings.getPreferredMode());
+            VeinMiner.instance.networkWrapper.sendToServer(p);
         }
     }
 }
