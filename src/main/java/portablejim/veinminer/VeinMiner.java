@@ -187,7 +187,9 @@ public class VeinMiner {
                             for(ItemStack item : itemStacks) {
                                 if(item.getItem() instanceof ItemBlock) {
                                     String blockName = Item.itemRegistry.getNameForObject(item.getItem());
-                                    configurationSettings.addBlockToWhitelist(toolType, new BlockID(blockName, item.getItemDamage()));
+                                    if(blockName != null) {
+                                        configurationSettings.addBlockToWhitelist(toolType, new BlockID(blockName, item.getItemDamage()));
+                                    }
                                     try {
                                         // Some mods raise an exception when calling getDisplayName on blocks.
                                         MinerLogger.debug("Adding %s/%d (%s) to block whitelist for %s (%s:%s)", blockName, item.getItemDamage(), item.getDisplayName(), toolType, autodetectValue, oreDictEntry);
