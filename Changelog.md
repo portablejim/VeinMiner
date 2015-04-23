@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.27.1
+------
+Fixes:
+* More null checking
+
 0.27.0
 ------
 Changes:
