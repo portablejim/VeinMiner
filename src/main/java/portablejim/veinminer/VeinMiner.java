@@ -29,21 +29,28 @@ import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.NetworkCheckHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
+import net.minecraft.block.Block;
 import net.minecraft.command.ServerCommandManager;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.logging.log4j.Logger;
 import portablejim.veinminer.configuration.ConfigurationSettings;
 import portablejim.veinminer.configuration.ConfigurationValues;
 import portablejim.veinminer.configuration.ToolType;
+import portablejim.veinminer.core.InjectedCalls;
 import portablejim.veinminer.lib.MinerLogger;
 import portablejim.veinminer.lib.ModInfo;
 import portablejim.veinminer.network.PacketClientPresent;
@@ -53,6 +60,7 @@ import portablejim.veinminer.proxy.CommonProxy;
 import portablejim.veinminer.server.MinerCommand;
 import portablejim.veinminer.server.MinerServer;
 import portablejim.veinminer.util.BlockID;
+import portablejim.veinminer.util.Point;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -149,6 +157,7 @@ public class VeinMiner {
         configurationSettings = new ConfigurationSettings(configurationValues);
         proxy.registerClientEvents();
         proxy.registerCommonEvents();
+        MinecraftForge.EVENT_BUS.register(this);
     }
 
     public void setupNetworking() {
@@ -264,6 +273,28 @@ public class VeinMiner {
 
                 configurationSettings.addCongruentBlocks(block1, block2);
             }
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @SubscribeEvent
+    public void blockBreakEventFalse(BlockEvent.BreakEvent event) {
+        Point eventPoint = new Point(event.x, event.y, event.z);
+        if(!event.world.isRemote && !event.isCanceled() && event.getPlayer() instanceof EntityPlayerMP && !MinerServer.instance.pointIsBlacklisted(eventPoint)) {
+            logger.info(String.format("Block Break (False) at %s | %s | %s || Cancel: %s / %s", event.x, event.y, event.z, !event.isCancelable(), event.isCanceled()));
+            InjectedCalls.blockMined(event.world, (EntityPlayerMP) event.getPlayer(), event.x, event.y, event.z, false, new BlockID(Block.blockRegistry.getNameForObject(event.block), event.blockMetadata));
+            MinerServer.instance.removeFromBlacklist(eventPoint);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @SubscribeEvent
+    public void blockBreakEventTrue(BlockEvent.HarvestDropsEvent event) {
+        Point eventPoint = new Point(event.x, event.y, event.z);
+        if(!event.world.isRemote && !event.isCanceled() && event.harvester instanceof EntityPlayerMP && !MinerServer.instance.pointIsBlacklisted(eventPoint)) {
+            logger.info(String.format("Block Break (True) at %s | %s | %s || Cancel: %s / %s", event.x, event.y, event.z, !event.isCancelable(), event.isCanceled()));
+            InjectedCalls.blockMined(event.world, (EntityPlayerMP) event.harvester, event.x, event.y, event.z, true, new BlockID(Block.blockRegistry.getNameForObject(event.block), event.blockMetadata));
+            MinerServer.instance.removeFromBlacklist(eventPoint);
         }
     }
 }

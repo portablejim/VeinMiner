@@ -60,8 +60,8 @@ processResources {
 }
 
 ext.sharedmanifest = manifest {
-        attributes 'FMLCorePlugin': 'portablejim.veinminer.asm.VeinMinerCorePlugin'
-        attributes 'FMLCorePluginContainsFMLMod': 'true'
+        //attributes 'FMLCorePlugin': 'portablejim.veinminer.asm.VeinMinerCorePlugin'
+        //attributes 'FMLCorePluginContainsFMLMod': 'true'
 }
 
 jar {
