@@ -33,8 +33,14 @@ import portablejim.veinminer.server.MinerServer;
  */
 
 public class EntityDropHook {
+    private MinerServer minerServer = null;
+
     public EntityDropHook() {
         MinecraftForge.EVENT_BUS.register(this);
+    }
+
+    public void setServer(MinerServer server) {
+        minerServer = server;
     }
 
     @SuppressWarnings("UnusedDeclaration")
@@ -46,7 +52,7 @@ public class EntityDropHook {
             return;
         }
 
-        if(MinerServer.instance == null) {
+        if(minerServer == null) {
             return;
         }
 
@@ -95,7 +101,7 @@ public class EntityDropHook {
 
         //new MinerServer();
         if((isBlock || isItem) && veinminerMethod) {
-            MinerServer.instance.addEntity(entity);
+            minerServer.addEntity(entity);
             event.setCanceled(true);
         }
     }

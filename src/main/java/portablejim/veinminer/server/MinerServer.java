@@ -38,7 +38,6 @@ import java.util.UUID;
 
 public class MinerServer {
 
-    public static MinerServer instance;
     private HashSet<MinerInstance> minerInstances;
     private HashMap<Point, MinerInstance> pointMinerInstances;
     private HashSet<UUID> clientPlayers;
@@ -46,7 +45,6 @@ public class MinerServer {
     private ConfigurationSettings settings;
 
     public MinerServer(ConfigurationValues configValues) {
-        instance = this;
         minerInstances = new HashSet<MinerInstance>();
         pointMinerInstances = new HashMap<Point, MinerInstance>();
         clientPlayers = new HashSet<UUID>();
