@@ -264,7 +264,6 @@ public class MinerInstance {
                     }
 
                     if(configSettings.getEnableAllBlocks() || toolAllowedForBlock(usedItem, newBlock)) {
-                        FMLLog.info(String.format("To add block: %s | %s | %s", x + dx, y+dy, z+dz));
                         startBlacklist.add(newBlockPos);
                         mineBlock(x + dx, y + dy, z + dz);
                         //numBlocksMined++;
