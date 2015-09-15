@@ -82,11 +82,14 @@ public class GuiElementSlotToolTypeList extends GuiScrollingList {
 
         boolean renderItem = false;
 
-        Item tryItem = GameRegistry.findItem(iconParts[0], iconParts[1]);
-        if(tryItem != null) {
-            ItemStack tryItemStack = new ItemStack(tryItem);
-            tryItemStack.setItemDamage(itemParts.metadata == -1 ? 0 : itemParts.metadata);
-            renderItem = true;
+        Item tryItem = new Item();
+        if(iconParts.length == 2) {
+            tryItem = GameRegistry.findItem(iconParts[0], iconParts[1]);
+            if (tryItem != null) {
+                ItemStack tryItemStack = new ItemStack(tryItem);
+                tryItemStack.setItemDamage(itemParts.metadata == -1 ? 0 : itemParts.metadata);
+                renderItem = true;
+            }
         }
 
         if(renderItem) {
