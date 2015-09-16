@@ -198,7 +198,7 @@ public class MinerCommand extends CommandBase {
         }
     }
 
-    private void runCommandBlocklist(ICustomCommandSender senderPlayer, String[] astring) {
+    private void runCommandBlocklist(ICustomCommandSender senderPlayer, String[] astring) throws WrongUsageException {
         ConfigurationSettings configSettings = minerServer.getConfigurationSettings();
 
         ConfigurationSettings settings = minerServer.getConfigurationSettings();
@@ -251,7 +251,7 @@ public class MinerCommand extends CommandBase {
         }
     }
 
-    private void runCommandToollist(ICustomCommandSender senderPlayer, String[] astring) {
+    private void runCommandToollist(ICustomCommandSender senderPlayer, String[] astring) throws WrongUsageException {
         ConfigurationSettings configSettings = minerServer.getConfigurationSettings();
 
         ConfigurationSettings settings = minerServer.getConfigurationSettings();
