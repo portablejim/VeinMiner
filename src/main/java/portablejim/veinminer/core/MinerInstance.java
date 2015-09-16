@@ -60,6 +60,7 @@ import static net.minecraftforge.event.entity.player.PlayerEvent.HarvestCheck;
 
 public class MinerInstance {
     public MinerServer serverInstance;
+    private HashSet<Point> startBlacklist;
     private ConcurrentLinkedQueue<Point> destroyQueue;
     private HashSet<Point> awaitingEntityDrop;
     private LinkedHashMap<ItemStackID, Integer> drops;
@@ -76,6 +77,7 @@ public class MinerInstance {
     private static final int MIN_HUNGER = 1;
 
     public MinerInstance(World world, EntityPlayerMP player, int x, int y, int z, BlockID blockID, MinerServer server, int radiusLimit, int blockLimit) {
+        startBlacklist = new HashSet<Point>();
         destroyQueue = new ConcurrentLinkedQueue<Point>();
         awaitingEntityDrop = new HashSet<Point>();
         drops = new LinkedHashMap<ItemStackID, Integer>();
@@ -93,6 +95,10 @@ public class MinerInstance {
         serverInstance.addInstance(this);
 
         FMLCommonHandler.instance().bus().register(this);
+    }
+
+    public Point getInitalBlock() {
+        return initalBlock;
     }
 
     public void cleanUp() {
@@ -212,6 +218,8 @@ public class MinerInstance {
         if(finished || !shouldContinue()) {
             return;
         }
+        Point targetPoint = new Point(x, y, z);
+        startBlacklist.add(targetPoint);
 
         player.addExhaustion(0.03F);
 
@@ -255,6 +263,7 @@ public class MinerInstance {
                     }
 
                     if(configSettings.getEnableAllBlocks() || toolAllowedForBlock(usedItem, newBlock)) {
+                        startBlacklist.add(newBlockPos);
                         mineBlock(x + dx, y + dy, z + dz);
                         //numBlocksMined++;
                     }
@@ -324,6 +333,16 @@ public class MinerInstance {
         }
         else {
             drops.put(itemInfo, item.stackSize);
+        }
+    }
+
+    public boolean pointIsBlacklisted(Point point) {
+        return startBlacklist.contains(point);
+    }
+
+    public void removeFromBlacklist(Point point) {
+        if(startBlacklist.contains(point)) {
+            startBlacklist.remove(point);
         }
     }
 }

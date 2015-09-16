@@ -22,6 +22,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import portablejim.veinminer.VeinMiner;
 import portablejim.veinminer.server.MinerServer;
 import portablejim.veinminer.util.PlayerStatus;
 
@@ -58,14 +59,14 @@ public class PacketMinerActivate implements IMessage {
             EntityPlayerMP player = context.getServerHandler().playerEntity;
             UUID playerName = player.getUniqueID();
 
-            PlayerStatus status = MinerServer.instance.getPlayerStatus(playerName);
+            PlayerStatus status = VeinMiner.instance.minerServer.getPlayerStatus(playerName);
             if (packetMinerActivate.keyActive) {
                 if (status == PlayerStatus.INACTIVE) {
-                    MinerServer.instance.setPlayerStatus(playerName, PlayerStatus.ACTIVE);
+                    VeinMiner.instance.minerServer.setPlayerStatus(playerName, PlayerStatus.ACTIVE);
                 }
             } else {
                 if (status == PlayerStatus.ACTIVE) {
-                    MinerServer.instance.setPlayerStatus(playerName, PlayerStatus.INACTIVE);
+                    VeinMiner.instance.minerServer.setPlayerStatus(playerName, PlayerStatus.INACTIVE);
                 }
             }
         }

@@ -28,9 +28,11 @@ import net.minecraftforge.fml.common.registry.LanguageRegistry;
  * Allow MinerCommand to work with Players
  */
 public class CommandSenderPlayer implements ICustomCommandSender{
+    private MinerServer minerServer = null;
     private EntityPlayerMP player;
 
-    public CommandSenderPlayer(EntityPlayerMP player) {
+    public CommandSenderPlayer(MinerServer minerServerInstace, EntityPlayerMP player) {
+        minerServer = minerServerInstace;
         this.player = player;
     }
 
@@ -41,7 +43,7 @@ public class CommandSenderPlayer implements ICustomCommandSender{
     @Override
     public void sendProperChat(String incomingMessage, Object... params) {
         IChatComponent message;
-        if(MinerServer.instance.playerHasClient(player.getPersistentID())) {
+        if(minerServer.playerHasClient(player.getPersistentID())) {
             message = new ChatComponentTranslation(incomingMessage, params);
         }
         else {
@@ -58,7 +60,7 @@ public class CommandSenderPlayer implements ICustomCommandSender{
 
     @Override
     public String localise(String input) {
-        if(!MinerServer.instance.playerHasClient(player.getPersistentID())) {
+        if(!minerServer.playerHasClient(player.getPersistentID())) {
             return LanguageRegistry.instance().getStringLocalization(input);
         }
         return input;

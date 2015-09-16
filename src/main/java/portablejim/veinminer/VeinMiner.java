@@ -17,7 +17,9 @@
 
 package portablejim.veinminer;
 
+import net.minecraft.block.Block;
 import net.minecraft.command.ServerCommandManager;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -34,15 +36,19 @@ import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkCheckHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.logging.log4j.Logger;
 import portablejim.veinminer.configuration.ConfigurationSettings;
 import portablejim.veinminer.configuration.ConfigurationValues;
 import portablejim.veinminer.configuration.ToolType;
+import portablejim.veinminer.core.InjectedCalls;
 import portablejim.veinminer.lib.MinerLogger;
 import portablejim.veinminer.lib.ModInfo;
 import portablejim.veinminer.network.PacketClientPresent;
@@ -52,6 +58,7 @@ import portablejim.veinminer.proxy.CommonProxy;
 import portablejim.veinminer.server.MinerCommand;
 import portablejim.veinminer.server.MinerServer;
 import portablejim.veinminer.util.BlockID;
+import portablejim.veinminer.util.Point;
 
 import java.io.File;
 import java.util.List;
@@ -77,6 +84,8 @@ public class VeinMiner {
 
     ConfigurationValues configurationValues;
     public ConfigurationSettings configurationSettings;
+
+    public MinerServer minerServer = null;
 
     public Logger logger;
 
@@ -148,6 +157,7 @@ public class VeinMiner {
         configurationSettings = new ConfigurationSettings(configurationValues);
         proxy.registerClientEvents();
         proxy.registerCommonEvents();
+        MinecraftForge.EVENT_BUS.register(this);
     }
 
     public void setupNetworking() {
@@ -186,7 +196,9 @@ public class VeinMiner {
                             for(ItemStack item : itemStacks) {
                                 if(item.getItem() instanceof ItemBlock) {
                                     String blockName = Item.itemRegistry.getNameForObject(item.getItem()).toString();
-                                    configurationSettings.addBlockToWhitelist(toolType, new BlockID(blockName, item.getItemDamage()));
+                                    if(blockName != null) {
+                                        configurationSettings.addBlockToWhitelist(toolType, new BlockID(blockName, item.getItemDamage()));
+                                    }
                                     try {
                                         // Some mods raise an exception when calling getDisplayName on blocks.
                                         MinerLogger.debug("Adding %s/%d (%s) to block whitelist for %s (%s:%s)", blockName, item.getItemDamage(), item.getDisplayName(), toolType, autodetectValue, oreDictEntry);
@@ -210,10 +222,12 @@ public class VeinMiner {
     @SuppressWarnings("UnusedDeclaration")
     @EventHandler
     public void serverStarted(FMLServerStartedEvent event) {
-        new MinerServer(configurationValues);
+        minerServer = new MinerServer(configurationValues);
+
+        proxy.setMinerServer(minerServer);
 
         ServerCommandManager serverCommandManger = (ServerCommandManager) MinecraftServer.getServer().getCommandManager();
-        serverCommandManger.registerCommand(new MinerCommand());
+        serverCommandManger.registerCommand(new MinerCommand(minerServer));
     }
 
     @SuppressWarnings("UnusedDeclaration")
@@ -261,6 +275,28 @@ public class VeinMiner {
 
                 configurationSettings.addCongruentBlocks(block1, block2);
             }
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @SubscribeEvent
+    public void blockBreakEventFalse(BlockEvent.BreakEvent event) {
+        Point eventPoint = new Point(event.pos.getX(), event.pos.getY(), event.pos.getZ());
+        if(!event.world.isRemote && !event.isCanceled() && event.getPlayer() instanceof EntityPlayerMP && !minerServer.pointIsBlacklisted(eventPoint)) {
+            logger.info(String.format("Block Break (False) at %s | %s | %s || Cancel: %s / %s", event.pos, !event.isCancelable(), event.isCanceled()));
+            InjectedCalls.blockMined(event.world, (EntityPlayerMP) event.getPlayer(), event.pos, false, new BlockID(event.state));
+            minerServer.removeFromBlacklist(eventPoint);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @SubscribeEvent
+    public void blockBreakEventTrue(BlockEvent.HarvestDropsEvent event) {
+        Point eventPoint = new Point(event.pos.getX(), event.pos.getY(), event.pos.getZ());
+        if(!event.world.isRemote && !event.isCanceled() && event.harvester instanceof EntityPlayerMP && !minerServer.pointIsBlacklisted(eventPoint)) {
+            logger.info(String.format("Block Break (True) at %s | %s | %s || Cancel: %s / %s", event.pos, !event.isCancelable(), event.isCanceled()));
+            InjectedCalls.blockMined(event.world, (EntityPlayerMP) event.harvester, event.pos, true, new BlockID(event.state));
+            minerServer.removeFromBlacklist(eventPoint);
         }
     }
 }

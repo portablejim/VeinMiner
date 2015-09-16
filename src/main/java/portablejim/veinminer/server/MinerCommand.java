@@ -45,6 +45,8 @@ import java.util.UUID;
  */
 
 public class MinerCommand extends CommandBase {
+    private MinerServer minerServer = null;
+
     public static final int COMMAND_MODE = 0;
     public static final int COMMAND_BLOCKLIST = 1;
     public static final int COMMAND_TOOLLIST = 2;
@@ -55,6 +57,10 @@ public class MinerCommand extends CommandBase {
     public static final int COMMAND_HELP = 7;
     private static final String[] commands = new String[]{"mode", "blocklist", "toollist", "blocklimit", "radius", "per_tick", "saveconfig", "help"};
     private static final String[] modes = new String[] {"auto", "sneak", "no_sneak"};
+
+    public MinerCommand(MinerServer minerServerInstance) {
+        minerServer = minerServerInstance;
+    }
 
     @Override
     public String getCommandName() {
@@ -70,7 +76,7 @@ public class MinerCommand extends CommandBase {
     public void processCommand(ICommandSender icommandsender, String[] astring) throws CommandException {
         ICustomCommandSender senderPlayer;
         if(icommandsender instanceof EntityPlayerMP) {
-            senderPlayer = new CommandSenderPlayer((EntityPlayerMP)icommandsender);
+            senderPlayer = new CommandSenderPlayer(minerServer, (EntityPlayerMP)icommandsender);
         }
         else if(icommandsender instanceof DedicatedServer) {
             senderPlayer = new CommandSenderServer((DedicatedServer)icommandsender);
@@ -124,7 +130,7 @@ public class MinerCommand extends CommandBase {
 
     private void sendProperChatToPlayer(ICommandSender player, String incomingMessage, Object... params) {
         IChatComponent message;
-        if(MinerServer.instance.playerHasClient(player.getCommandSenderEntity().getPersistentID())) {
+        if(minerServer.playerHasClient(player.getCommandSenderEntity().getPersistentID())) {
             message = new ChatComponentTranslation(incomingMessage, params);
         }
         else {
@@ -149,7 +155,7 @@ public class MinerCommand extends CommandBase {
             EntityPlayerMP player = (EntityPlayerMP) sender;
             MinecraftServer server = player.mcServer;
             if (server.isDedicatedServer() && !server.getConfigurationManager().canSendCommands(player.getGameProfile())) {
-                boolean playerNoClient = !MinerServer.instance.playerHasClient(player.getUniqueID());
+                boolean playerNoClient = !minerServer.playerHasClient(player.getUniqueID());
                 String message = "command.veinminer.permissionDenied";
                 if (playerNoClient) {
                     message = LanguageRegistry.instance().getStringLocalization(message);
@@ -168,7 +174,6 @@ public class MinerCommand extends CommandBase {
     private void runCommandMode(ICustomCommandSender sender, String[] astring) throws CommandException {
         if(sender instanceof CommandSenderPlayer) {
             CommandSenderPlayer senderPlayer = ((CommandSenderPlayer) sender);
-            MinerServer minerServer = MinerServer.instance;
             UUID player = senderPlayer.getPlayer().getPersistentID();
 
             if(astring.length == 1) {
@@ -193,10 +198,10 @@ public class MinerCommand extends CommandBase {
         }
     }
 
-    private void runCommandBlocklist(ICustomCommandSender senderPlayer, String[] astring) throws WrongUsageException {
-        ConfigurationSettings configSettings = MinerServer.instance.getConfigurationSettings();
+    private void runCommandBlocklist(ICustomCommandSender senderPlayer, String[] astring) {
+        ConfigurationSettings configSettings = minerServer.getConfigurationSettings();
 
-        ConfigurationSettings settings = MinerServer.instance.getConfigurationSettings();
+        ConfigurationSettings settings = minerServer.getConfigurationSettings();
         Set<String> toolsSet = settings.getToolTypeNames();
         String toolsSlashed = Joiner.on("/").join(toolsSet);
 
@@ -246,10 +251,10 @@ public class MinerCommand extends CommandBase {
         }
     }
 
-    private void runCommandToollist(ICustomCommandSender senderPlayer, String[] astring) throws WrongUsageException {
-        ConfigurationSettings configSettings = MinerServer.instance.getConfigurationSettings();
+    private void runCommandToollist(ICustomCommandSender senderPlayer, String[] astring) {
+        ConfigurationSettings configSettings = minerServer.getConfigurationSettings();
 
-        ConfigurationSettings settings = MinerServer.instance.getConfigurationSettings();
+        ConfigurationSettings settings = minerServer.getConfigurationSettings();
         Set<String> toolsSet = settings.getToolTypeNames();
         String toolsSlashed = Joiner.on("/").join(toolsSet);
 
@@ -305,9 +310,9 @@ public class MinerCommand extends CommandBase {
             showUsageError("command.veinminer.blocklimit");
         }
 
-        MinerServer.instance.getConfigurationSettings().setBlockLimit(newBlockPerTick);
+        minerServer.getConfigurationSettings().setBlockLimit(newBlockPerTick);
 
-        int actualBlockPerTick = MinerServer.instance.getConfigurationSettings().getBlockLimit();
+        int actualBlockPerTick = minerServer.getConfigurationSettings().getBlockLimit();
         senderPlayer.sendProperChat("command.veinminer.blocklimit.set", actualBlockPerTick);
     }
 
@@ -324,9 +329,9 @@ public class MinerCommand extends CommandBase {
             showUsageError("command.veinminer.range");
         }
 
-        MinerServer.instance.getConfigurationSettings().setRadiusLimit(newRange);
+        minerServer.getConfigurationSettings().setRadiusLimit(newRange);
 
-        int actualRange = MinerServer.instance.getConfigurationSettings().getRadiusLimit();
+        int actualRange = minerServer.getConfigurationSettings().getRadiusLimit();
         senderPlayer.sendProperChat("command.veinminer.range.set", actualRange);
     }
 
@@ -343,14 +348,14 @@ public class MinerCommand extends CommandBase {
             showUsageError("command.veinminer.pertick");
         }
 
-        MinerServer.instance.getConfigurationSettings().setBlocksPerTick(newRate);
+        minerServer.getConfigurationSettings().setBlocksPerTick(newRate);
 
-        int actualRate = MinerServer.instance.getConfigurationSettings().getRadiusLimit();
+        int actualRate = minerServer.getConfigurationSettings().getRadiusLimit();
         senderPlayer.sendProperChat("command.veinminer.pertick.set", actualRate);
     }
 
     private void runCommandSave(ICustomCommandSender senderPlayer) {
-        MinerServer.instance.getConfigurationSettings().saveConfigs();
+        minerServer.getConfigurationSettings().saveConfigs();
         senderPlayer.sendProperChat("command.veinminer.saveconfig");
     }
 
@@ -387,7 +392,7 @@ public class MinerCommand extends CommandBase {
                     return getListOfStringsMatchingLastWord(arguments, modes);
                 }
                 else if(arguments[0].equals(commands[COMMAND_BLOCKLIST]) || arguments[0].equals(commands[COMMAND_TOOLLIST])) {
-                    Set<String> toolsSet = MinerServer.instance.getConfigurationSettings().getToolTypeNames();
+                    Set<String> toolsSet = minerServer.getConfigurationSettings().getToolTypeNames();
                     String[] tools = new String[] {};
                     tools = toolsSet.toArray(tools);
                     Arrays.sort(tools);

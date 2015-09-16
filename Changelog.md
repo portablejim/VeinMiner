@@ -1,6 +1,18 @@
 Changelog
 =========
 
+0.28.0
+------
+Changes:
+* No longer a coremod.
+Fixes:
+* Fix some minor errors causing crashes.
+
+0.27.1
+------
+Fixes:
+* More null checking
+
 0.27.0
 ------
 Changes:

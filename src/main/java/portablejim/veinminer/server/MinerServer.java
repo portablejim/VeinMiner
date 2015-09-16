@@ -38,15 +38,15 @@ import java.util.UUID;
 
 public class MinerServer {
 
-    public static MinerServer instance;
     private HashSet<MinerInstance> minerInstances;
+    private HashMap<Point, MinerInstance> pointMinerInstances;
     private HashSet<UUID> clientPlayers;
     private HashMap<UUID, PlayerStatus> players;
     private ConfigurationSettings settings;
 
     public MinerServer(ConfigurationValues configValues) {
-        instance = this;
         minerInstances = new HashSet<MinerInstance>();
+        pointMinerInstances = new HashMap<Point, MinerInstance>();
         clientPlayers = new HashSet<UUID>();
         players = new HashMap<UUID, PlayerStatus>();
         settings = new ConfigurationSettings(configValues);
@@ -83,12 +83,40 @@ public class MinerServer {
         }
     }
 
+    public boolean pointIsBlacklisted(Point point) {
+        for (MinerInstance minerInstance : minerInstances) {
+            if(minerInstance.pointIsBlacklisted(point)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void removeFromBlacklist(Point point) {
+        for (MinerInstance minerInstance : minerInstances) {
+            if(minerInstance.pointIsBlacklisted(point)) {
+                minerInstance.removeFromBlacklist(point);
+            }
+        }
+    }
+
     public void addInstance(MinerInstance ins) {
         minerInstances.add(ins);
+        pointMinerInstances.put(ins.getInitalBlock(), ins);
+    }
+
+    public MinerInstance getInstance(Point point) {
+        if(pointMinerInstances.containsKey(point)) {
+            return pointMinerInstances.get(point);
+        }
+        return null;
     }
 
     public void removeInstance(MinerInstance ins) {
         minerInstances.remove(ins);
+        if(pointMinerInstances.containsKey(ins.getInitalBlock())) {
+            pointMinerInstances.remove(ins);
+        }
     }
 
     public ConfigurationSettings getConfigurationSettings() {

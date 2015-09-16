@@ -31,9 +31,14 @@ import portablejim.veinminer.server.MinerServer;
  * Class to hold events that happen on the server.
  */
 public class PlayerServerEvent {
+    MinerServer minerServer = null;
 
     public PlayerServerEvent() {
         FMLCommonHandler.instance().bus().register(this);
+    }
+
+    public void setServer(MinerServer server) {
+        minerServer = server;
     }
 
     @SuppressWarnings("UnusedDeclaration")
@@ -54,6 +59,6 @@ public class PlayerServerEvent {
     @SuppressWarnings("UnusedDeclaration")
     @SubscribeEvent
     public void disconnected(PlayerLoggedOutEvent event) {
-        MinerServer.instance.removeClientPlayer(event.player.getPersistentID());
+        minerServer.removeClientPlayer(event.player.getPersistentID());
     }
 }
