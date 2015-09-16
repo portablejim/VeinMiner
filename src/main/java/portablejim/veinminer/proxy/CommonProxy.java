@@ -19,6 +19,7 @@ package portablejim.veinminer.proxy;
 
 import portablejim.veinminer.core.EntityDropHook;
 import portablejim.veinminer.event.server.PlayerServerEvent;
+import portablejim.veinminer.server.MinerServer;
 
 /**
  * Server implementation of the proxy interface.
@@ -26,11 +27,18 @@ import portablejim.veinminer.event.server.PlayerServerEvent;
 
 @SuppressWarnings("UnusedDeclaration")
 public class CommonProxy {
+    private PlayerServerEvent playerServerEvent;
+    private EntityDropHook entityDropHook;
 
     public void registerClientEvents () { }
 
     public void registerCommonEvents () {
-        PlayerServerEvent playerServerEvent = new PlayerServerEvent();
-        EntityDropHook entityDropHook = new EntityDropHook();
+        playerServerEvent = new PlayerServerEvent();
+        entityDropHook = new EntityDropHook();
+    }
+
+    public void setMinerServer(MinerServer server) {
+        playerServerEvent.setServer(server);
+        entityDropHook.setServer(server);
     }
 }
