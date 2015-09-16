@@ -43,7 +43,8 @@ public class InjectedCalls {
             return;
         }
 
-        if(!harvestBlockSuccess) {
+
+        if(!harvestBlockSuccess && !player.theItemInWorldManager.isCreative()) {
             VeinminerHarvestFailedCheck startEvent = new VeinminerHarvestFailedCheck(player, blockName.name, blockName.metadata);
             MinecraftForge.EVENT_BUS.post(startEvent);
             if(startEvent.allowContinue.isDenied()) {
