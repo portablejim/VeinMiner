@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.28.1
+------
+Fixes:
+* Stop console spam.
+
 0.28.0
 ------
 Changes:
