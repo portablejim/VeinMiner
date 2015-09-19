@@ -285,7 +285,7 @@ public class VeinMiner {
     public void blockBreakEventFalse(BlockEvent.BreakEvent event) {
         Point eventPoint = new Point(event.x, event.y, event.z);
         if(!event.world.isRemote && !event.isCanceled() && event.getPlayer() instanceof EntityPlayerMP && !minerServer.pointIsBlacklisted(eventPoint)) {
-            logger.info(String.format("Block Break (False) at %s | %s | %s || Cancel: %s / %s", event.x, event.y, event.z, !event.isCancelable(), event.isCanceled()));
+            MinerLogger.debug(String.format("Block Break (False) at %s | %s | %s || Cancel: %s / %s", event.x, event.y, event.z, !event.isCancelable(), event.isCanceled()));
             InjectedCalls.blockMined(event.world, (EntityPlayerMP) event.getPlayer(), event.x, event.y, event.z, false, new BlockID(Block.blockRegistry.getNameForObject(event.block), event.blockMetadata));
             minerServer.removeFromBlacklist(eventPoint);
         }
@@ -296,7 +296,7 @@ public class VeinMiner {
     public void blockBreakEventTrue(BlockEvent.HarvestDropsEvent event) {
         Point eventPoint = new Point(event.x, event.y, event.z);
         if(!event.world.isRemote && !event.isCanceled() && event.harvester instanceof EntityPlayerMP && !minerServer.pointIsBlacklisted(eventPoint)) {
-            logger.info(String.format("Block Break (True) at %s | %s | %s || Cancel: %s / %s", event.x, event.y, event.z, !event.isCancelable(), event.isCanceled()));
+            MinerLogger.debug(String.format("Block Break (True) at %s | %s | %s || Cancel: %s / %s", event.x, event.y, event.z, !event.isCancelable(), event.isCanceled()));
             InjectedCalls.blockMined(event.world, (EntityPlayerMP) event.harvester, event.x, event.y, event.z, true, new BlockID(Block.blockRegistry.getNameForObject(event.block), event.blockMetadata));
             minerServer.removeFromBlacklist(eventPoint);
         }
