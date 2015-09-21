@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.28.2
+------
+Fixes:
+* Don't crash when blocks drop entities (yes, I'm looking at you, Ag Skies hellfish)
+
 0.28.1
 ------
 Fixes:

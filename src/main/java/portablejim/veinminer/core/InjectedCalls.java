@@ -40,7 +40,8 @@ public class InjectedCalls {
     public static void blockMined(World world, EntityPlayerMP player, BlockPos blockPos, boolean harvestBlockSuccess, BlockID blockName) {
         MinerLogger.debug("Block mined at %d,%d,%d, result %s, block id is %s/%d", blockPos.getX(), blockPos.getY(), blockPos.getZ(), harvestBlockSuccess, blockName.name, blockName.metadata);
 
-        if(blockName.name.isEmpty() || Block.getBlockFromName(blockName.name) == null  || !player.canHarvestBlock(Block.getBlockFromName(blockName.name))) {
+        //noinspection ConstantConditions
+        if(blockName == null || blockName.name == null || blockName.name.isEmpty() || Block.getBlockFromName(blockName.name) == null  || !player.canHarvestBlock(Block.getBlockFromName(blockName.name))) {
             return;
         }
 
