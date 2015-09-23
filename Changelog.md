@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.28.3
+------
+Changes:
+* Any tool that extends Ex Nihilo's ItemHammerBase class will work with VeinMiner.
+
 0.28.2
 ------
 Fixes:

@@ -272,6 +272,20 @@ public class VeinMinerModSupport {
             else if(currentEquippedItem != null) {
                 devLog(currentEquippedItem.getClass().getCanonicalName());
             }
+
+            try {
+                Class<?> hammerBase = Class.forName("exnihilo.items.hammers.ItemHammerBase");
+                if(currentEquippedItem != null && hammerBase.isAssignableFrom(currentEquippedItem.getClass())) {
+                    if(event.allowContinue == Permission.DENY) {
+                        devLog("Allowed generic Ex Nihilo hammer start");
+                        event.allowContinue = Permission.ALLOW;
+                    }
+                }
+
+            } catch (ClassNotFoundException e) {
+                // Class doesn't exist. Do nothing.
+                devLog("Ex Nihilo generic hammer support failed.");
+            }
         }
     }
 
