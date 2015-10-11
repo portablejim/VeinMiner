@@ -94,4 +94,9 @@ public class Point {
     public boolean isWithinRange(int x, int y, int z, int range) {
         return distanceFrom(x, y, z) <= (range * range);
     }
+
+    @Override
+    public String toString() {
+        return String.format("(%d, %d, %d)", x, y, z);
+    }
 }
