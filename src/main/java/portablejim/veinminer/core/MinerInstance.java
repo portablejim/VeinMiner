@@ -46,8 +46,12 @@ import portablejim.veinminer.util.ItemStackID;
 import portablejim.veinminer.util.PlayerStatus;
 import portablejim.veinminer.util.Point;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -193,85 +197,80 @@ public class MinerInstance {
 
     private void mineBlock(int x, int y, int z) {
         Point newPoint = new Point(x, y, z);
-        awaitingEntityDrop.add(newPoint);
-        boolean success = player.theItemInWorldManager.tryHarvestBlock(x, y, z);
-        numBlocksMined++;
+        BlockID newBlock = new BlockID(world, x , y, z );
+        ConfigurationSettings configurationSettings = serverInstance.getConfigurationSettings();
+        startBlacklist.add(newPoint);
+        if(mineAllowed(newBlock, newPoint, configurationSettings)) {
+            awaitingEntityDrop.add(newPoint);
+            boolean success = player.theItemInWorldManager.tryHarvestBlock(x, y, z);
+            numBlocksMined++;
 
-        VeinminerPostUseTool toolUsedEvent = new VeinminerPostUseTool(player);
-        MinecraftForge.EVENT_BUS.post(toolUsedEvent);
+            VeinminerPostUseTool toolUsedEvent = new VeinminerPostUseTool(player);
+            MinecraftForge.EVENT_BUS.post(toolUsedEvent);
 
-        // Only go ahead if block was destroyed. Stops mining through protected areas.
-        VeinminerHarvestFailedCheck continueCheck = new VeinminerHarvestFailedCheck(player, targetBlock.name, targetBlock.metadata);
-        MinecraftForge.EVENT_BUS.post(continueCheck);
-        if(success || continueCheck.allowContinue.isAllowed()) {
-            destroyQueue.add(newPoint);
-        }
-        else {
-            awaitingEntityDrop.remove(newPoint);
-        }
-    }
-
-    @SuppressWarnings("ConstantConditions")
-    public synchronized void mineVein(int x, int y, int z) {
-        if(this.world == null || this.player == null || this.targetBlock == null) {
-            finished = true;
-        }
-        if(finished || !shouldContinue()) {
-            return;
-        }
-        Point targetPoint = new Point(x, y, z);
-        startBlacklist.add(targetPoint);
-
-        player.addExhaustion(0.03F);
-
-        byte d = 1;
-        for (int dx = -d; dx <= d; dx++) {
-            for (int dy = -d; dy <= d; dy++) {
-                for (int dz = -d; dz <= d; dz++) {
-                    if (dx == 0 && dy == 0 && dz == 0) {
-                        continue;
-                    }
-
-                    Point newBlockPos = new Point(x + dx, y + dy, z + dz);
-                    BlockID newBlock = new BlockID(world, x + dx, y + dy, z + dz);
-
-                    // Ensure valid block
-                    if(Block.getBlockFromName(newBlock.name) == null) {
-                        continue;
-                    }
-
-                    ConfigurationSettings configSettings = serverInstance.getConfigurationSettings();
-
-                    if(!newBlock.wildcardEquals(targetBlock) && !configSettings.areBlocksCongruent(newBlock, targetBlock)
-                            && !BlockLib.arePickBlockEqual(newBlock, targetBlock)) {
-                        continue;
-                    }
-
-                    if(!newBlockPos.isWithinRange(initalBlock, radiusLimit) && radiusLimit > 0) {
-                        MinerLogger.debug("Initial block: %d,%d,%d; New block: %d,%d,%d; Radius: %.2f; Raidus limit: %d.", initalBlock.getX(), initalBlock.getY(), initalBlock.getZ(), newBlockPos.getX(), newBlockPos.getY(), newBlockPos.getZ(), Math.sqrt(initalBlock.distanceFrom(newBlockPos)), radiusLimit);
-                        continue;
-                    }
-
-                    // Block already scheduled.
-                    if(awaitingEntityDrop.contains(newBlockPos)) {
-                        continue;
-                    }
-
-                    //int blockLimit = serverInstance.getConfigurationSettings().getBlockLimit();
-                    if (numBlocksMined >= blockLimit && blockLimit != -1) {
-                        MinerLogger.debug("Block limit is: %d; Blocks mined: %d", blockLimit, numBlocksMined);
-                        continue;
-                    }
-
-                    if(configSettings.getEnableAllBlocks() || toolAllowedForBlock(usedItem, newBlock)) {
-                        startBlacklist.add(newBlockPos);
-                        mineBlock(x + dx, y + dy, z + dz);
-                        //numBlocksMined++;
-                    }
-                }
+            // Only go ahead if block was destroyed. Stops mining through protected areas.
+            VeinminerHarvestFailedCheck continueCheck = new VeinminerHarvestFailedCheck(player, targetBlock.name, targetBlock.metadata);
+            MinecraftForge.EVENT_BUS.post(continueCheck);
+            if (success || continueCheck.allowContinue.isAllowed()) {
+                postSuccessfulBreak(newPoint);
+            } else {
+                awaitingEntityDrop.remove(newPoint);
             }
         }
     }
+
+
+    public void postSuccessfulBreak(Point breakPoint) {
+        ArrayList<Point> surrondingPoints = getPoints(breakPoint);
+        destroyQueue.addAll(surrondingPoints);
+    }
+
+    private ArrayList<Point> getPoints(Point origin) {
+        ArrayList<Point> points = new ArrayList<Point>(9);
+        int dimRange[] = {-1, 0, 1};
+        for(int dx : dimRange) {
+            for(int dy : dimRange) {
+                for(int dz : dimRange) {
+                    if(dx == 0 && dy == 0 && dz == 0) {
+                        // If 0, 0, 0
+                        continue;
+                    }
+                    points.add(new Point(origin.getX() + dx, origin.getY() + dy, origin.getZ() + dz));
+                }
+            }
+        }
+        Collections.shuffle(points);
+        return points;
+    }
+
+    private boolean mineAllowed(BlockID newBlock, Point newBlockPos, ConfigurationSettings configSettings) {
+        if(finished || !shouldContinue()) return false;
+        // Ensure valid block
+        if (Block.getBlockFromName(newBlock.name) == null) {
+            return false;
+        }
+        if (!newBlock.wildcardEquals(targetBlock) && !configSettings.areBlocksCongruent(newBlock, targetBlock)
+                && !BlockLib.arePickBlockEqual(newBlock, targetBlock)) {
+            return false;
+        }
+        if (!newBlockPos.isWithinRange(initalBlock, radiusLimit) && radiusLimit > 0) {
+            MinerLogger.debug("Initial block: %d,%d,%d; New block: %d,%d,%d; Radius: %.2f; Raidus limit: %d.", initalBlock.getX(), initalBlock.getY(), initalBlock.getZ(), newBlockPos.getX(), newBlockPos.getY(), newBlockPos.getZ(), Math.sqrt(initalBlock.distanceFrom(newBlockPos)), radiusLimit);
+            return false;
+        }
+        // Block already scheduled.
+        if (awaitingEntityDrop.contains(newBlockPos))
+            return false;
+        //noinspection SimplifiableIfStatement
+        if (numBlocksMined >= blockLimit && blockLimit != -1) {
+            MinerLogger.debug("Block limit is: %d; Blocks mined: %d", blockLimit, numBlocksMined);
+            return false;
+        }
+        // Seem to get wrong result if inlined. ??!??!
+        //noinspection UnnecessaryLocalVariable
+        boolean result =  (configSettings.getEnableAllBlocks() || toolAllowedForBlock(usedItem, newBlock));
+        return result;
+    }
+
 
     @SuppressWarnings({"UnusedParameters", "UnusedDeclaration"})
     @SubscribeEvent
@@ -280,12 +279,14 @@ public class MinerInstance {
         for(int i = 0; i < quantity; i++) {
             if(!destroyQueue.isEmpty()) {
                 Point target = destroyQueue.remove();
-                mineVein(target.getX(), target.getY(), target.getZ());
+                mineBlock(target.getX(), target.getY(), target.getZ());
             }
-            else if(!drops.isEmpty()){
+            else {
                 // All blocks have been mined. This is done last.
                 serverInstance.removeInstance(this);
-                spawnDrops();
+                if(!drops.isEmpty()) {
+                    spawnDrops();
+                }
                 cleanUp();
                 return;
             }

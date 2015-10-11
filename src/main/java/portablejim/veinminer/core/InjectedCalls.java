@@ -28,6 +28,7 @@ import portablejim.veinminer.configuration.ConfigurationSettings;
 import portablejim.veinminer.lib.MinerLogger;
 import portablejim.veinminer.server.MinerServer;
 import portablejim.veinminer.util.BlockID;
+import portablejim.veinminer.util.Point;
 
 /**
  * Holds functions called by calls injected via ASM.
@@ -64,7 +65,7 @@ public class InjectedCalls {
             blockLimit = Math.min(startConfig.blockLimit, blockLimit);
 
             MinerInstance ins = new MinerInstance(world, player, x, y, z, blockName, VeinMiner.instance.minerServer, radiusLimit, blockLimit);
-            ins.mineVein(x, y, z);
+            ins.postSuccessfulBreak(new Point(x, y, z));
         }
     }
 }
