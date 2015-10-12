@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.29.0
+0.29.1
 ------
 Changes:
 * Change the way that veinminer works. You should not see a difference in the way it works.
