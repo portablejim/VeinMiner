@@ -1,6 +1,14 @@
 Changelog
 =========
 
+0.29.0
+------
+Changes:
+* Change the way that veinminer works. You should not see a difference in the way it works.
+Fixes:
+* Fix crash when veinmining using a AOE tool (tinkers hammer).
+* Fix crash with a tooltip.
+
 0.28.3
 ------
 Changes:
