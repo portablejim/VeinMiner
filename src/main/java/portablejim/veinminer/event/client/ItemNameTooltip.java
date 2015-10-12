@@ -21,6 +21,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import portablejim.veinminer.VeinMiner;
 
 /**
  * Adds the item registry name to the item tooltip when ids are shown
@@ -38,7 +39,15 @@ public class ItemNameTooltip {
             return;
         }
         GameRegistry.UniqueIdentifier uniqueIdentifierFor = GameRegistry.findUniqueIdentifierFor(event.itemStack.getItem());
-        if(uniqueIdentifierFor != null && event.showAdvancedItemTooltips)
-            event.toolTip.add(uniqueIdentifierFor.toString());
+        if(uniqueIdentifierFor != null && event.showAdvancedItemTooltips) {
+            // Sometimes this crashes. Not my fault. I can control the damage though.
+            try {
+                event.toolTip.add(uniqueIdentifierFor.toString());
+            }
+            catch (NullPointerException exception) {
+                VeinMiner.instance.logger.error(String.format("NPE getting unique identifier for %s", event.itemStack.getItem().getClass().toString()));
+                VeinMiner.instance.logger.error("Contact the mod author responsible.");
+            }
+        }
     }
 }
