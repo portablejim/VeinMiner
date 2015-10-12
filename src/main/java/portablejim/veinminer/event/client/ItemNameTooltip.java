@@ -35,19 +35,19 @@ public class ItemNameTooltip {
     @SuppressWarnings("UnusedDeclaration")
     @SubscribeEvent
     public void addTooltip(ItemTooltipEvent event) {
-        if(event.itemStack == null || event.itemStack.getItem() == null || event.toolTip == null) {
-            return;
+        try {
+            if(event.itemStack == null || event.itemStack.getItem() == null || event.toolTip == null) {
+                return;
+            }
+            GameRegistry.UniqueIdentifier uniqueIdentifierFor = GameRegistry.findUniqueIdentifierFor(event.itemStack.getItem());
+            if(uniqueIdentifierFor != null && event.showAdvancedItemTooltips) {
+                // Sometimes this crashes. Not my fault. I can control the damage though.
+                    event.toolTip.add(uniqueIdentifierFor.toString());
+            }
         }
-        GameRegistry.UniqueIdentifier uniqueIdentifierFor = GameRegistry.findUniqueIdentifierFor(event.itemStack.getItem());
-        if(uniqueIdentifierFor != null && event.showAdvancedItemTooltips) {
-            // Sometimes this crashes. Not my fault. I can control the damage though.
-            try {
-                event.toolTip.add(uniqueIdentifierFor.toString());
-            }
-            catch (NullPointerException exception) {
-                VeinMiner.instance.logger.error(String.format("NPE getting unique identifier for %s", event.itemStack.getItem().getClass().toString()));
-                VeinMiner.instance.logger.error("Contact the mod author responsible.");
-            }
+        catch (NullPointerException exception) {
+            VeinMiner.instance.logger.error(String.format("NPE getting unique identifier for %s", event.itemStack.getItem().getClass().toString()));
+            VeinMiner.instance.logger.error("Contact the mod author responsible.");
         }
     }
 }
