@@ -80,6 +80,16 @@ public class ConfigurationValues {
     public static final String BLOCKS_PER_TICK_CONFIGNAME = "limit.blocksPerTick";
     public static final String BLOCKS_PER_TICK_DESCRIPTION = String.format("Maximum number of blocks to be removed per game tick (1/20 seconds). Using a low number will keep the game from getting huge performance drops but also decreases the speed at which blocks are destroyed. [range: 1 ~ 1000, default: %d]", BLOCKS_PER_TICK_DEFAULT);
 
+    public int HUNGER_MULTIPLIER;
+    public static final int HUNGER_MULTIPLIER_DEFAULT = 0;
+    public static final String HUNGER_MULTIPLIER_CONFIGNAME = "hungermodifier";
+    public static final String HUNGER_MULTIPLIER_DESCRIPTION = String.format("Change how much additional hunger/exhaustion is used for every block. Every point is 0.025 hunger/exhaustion per block. [range: 0 to 2147483647, default: %d]", HUNGER_MULTIPLIER_DEFAULT);
+
+    public int EXPERIENCE_MULTIPLIER;
+    public static final int EXPERIENCE_MULTIPLIER_DEFAULT = 0;
+    public static final String EXPERIENCE_MULTIPLIER_CONFIGNAME = "expmodifier";
+    public static final String EXPERIENCE_MULTIPLIER_DESCRIPTION = String.format("Change how much experience is required to Veinmine and how much experience each block uses. [range: 0 to 2147483647, default: %d]", EXPERIENCE_MULTIPLIER_DEFAULT);
+
     public boolean ENABLE_ALL_BLOCKS;
     public static final boolean ENABLE_ALL_BLOCKS_DEFAULT = false;
     public static final String ENABLE_ALL_BLOCKS_CONFIGNAME = "override.allBlocks";
@@ -127,9 +137,14 @@ public class ConfigurationValues {
 
         toolsAndBlocks = new JsonObject();
 
+        loadConfigFile();
+        saveConfigFile();
+    }
+
+    public void loadConfigFile() {
         try {
-            if(toolsJson.exists()) {
-                String toolsAndBlocksString = Files.toString(toolsJson, Charset.defaultCharset());
+            if(configFileJson.exists()) {
+                String toolsAndBlocksString = Files.toString(configFileJson, Charset.defaultCharset());
                 toolsAndBlocks = new JsonParser().parse(toolsAndBlocksString);
             }
             else {
@@ -139,16 +154,11 @@ public class ConfigurationValues {
             e.printStackTrace();
         }
         catch(JsonParseException e) {
-            VeinMiner.instance.logger.error(String.format("Error parsing %s; Json error: %s", toolsJson.getName(), e.getLocalizedMessage()));
+            VeinMiner.instance.logger.error(String.format("Error parsing %s; Json error: %s", configFileJson.getName(), e.getLocalizedMessage()));
             VeinMiner.instance.logger.error("Asking java to exit");
             FMLCommonHandler.instance().exitJava(1, false);
         }
 
-        loadConfigFile();
-        saveConfigFile();
-    }
-
-    public void loadConfigFile() {
         configFile.load();
 
         configFile.addCustomCategoryComment(CONFIG_AUTODETECT, CONFIG_AUTODETECT_COMMENT);
@@ -166,6 +176,8 @@ public class ConfigurationValues {
         BLOCKS_PER_TICK = configFile.get(CONFIG_LIMITS, BLOCKS_PER_TICK_CONFIGNAME, BLOCKS_PER_TICK_DEFAULT, BLOCKS_PER_TICK_DESCRIPTION).getInt(BLOCKS_PER_TICK_DEFAULT);
 
         BLOCK_EQUIVALENCY_LIST = configFile.get(CONFIG_MISC, BLOCK_EQUIVALENCY_LIST_CONFIGNAME, BLOCK_EQUIVALENCY_LIST_DEFAULT, BLOCK_EQUIVALENCY_LIST_DESCRIPTION).getString();
+        HUNGER_MULTIPLIER = configFile.get(CONFIG_MISC, HUNGER_MULTIPLIER_CONFIGNAME, HUNGER_MULTIPLIER_DEFAULT, HUNGER_MULTIPLIER_DESCRIPTION).getInt();
+        EXPERIENCE_MULTIPLIER = configFile.get(CONFIG_MISC, EXPERIENCE_MULTIPLIER_CONFIGNAME, EXPERIENCE_MULTIPLIER_DEFAULT, EXPERIENCE_MULTIPLIER_DESCRIPTION).getInt();
 
         ENABLE_ALL_BLOCKS = configFile.get(CONFIG_OVERRIDE, ENABLE_ALL_BLOCKS_CONFIGNAME, ENABLE_ALL_BLOCKS_DEFAULT, ENABLE_ALL_BLOCKS_DESCRIPTION).getBoolean(ENABLE_ALL_BLOCKS_DEFAULT);
         ENABLE_ALL_TOOLS = configFile.get(CONFIG_OVERRIDE, ENABLE_ALL_TOOLS_CONFIGNAME, ENABLE_ALL_TOOLS_DEFAULT, ENABLE_ALL_TOOLS_DESCRIPTION).getBoolean(ENABLE_ALL_TOOLS_DEFAULT);
@@ -184,6 +196,8 @@ public class ConfigurationValues {
         configFile.getCategory(CONFIG_LIMITS).get(BLOCKS_PER_TICK_CONFIGNAME).set(BLOCKS_PER_TICK);
 
         configFile.getCategory(CONFIG_MISC).get(BLOCK_EQUIVALENCY_LIST_CONFIGNAME).set(BLOCK_EQUIVALENCY_LIST);
+        configFile.getCategory(CONFIG_MISC).get(HUNGER_MULTIPLIER_CONFIGNAME).set(HUNGER_MULTIPLIER);
+        configFile.getCategory(CONFIG_MISC).get(EXPERIENCE_MULTIPLIER_CONFIGNAME).set(EXPERIENCE_MULTIPLIER);
 
         configFile.getCategory(CONFIG_OVERRIDE).get(ENABLE_ALL_BLOCKS_CONFIGNAME).set(ENABLE_ALL_BLOCKS);
         configFile.getCategory(CONFIG_OVERRIDE).get(ENABLE_ALL_TOOLS_CONFIGNAME).set(ENABLE_ALL_TOOLS);

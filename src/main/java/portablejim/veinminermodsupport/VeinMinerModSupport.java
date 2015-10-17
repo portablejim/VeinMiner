@@ -286,6 +286,19 @@ public class VeinMinerModSupport {
                 // Class doesn't exist. Do nothing.
                 devLog("Ex Nihilo generic hammer support failed.");
             }
+            try {
+                Class<?> hammerBase = Class.forName("ExAstris.Item.ItemHammerRF");
+                if(currentEquippedItem != null && hammerBase.isAssignableFrom(currentEquippedItem.getClass())) {
+                    if(event.allowContinue == Permission.DENY) {
+                        devLog("Allowed Ex Astris hammer start");
+                        event.allowContinue = Permission.ALLOW;
+                    }
+                }
+
+            } catch (ClassNotFoundException e) {
+                // Class doesn't exist. Do nothing.
+                devLog("Ex Astris hammer support failed.");
+            }
         }
     }
 

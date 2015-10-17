@@ -100,4 +100,9 @@ public class Point {
     public BlockPos toBlockPos() {
         return new BlockPos(x, y, z);
     }
+
+    @Override
+    public String toString() {
+        return String.format("(%d, %d, %d)", x, y, z);
+    }
 }

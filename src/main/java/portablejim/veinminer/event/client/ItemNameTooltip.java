@@ -21,6 +21,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import portablejim.veinminer.VeinMiner;
 
 /**
  * Adds the item registry name to the item tooltip when ids are shown
@@ -34,11 +35,19 @@ public class ItemNameTooltip {
     @SuppressWarnings("UnusedDeclaration")
     @SubscribeEvent
     public void addTooltip(ItemTooltipEvent event) {
-        if(event.itemStack == null || event.itemStack.getItem() == null || event.toolTip == null) {
-            return;
+        try {
+            if(event.itemStack == null || event.itemStack.getItem() == null || event.toolTip == null) {
+                return;
+            }
+            GameRegistry.UniqueIdentifier uniqueIdentifierFor = GameRegistry.findUniqueIdentifierFor(event.itemStack.getItem());
+            if(uniqueIdentifierFor != null && event.showAdvancedItemTooltips) {
+                // Sometimes this crashes. Not my fault. I can control the damage though.
+                    event.toolTip.add(uniqueIdentifierFor.toString());
+            }
         }
-        GameRegistry.UniqueIdentifier uniqueIdentifierFor = GameRegistry.findUniqueIdentifierFor(event.itemStack.getItem());
-        if(uniqueIdentifierFor != null && event.showAdvancedItemTooltips)
-            event.toolTip.add(uniqueIdentifierFor.toString());
+        catch (NullPointerException exception) {
+            VeinMiner.instance.logger.error(String.format("NPE getting unique identifier for %s", event.itemStack.getItem().getClass().toString()));
+            VeinMiner.instance.logger.error("Contact the mod author responsible.");
+        }
     }
 }
