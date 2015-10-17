@@ -283,8 +283,10 @@ public class MinerInstance {
             boolean success = player.theItemInWorldManager.tryHarvestBlock(new BlockPos(x, y, z));
             numBlocksMined++;
 
-            takeHunger();
-            takeExperience();
+            if(!player.capabilities.isCreativeMode) {
+                takeHunger();
+                takeExperience();
+            }
 
             VeinminerPostUseTool toolUsedEvent = new VeinminerPostUseTool(player);
             MinecraftForge.EVENT_BUS.post(toolUsedEvent);
