@@ -1,0 +1,83 @@
+# Command usage/error
+command.veinminer=/veinminer mode/blocklist/toollist/blocklimit/radius/per_tick/saveconfig/help
+command.veinminer.enable=/veinminer mode auto/sneak/no_sneak
+command.veinminer.blocklist=/veinminer blocklist %s add/remove <mod id>:<block name> <metadata>
+command.veinminer.toollist=/veinminer toollist %s add/remove <tool id>
+
+# Command result/Mode status
+command.veinminer.set.disable=Veinminer aktiválás: tiltva
+command.veinminer.set.auto=Veinminer aktiválás: Kliens billentyűbeállítása szerint
+command.veinminer.set.sneak=Veinminer aktiválás: Ha lopakodik
+command.veinminer.set.nosneak=Veinminer aktiválás: Ha nem lopakodik
+
+# Command blocklist
+command.veinminer.blocklist.actionerror=/veinminer blocklist %s add/remove <mod id>:<block name> <metadata>
+command.veinminer.blocklist.itemerror=/veinminer blocklist %s %s  <mod id>:<block name> <metadata>
+command.veinminer.blocklist.add=%s/%d hozzáadva a(z) %s blokk engedélylistájához
+command.veinminer.blocklist.remove=%s/%d eltávolítva a(z) %s blokk engedélylistájából
+
+# Command toollist
+command.veinminer.toollist.actionerror=/veinminer toollist %s add/remove <tool id>
+command.veinminer.toollist.itemerror=/veinminer toollist %s %s <tool id>
+command.veinminer.toollist.add=%s hozzáadva a(z) %s eszköz listájához
+command.veinminer.toollist.remove=%s eltávolítva a(z) %s eszköz listájából
+
+command.veinminer.blocklimit=/veinminer blocklimit [-1 - 2147483647]
+command.veinminer.blocklimit.set=Blokk határérték: %d blokk
+command.veinminer.range=/veinminer radius [-1 - 1000]
+command.veinminer.range.set=Sugár határérték: %d blokknyi távolság
+command.veinminer.pertick=/veinminer per_tick <# blocks to destroy each tick>
+command.veinminer.pertick.set=%d blokk megsemmisítése tick-enként (1/20 sec.)
+
+command.veinminer.saveconfig=Beállítások mentve a konfigurációs fájlba.
+
+command.veinminer.cannotuse=Nem-játékosok nem használhatják a Veinminer-t
+command.veinminer.permissionDenied=Nincs engedélyed ehhez az alparancshoz
+
+# Preferred mode confirmation
+mod.veinminer.preferredmode.auto=A Veinminer a kliens billentyűbeállítását használja. Lásd a mod konfigurációs fájlját a beállításhoz.
+mod.veinminer.preferredmode.sneak=A Veinminer lopakodáskor aktív.
+mod.veinminer.preferredmode.nosneak=A Veinminer lopakodáskor inaktív.
+
+mod.veinminer.finished.tooHungry=Túl éhes vagy Veinmine használatához.
+
+# Controls
+veinminer.key.category=Vein Miner
+veinminer.key.enable=Vein Miner aktiválása
+
+# Command help.
+command.veinminer.help1=Sub-commands available:
+command.veinminer.help2='mode': VeinMiner aktiválási mód megváltoztatása
+command.veinminer.help3='blocklist': Blokkok hozzáadása/törlése a VeinMiner fehérlistájából
+command.veinminer.help4='toollist': Eszközök hozzáadása/törlése a VeinMiner fehérlistájából
+command.veinminer.help5='blocklimit': Állítsd be hogy hány blokkot tud egyszerre maximum a VeinMiner megsemmisíteni
+command.veinminer.help6='radius': Állítsd be a maximum távolságot ahonnan a Veinminer begyűjti a cuccokat, az első megsemmisített blokktól számolva 
+command.veinminer.help7='per_tick': Állíts be a blokkok megsemmisítésének sebességét
+command.veinminer.help8='saveconfig': Jelenlegi beállítási értékek mentése a konfigurációs fájlba
+command.veinminer.help9='help': Ez a szöveg
+command.veinminer.help.enable1=Elérhető aktiválási módok:
+command.veinminer.help.enable2='auto': Aktiválás billentyűnyomáskor (hasztalan, ha a mod nincs a kliensre telepítve).
+command.veinminer.help.enable3='sneak': Aktiválás amikor lopakodik
+command.veinminer.help.enable4='no_sneak': Aktiválás amikor nem lopakodik
+
+# GUI config
+gui.veinminer.back=Vissza
+gui.veinminer.config=Veinminer beállítása
+gui.veinminer.config.disabled=Tiltve
+gui.veinminer.config.pressed=Ha a billentyű le lett nyomva
+gui.veinminer.config.released=Ha a billentyű fel lett engedve
+gui.veinminer.config.sneak=Ha lopakodik
+gui.veinminer.config.nosneak=Ha nem lopakodik
+gui.veinminer.config.enable.text=Veinminer engedélyezése:
+gui.veinminer.config.range=Hatótáv: %d blokk
+gui.veinminer.config.blocklimit=Blokk limit: %d blokk
+gui.veinminer.config.blocklimit.infinite=Blokk limit: Végtelen blokk
+gui.veinminer.config.toolTypes=Eszköz típusok
+gui.veinminer.config.blocklist=Blokklista
+gui.veinminer.config.toollist=Eszközlista
+gui.veinminer.unknown=<Ismeretlen>
+gui.veinminer.item.delete=Törlés a listáról
+gui.veinminer.item.add=Hozzáadás
+gui.veinminer.item.clear=Törlés
+gui.veinminer.title.toollist=%s eszközlista
+gui.veinminer.title.blocklist=%s blokklista
