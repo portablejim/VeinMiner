@@ -7,10 +7,6 @@ Changes:
 * Add a '/veinminer reloadconfig' command. This reloads the configs from the config file (yes, it does what it says on the tin).
 * New config option 'expmodifier' to customise the amount of experience is used (and is required) for each block VeinMiner mines.
 * New config option 'hungermodifier' to customise how much extra hunger each block takes to mine.
-
-0.29.1
-------
-Changes:
 * Change the way that veinminer works. You should not see a difference in the way it works.
 Fixes:
 * Fix crash when veinmining using a AOE tool (tinkers hammer).
