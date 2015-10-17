@@ -230,7 +230,7 @@ public class MinerInstance {
         float foodExhaustionLevel = nbt.getFloat("foodExhaustionLevel");
 
         float newExhaustion = (foodExhaustionLevel + hungerMod) % 4;
-        float newSaturation = foodSaturationLevel - (float)Math.floor(foodExhaustionLevel + hungerMod / 4);
+        float newSaturation = foodSaturationLevel - (float)((int)((foodExhaustionLevel + hungerMod) / 4));
         int newFoodLevel = foodLevel;
         if(newSaturation < 0) {
             newFoodLevel += newSaturation;
