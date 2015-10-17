@@ -114,6 +114,12 @@ public class ConfigurationSettings {
         }
     }
 
+    public void reloadConfigFile() {
+        configValues.loadConfigFile();
+        parseConfigValues();
+        saveConfigs();
+    }
+
     public boolean getEnableAllBlocks() {
         return enableAllBlocks;
     }

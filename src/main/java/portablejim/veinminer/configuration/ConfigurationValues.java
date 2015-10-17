@@ -137,9 +137,14 @@ public class ConfigurationValues {
 
         toolsAndBlocks = new JsonObject();
 
+        loadConfigFile();
+        saveConfigFile();
+    }
+
+    public void loadConfigFile() {
         try {
-            if(toolsJson.exists()) {
-                String toolsAndBlocksString = Files.toString(toolsJson, Charset.defaultCharset());
+            if(configFileJson.exists()) {
+                String toolsAndBlocksString = Files.toString(configFileJson, Charset.defaultCharset());
                 toolsAndBlocks = new JsonParser().parse(toolsAndBlocksString);
             }
             else {
@@ -149,16 +154,11 @@ public class ConfigurationValues {
             e.printStackTrace();
         }
         catch(JsonParseException e) {
-            VeinMiner.instance.logger.error(String.format("Error parsing %s; Json error: %s", toolsJson.getName(), e.getLocalizedMessage()));
+            VeinMiner.instance.logger.error(String.format("Error parsing %s; Json error: %s", configFileJson.getName(), e.getLocalizedMessage()));
             VeinMiner.instance.logger.error("Asking java to exit");
             FMLCommonHandler.instance().exitJava(1, false);
         }
 
-        loadConfigFile();
-        saveConfigFile();
-    }
-
-    public void loadConfigFile() {
         configFile.load();
 
         configFile.addCustomCategoryComment(CONFIG_AUTODETECT, CONFIG_AUTODETECT_COMMENT);

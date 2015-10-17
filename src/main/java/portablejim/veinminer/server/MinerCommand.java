@@ -49,8 +49,9 @@ public class MinerCommand extends CommandBase {
     public static final int COMMAND_RANGE = 4;
     public static final int COMMAND_PER_TICK = 5;
     public static final int COMMAND_SAVE = 6;
-    public static final int COMMAND_HELP = 7;
-    private static final String[] commands = new String[]{"mode", "blocklist", "toollist", "blocklimit", "radius", "per_tick", "saveconfig", "help"};
+    public static final int COMMAND_RELOAD = 7;
+    public static final int COMMAND_HELP = 8;
+    private static final String[] commands = new String[]{"mode", "blocklist", "toollist", "blocklimit", "radius", "per_tick", "saveconfig", "reloadconfig", "help"};
     private static final String[] modes = new String[] {"auto", "sneak", "no_sneak"};
 
     public MinerCommand(MinerServer minerServerInstance) {
@@ -108,6 +109,10 @@ public class MinerCommand extends CommandBase {
             else if(astring[0].equals(commands[COMMAND_SAVE])) {
                 needAdmin(senderPlayer);
                 runCommandSave(senderPlayer);
+            }
+            else if(astring[0].equals(commands[COMMAND_RELOAD])) {
+                needAdmin(senderPlayer);
+                runCommandReload(senderPlayer);
             }
             else if(astring[0].equals(commands[COMMAND_HELP])) {
                 runCommandHelp(senderPlayer, astring);
@@ -332,6 +337,11 @@ public class MinerCommand extends CommandBase {
     private void runCommandSave(ICustomCommandSender senderPlayer) {
         minerServer.getConfigurationSettings().saveConfigs();
         senderPlayer.sendProperChat("command.veinminer.saveconfig");
+    }
+
+    private void runCommandReload(ICustomCommandSender senderPlayer) {
+        minerServer.getConfigurationSettings().reloadConfigFile();
+        senderPlayer.sendProperChat("command.veinminer.loadconfig");
     }
 
     private void runCommandHelp(ICustomCommandSender senderPlayer, String[] astring) {
