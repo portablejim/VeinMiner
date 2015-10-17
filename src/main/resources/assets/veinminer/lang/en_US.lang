@@ -40,6 +40,7 @@ mod.veinminer.preferredmode.sneak=Veinminer set to activate on sneak.
 mod.veinminer.preferredmode.nosneak=Veinminer set to deactivate on sneak.
 
 mod.veinminer.finished.tooHungry=You are too hungry to use VeinMiner.
+mod.veinminer.finished.noExp=You don't have enough experience to use VeinMiner.
 
 # Controls
 veinminer.key.category=Vein Miner

@@ -27,6 +27,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.FoodStats;
@@ -42,6 +43,7 @@ import portablejim.veinminer.lib.BlockLib;
 import portablejim.veinminer.lib.MinerLogger;
 import portablejim.veinminer.server.MinerServer;
 import portablejim.veinminer.util.BlockID;
+import portablejim.veinminer.util.ExpCalculator;
 import portablejim.veinminer.util.ItemStackID;
 import portablejim.veinminer.util.PlayerStatus;
 import portablejim.veinminer.util.Point;
@@ -173,6 +175,28 @@ public class MinerInstance {
             }
         }
 
+        // Experience
+        int experienceMod = serverInstance.getConfigurationSettings().getExperienceMultiplier();
+        if(experienceMod > 0 && ExpCalculator.getExp(player.experienceLevel, player.experience) < experienceMod) {
+            this.finished = true;
+
+            String problem = "mod.veinminer.finished.noExp";
+
+            // Fix bugged xp
+            if(player.experience < 0) player.experience = 0;
+            if(player.experience > 1) player.experience = 1;
+            if(player.experienceLevel < 0) player.experienceLevel = 0;
+            player.addExperienceLevel(0);
+
+            if(serverInstance.playerHasClient(player.getUniqueID())) {
+                player.addChatMessage(new ChatComponentTranslation(problem));
+            }
+            else {
+                String translatedProblem = StatCollector.translateToLocal(problem);
+                player.addChatMessage(new ChatComponentText(translatedProblem));
+            }
+        }
+
         // Within mined block limits
         if (numBlocksMined >= blockLimit && blockLimit != -1) {
             MinerLogger.debug("Blocks mined: %d; Blocklimit: %d. Forcing finish.", numBlocksMined, blockLimit);
@@ -195,6 +219,60 @@ public class MinerInstance {
         return toolAllowed;
     }
 
+    private void takeHunger() {
+        float hungerMod = ((float) serverInstance.getConfigurationSettings().getHungerMultiplier()) * 0.025F;
+        FoodStats s = player.getFoodStats();
+        NBTTagCompound nbt = new NBTTagCompound();
+        s.writeNBT(nbt);
+        int foodLevel = nbt.getInteger("foodLevel");
+        int foodTimer = nbt.getInteger("foodTickTimer");
+        float foodSaturationLevel = nbt.getFloat("foodSaturationLevel");
+        float foodExhaustionLevel = nbt.getFloat("foodExhaustionLevel");
+
+        float newExhaustion = (foodExhaustionLevel + hungerMod) % 4;
+        float newSaturation = foodSaturationLevel - (float)Math.floor(foodExhaustionLevel + hungerMod / 4);
+        int newFoodLevel = foodLevel;
+        if(newSaturation < 0) {
+            newFoodLevel += newSaturation;
+            newSaturation = 0;
+        }
+        nbt.setInteger("foodLevel", newFoodLevel);
+        nbt.setInteger("foodTickTimer", foodTimer);
+        nbt.setFloat("foodSaturationLevel", newSaturation);
+        nbt.setFloat("foodExhaustionLevel", newExhaustion);
+
+        s.readNBT(nbt);
+    }
+
+    private void takeExperience() {
+        int targetLevel = player.experienceLevel;
+        int expToTakeAway = serverInstance.getConfigurationSettings().getExperienceMultiplier();
+
+        if(expToTakeAway == 0) {
+            return;
+        }
+
+        if(expToTakeAway > player.experience * player.xpBarCap()) {
+            int newExp = ExpCalculator.getExp(player.experienceLevel, player.experience) - expToTakeAway;
+            while(ExpCalculator.getExp(targetLevel, 0) > newExp)
+                targetLevel--;
+            player.experienceLevel = targetLevel < 0 ? 0 : targetLevel;
+            //expToTakeAway -= ExpCalculator.getExp(targetLevel, 0);
+            int newExpTotal = newExp - ExpCalculator.getExp(targetLevel, 0);
+            player.experience = Math.max(0, Math.min(1, (float)newExpTotal / player.xpBarCap()));
+            player.experienceTotal = Math.max(0, newExpTotal);
+            if(newExp <= 0) {
+                player.experience = 0;
+                player.experienceLevel = 0;
+                player.experienceTotal = 0;
+            }
+        }
+        else {
+            player.addExperience(-expToTakeAway);
+        }
+        player.addExperienceLevel(0);
+    }
+
     private void mineBlock(int x, int y, int z) {
         Point newPoint = new Point(x, y, z);
         BlockID newBlock = new BlockID(world, x , y, z );
@@ -204,6 +282,9 @@ public class MinerInstance {
             awaitingEntityDrop.add(newPoint);
             boolean success = player.theItemInWorldManager.tryHarvestBlock(x, y, z);
             numBlocksMined++;
+
+            takeHunger();
+            takeExperience();
 
             VeinminerPostUseTool toolUsedEvent = new VeinminerPostUseTool(player);
             MinecraftForge.EVENT_BUS.post(toolUsedEvent);

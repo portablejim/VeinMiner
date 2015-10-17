@@ -101,6 +101,8 @@ public class ConfigurationSettings {
         setRadiusLimit(configValues.RADIUS_LIMIT);
 
         setBlockCongruenceList(configValues.BLOCK_EQUIVALENCY_LIST);
+        setHungerModifier(configValues.HUNGER_MULTIPLIER);
+        setExperienceModifier(configValues.EXPERIENCE_MULTIPLIER);
 
         setEnableAllBlocks(configValues.ENABLE_ALL_BLOCKS);
         setEnableAllTools(configValues.ENABLE_ALL_TOOLS);
@@ -368,6 +370,25 @@ public class ConfigurationSettings {
         this.blocksPerTick = blocksPerTick;
     }
 
+    private int hungerModifier;
+    private int experienceModifier;
+
+    public int getHungerMultiplier() {
+        return hungerModifier;
+    }
+
+    public void setHungerModifier(int hungerModifier) {
+        this.hungerModifier = hungerModifier < 0 ? 0 : hungerModifier;
+    }
+
+    public int getExperienceMultiplier() {
+        return experienceModifier;
+    }
+
+    public void setExperienceModifier(int experienceModifier) {
+        this.experienceModifier = experienceModifier < 0 ? 0 : experienceModifier;
+    }
+
     public boolean toolIsOfType(ItemStack tool, String type) {
         return tool == null || toolsAndBlocks.get(type).toollist.contains(Item.itemRegistry.getNameForObject(tool.getItem()));
     }
@@ -444,6 +465,8 @@ public class ConfigurationSettings {
         configValues.RADIUS_LIMIT = getRadiusLimit();
 
         configValues.BLOCK_EQUIVALENCY_LIST = getBlockCongruenceList();
+        configValues.HUNGER_MULTIPLIER = getHungerMultiplier();
+        configValues.EXPERIENCE_MULTIPLIER = getExperienceMultiplier();
 
         configValues.ENABLE_ALL_BLOCKS = getEnableAllBlocks();
         configValues.ENABLE_ALL_TOOLS = getEnableAllTools();
