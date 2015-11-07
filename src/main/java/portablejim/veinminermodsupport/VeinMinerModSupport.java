@@ -28,6 +28,7 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.NetworkCheckHandler;
+import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -264,13 +265,22 @@ public class VeinMinerModSupport {
         }
         if(Loader.isModLoaded("exnihilo")) {
             devLog("Ex Nihilo detected");
-            if (currentEquippedItem != null && currentEquippedItem.getClass().getCanonicalName().startsWith("exnihilo.items.hammers")
-                    && event.allowContinue == Permission.DENY) {
-                devLog("Allowed hammer start");
-                event.allowContinue = Permission.ALLOW;
-            }
-            else if(currentEquippedItem != null) {
-                devLog(currentEquippedItem.getClass().getCanonicalName());
+            if(currentEquippedItem != null) {
+                if (currentEquippedItem.getClass().getCanonicalName().startsWith("exnihilo.items.hammers") && event.allowContinue == Permission.DENY) {
+                    devLog("Allowed hammer start");
+                    event.allowContinue = Permission.ALLOW;
+                }
+                else {
+                    devLog(currentEquippedItem.getClass().getCanonicalName());
+                }
+                Block testLeaves = Block.getBlockFromName(event.blockName);
+                if(Block.getBlockFromName(event.blockName).isLeaves(event.player.getEntityWorld(), (int)event.player.posX, (int)event.player.posY, (int)event.player.posZ)
+                        && event.allowContinue == Permission.DENY) {
+                    String item_name = GameRegistry.findUniqueIdentifierFor(currentEquippedItem).toString();
+                    if("exnihilo:crook".equals(item_name)) event.allowContinue = Permission.ALLOW;
+                    if("exnihilo:crook_bone".equals(item_name)) event.allowContinue = Permission.ALLOW;
+                    if("exastris:crook_rf".equals(item_name)) event.allowContinue = Permission.ALLOW;
+                }
             }
 
             try {
