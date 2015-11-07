@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.30.1
+------
+Bob Ross edition.
+Changes/Fixes:
+* You can now have happy little accidents with happy little white trees. Instead of a 2 inch brush, use a crook.
+
 0.30.0
 -------
 Changes:
