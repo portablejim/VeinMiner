@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.30.2
+------
+Fixes:
+* The command to reload configs from file is 'reloadconfig' not 'loadconfig'
+* The per tick command returns the correct value.
+
 0.30.1
 ------
 Bob Ross edition.
