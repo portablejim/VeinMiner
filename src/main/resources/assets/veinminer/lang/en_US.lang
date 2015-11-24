@@ -1,5 +1,5 @@
 # Command usage/error
-command.veinminer=/veinminer mode/blocklist/toollist/blocklimit/radius/per_tick/saveconfig/loadconfig/help
+command.veinminer=/veinminer mode/blocklist/toollist/blocklimit/radius/per_tick/saveconfig/reloadconfig/help
 command.veinminer.enable=/veinminer mode auto/sneak/no_sneak
 command.veinminer.blocklist=/veinminer blocklist %s add/remove <mod id>:<block name> <metadata>
 command.veinminer.toollist=/veinminer toollist %s add/remove <tool id>
@@ -30,7 +30,7 @@ command.veinminer.pertick=/veinminer per_tick <# blocks to destroy each tick>
 command.veinminer.pertick.set=Set to destroy %d blocks per tick
 
 command.veinminer.saveconfig=Saved settings to config file
-command.veinminer.loadconfig=Loaded settings from config file
+command.veinminer.loadconfig=Reloaded settings from config file
 
 command.veinminer.cannotuse=Non-players cannot use veinminer commands
 command.veinminer.permissionDenied=You don't have permission to use this sub-command
@@ -56,7 +56,7 @@ command.veinminer.help5='blocklimit': Set the limit on the number of blocks that
 command.veinminer.help6='radius': Set the maximum distance Veinminer will collect blocks from the first block destroyed
 command.veinminer.help7='per_tick': Set the rate at which blocks are destroyed by VeinMiner
 command.veinminer.help8='saveconfig': Save current config values to config file
-command.veinminer.help9='loadconfig': Load config values from config file
+command.veinminer.help9='reloadconfig': Load config values from config file
 command.veinminer.help10='help': This text
 command.veinminer.help.enable1=Available activation modes:
 command.veinminer.help.enable2='auto': Activate on keybind (useless without mod on client).
