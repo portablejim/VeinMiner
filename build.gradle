@@ -1,7 +1,7 @@
 
 buildscript {
     repositories {
-        mavenCentral()
+        jcenter()
         maven {
             name = "forge"
             url = "http://files.minecraftforge.net/maven"
@@ -12,13 +12,16 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.0-SNAPSHOT'
     }
 }
 
-apply plugin: 'forge'
+plugins {
+    id 'com.matthewprenger.cursegradle' version '1.0.4'
+}
+
+apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'maven'
-apply plugin: 'curseforge'
 
 ext.configFile = file "build.properties"
 
@@ -35,7 +38,8 @@ archivesBaseName = "VeinMiner"
 
 minecraft {
     version = config.minecraft_version + "-" + config.forge_version
-    mappings = "snapshot_20150220"
+    mappings = "snapshot_20151119"
+    runDir = "run"
 }
 
 String buildNumber = "unknown"
@@ -137,19 +141,25 @@ uploadArchives {
 ext.curseForgeReleaseType = null
 
 task ('curseGeneral') << {
-    curse {
-        projectId = '67133'
+    curseforge {
         if (project.hasProperty('curseForgeApiKey')) apiKey = project.curseForgeApiKey
         else apiKey = 0
-        releaseType = curseForgeReleaseType
-        changelog = new File('Changelog.md').getText('utf-8').split('\n-{3,8}|\n\n')[2]
-        displayName = String.format('VeinMiner %s [MC%s; build %s]', config.mod_version, config.compatible_versions, buildNumber)
-        additionalArtifact deobfJar, apiJar
+        project {
+            id = '67133'
+            releaseType = curseForgeReleaseType
+            changelog = new File('Changelog.md').getText('utf-8').split('\n-{3,8}|\n\n')[2]
 
-        for (String newVersion : config.compatible_versions.split(",")) {
-            addGameVersion newVersion
+            mainArtifact(jar) {
+                displayName = String.format('VeinMiner %s [MC%s; build %s]', config.mod_version, config.compatible_versions, buildNumber)
+            }
+            addArtifact deobfJar
+            addArtifact apiJar
+
+            for (String newVersion : config.compatible_versions.split(",")) {
+                addGameVersion newVersion
+            }
         }
-    }.execute()
+    }
 }
 
 task setCurseAlpha << {
@@ -164,10 +174,12 @@ task setCurseRelease << {
 
 task curseAlpha(dependsOn: 'curseGeneral') {
     curseGeneral.dependsOn setCurseAlpha
+    curseforge
 }
 
 task curseRelease(dependsOn: 'curseGeneral') {
     curseGeneral.dependsOn setCurseRelease
+    curseforge
 
 }
 
