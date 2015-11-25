@@ -138,49 +138,39 @@ uploadArchives {
     }
 }
 
-ext.curseForgeReleaseType = null
+curseforge {
+    if (project.hasProperty('curseForgeApiKey')) apiKey = project.curseForgeApiKey
+    else apiKey = 0
+    project {
+        id = '67133'
+        changelog = new File('Changelog.md').getText('utf-8').split('\n-{3,8}|\n\n')[2]
+        changelogType = 'markdown'
+        releaseType = 'alpha' // Just a default
+        mainArtifact (jar) {
+            displayName = "VeinMiner $config.mod_version [MC$config.compatible_versions; build $buildNumber]"
+        }
 
-task ('curseGeneral') << {
-    curseforge {
-        if (project.hasProperty('curseForgeApiKey')) apiKey = project.curseForgeApiKey
-        else apiKey = 0
-        project {
-            id = '67133'
-            releaseType = curseForgeReleaseType
-            changelog = new File('Changelog.md').getText('utf-8').split('\n-{3,8}|\n\n')[2]
+        addArtifact deobfJar
+        addArtifact apiJar
 
-            mainArtifact(jar) {
-                displayName = String.format('VeinMiner %s [MC%s; build %s]', config.mod_version, config.compatible_versions, buildNumber)
-            }
-            addArtifact deobfJar
-            addArtifact apiJar
-
-            for (String newVersion : config.compatible_versions.split(",")) {
-                addGameVersion newVersion
-            }
+        for (String newVersion : config.compatible_versions.split(",")) {
+            addGameVersion newVersion
         }
     }
 }
 
-task setCurseAlpha << {
-    print('Set alpha')
-    curseForgeReleaseType = 'alpha'
+task curseAlpha(dependsOn: tasks.curseforge) {}
+task curseRelease(dependsOn: tasks.curseforge) {}
+
+gradle.taskGraph.whenReady { taskGraph ->
+    if (taskGraph.hasTask(curseAlpha)) {
+        curseforge.curseProjects.each { it.additionalArtifacts.each { it.releaseType = 'alpha' } }
+        curseforge.curseProjects.each { it.releaseType = 'alpha' }
+        curseforge.curseProjects.each { it.mainArtifact.releaseType = 'alpha' }
+
+    } else if (taskGraph.hasTask(curseRelease)) {
+        curseforge.curseProjects.each { it.releaseType = 'release' }
+        curseforge.curseProjects.each { it.mainArtifact.releaseType = 'release' }
+        curseforge.curseProjects.each { it.additionalArtifacts.each { it.releaseType = 'release' } }
+    }
 }
-
-task setCurseRelease << {
-    print('Set release')
-    curseForgeReleaseType = 'release'
-}
-
-task curseAlpha(dependsOn: 'curseGeneral') {
-    curseGeneral.dependsOn setCurseAlpha
-    curseforge
-}
-
-task curseRelease(dependsOn: 'curseGeneral') {
-    curseGeneral.dependsOn setCurseRelease
-    curseforge
-
-}
-
-
