@@ -30,6 +30,7 @@ command.veinminer.pertick=/veinminer per_tick <# 每 tick 破坏的方块数>
 command.veinminer.pertick.set=已设置破坏方块的速度为 %d 个方块每 tick
 
 command.veinminer.saveconfig=已保存设置到配置文件
+command.veinminer.loadconfig=已从配置文件重新载入设置
 
 command.veinminer.cannotuse=非玩家不能使用 Veinminer 指令
 command.veinminer.permissionDenied=你没有权限使用该指令
@@ -40,6 +41,7 @@ mod.veinminer.preferredmode.sneak=Veinminer 正使用潜行模式
 mod.veinminer.preferredmode.nosneak=Veinminer 正使用非潜行模式
 
 mod.veinminer.finished.tooHungry=你的饥饿值不足以使用 Veinminer
+mod.veinminer.finished.noExp=你没有足够的经验值以使用 VeinMiner
 
 # Controls
 veinminer.key.category=Veinminer
@@ -54,7 +56,8 @@ command.veinminer.help5='blocklimit': 设置 Veinminer 破坏方块的最大数�
 command.veinminer.help6='radius': 设置 Veinminer 破坏方块的最大半径
 command.veinminer.help7='per_tick': 设置 Veinminer 破坏方块的速度
 command.veinminer.help8='saveconfig': 保存设置到配置文件
-command.veinminer.help9='help': 显示帮助菜单
+command.veinminer.help9='reloadconfig': 从配置文件载入设置
+command.veinminer.help10='help': 显示帮助菜单
 command.veinminer.help.enable1=可选模式:
 command.veinminer.help.enable2='auto': 热键模式 (服务端: 当客户端没有本模组时无效)
 command.veinminer.help.enable3='sneak': 潜行模式
