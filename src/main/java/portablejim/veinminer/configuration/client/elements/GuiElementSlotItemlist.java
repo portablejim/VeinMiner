@@ -107,6 +107,7 @@ public class GuiElementSlotItemlist extends GuiScrollingList {
             itemStack.setItemDamage(itemParts.metadata == -1 ? 0 : itemParts.metadata);
 
             // Get new name based on damage value.
+            tryBlock.getStateForEntityRender(tryBlock.getDefaultState());
             displayName = itemStack.getUnlocalizedName();
             iconRenderer.renderItemStackIcon(this.listWidth / 2 - 148, var3 - 1 , itemStack);
         }

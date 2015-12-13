@@ -432,10 +432,4 @@ public class MinerCommand extends CommandBase {
     {
         return this.getCommandName().compareTo(par1ICommand.getCommandName());
     }
-
-    @Override
-    public int compareTo(Object par1Obj)
-    {
-        return this.compareTo((ICommand)par1Obj);
-    }
 }

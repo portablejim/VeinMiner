@@ -17,15 +17,21 @@
 
 package portablejim.veinminer.lib;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
+import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.GL21;
+import org.lwjgl.opengl.GL30;
 
 /**
  * Render an icon of an ItemStack with a background.
@@ -64,11 +70,11 @@ public class IconRenderer {
         minecraft.getTextureManager().bindTexture(Gui.statIcons);
         Tessellator tessellator = Tessellator.getInstance();
         WorldRenderer wr = tessellator.getWorldRenderer();
-        wr.startDrawingQuads();
-        wr.addVertexWithUV((double) (xBase), (double) (yBase + 18), zLevel, (double) ((float) (uBase) * 0.0078125F), (double) ((float) (vBase + 18) * 0.0078125F));
-        wr.addVertexWithUV((double) (xBase + 18), (double) (yBase + 18), zLevel, (double) ((float) (uBase + 18) * 0.0078125F), (double) ((float) (vBase + 18) * 0.0078125F));
-        wr.addVertexWithUV((double) (xBase + 18), (double) (yBase), zLevel, (double) ((float) (uBase + 18) * 0.0078125F), (double) ((float) (vBase) * 0.0078125F));
-        wr.addVertexWithUV((double) (xBase), (double) (yBase), zLevel, (double) ((float) (uBase) * 0.0078125F), (double) ((float) (vBase) * 0.0078125F));
+        wr.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+        wr.pos((double) (xBase), (double) (yBase + 18), zLevel).tex((double) ((float) (uBase) * 0.0078125F), (double) ((float) (vBase + 18) * 0.0078125F)).endVertex();
+        wr.pos((double) (xBase + 18), (double) (yBase + 18), zLevel).tex((double) ((float) (uBase + 18) * 0.0078125F), (double) ((float) (vBase + 18) * 0.0078125F)).endVertex();
+        wr.pos((double) (xBase + 18), (double) (yBase), zLevel).tex((double) ((float) (uBase + 18) * 0.0078125F), (double) ((float) (vBase) * 0.0078125F)).endVertex();
+        wr.pos((double) (xBase), (double) (yBase), zLevel).tex((double) ((float) (uBase) * 0.0078125F), (double) ((float) (vBase) * 0.0078125F)).endVertex();
         wr.finishDrawing();
     }
 }
