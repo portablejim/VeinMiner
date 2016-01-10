@@ -25,6 +25,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import portablejim.veinminer.server.MinerServer;
+import portablejim.veinminer.util.Point;
 
 /**
  * Hooks into the entity that are dropped into the world to stop entities that
@@ -59,6 +60,11 @@ public class EntityDropHook {
         int entityX = (int)Math.floor(entity.posX);
         int entityY = (int)Math.floor(entity.posY);
         int entityZ = (int)Math.floor(entity.posZ);
+
+        // Only return for what we are waiting for.
+        if(!minerServer.awaitingDrop(new Point(entityX, entityY, entityZ))) {
+            return;
+        }
 
         if(!EntityItem.class.isInstance(entity)) {
             return;

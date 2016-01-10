@@ -297,6 +297,7 @@ public class MinerInstance {
             if (success || continueCheck.allowContinue.isAllowed()) {
                 mineSuccessful = true;
                 postSuccessfulBreak(newPoint);
+                awaitingEntityDrop.remove(newPoint);
             } else {
                 awaitingEntityDrop.remove(newPoint);
             }
