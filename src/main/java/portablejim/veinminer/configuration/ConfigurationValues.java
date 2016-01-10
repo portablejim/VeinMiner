@@ -155,6 +155,7 @@ public class ConfigurationValues {
         }
         catch(JsonParseException e) {
             VeinMiner.instance.logger.error(String.format("Error parsing %s; Json error: %s", configFileJson.getName(), e.getLocalizedMessage()));
+            VeinMiner.instance.logger.error("The above line number may be inexact.");
             VeinMiner.instance.logger.error("Asking java to exit");
             FMLCommonHandler.instance().exitJava(1, false);
         }
