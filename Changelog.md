@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.31.0
+------
+Fixes:
+* Torches and grass on top of blocks destroyed by veinminer now drop properly.
+* Veinminer should be faster, working closer to the advertised speed.
+
 0.30.2
 ------
 Fixes:

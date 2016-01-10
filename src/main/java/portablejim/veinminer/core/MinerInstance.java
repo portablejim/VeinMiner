@@ -49,11 +49,10 @@ import portablejim.veinminer.util.PlayerStatus;
 import portablejim.veinminer.util.Point;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -273,7 +272,8 @@ public class MinerInstance {
         player.addExperienceLevel(0);
     }
 
-    private void mineBlock(int x, int y, int z) {
+    private boolean mineBlock(int x, int y, int z) {
+        boolean mineSuccessful = false;
         Point newPoint = new Point(x, y, z);
         BlockID newBlock = new BlockID(world, new BlockPos(x , y, z ));
         ConfigurationSettings configurationSettings = serverInstance.getConfigurationSettings();
@@ -295,11 +295,15 @@ public class MinerInstance {
             VeinminerHarvestFailedCheck continueCheck = new VeinminerHarvestFailedCheck(player, targetBlock.name, targetBlock.metadata);
             MinecraftForge.EVENT_BUS.post(continueCheck);
             if (success || continueCheck.allowContinue.isAllowed()) {
+                mineSuccessful = true;
                 postSuccessfulBreak(newPoint);
+                awaitingEntityDrop.remove(newPoint);
             } else {
                 awaitingEntityDrop.remove(newPoint);
             }
         }
+
+        return mineSuccessful;
     }
 
 
@@ -359,10 +363,13 @@ public class MinerInstance {
     @SubscribeEvent
     public void mineScheduled(ServerTickEvent event) {
         int quantity = serverInstance.getConfigurationSettings().getBlocksPerTick();
-        for(int i = 0; i < quantity; i++) {
+        int i = 0;
+        while(i < quantity) {
             if(!destroyQueue.isEmpty()) {
                 Point target = destroyQueue.remove();
-                mineBlock(target.getX(), target.getY(), target.getZ());
+                if(mineBlock(target.getX(), target.getY(), target.getZ())) {
+                    i += 1;
+                }
             }
             else {
                 // All blocks have been mined. This is done last.

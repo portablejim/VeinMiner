@@ -83,6 +83,15 @@ public class MinerServer {
         }
     }
 
+    public boolean awaitingDrop(Point p) {
+        for (MinerInstance minerInstance : minerInstances) {
+            if (minerInstance.isRegistered(p)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public boolean pointIsBlacklisted(Point point) {
         for (MinerInstance minerInstance : minerInstances) {
             if(minerInstance.pointIsBlacklisted(point)) {
