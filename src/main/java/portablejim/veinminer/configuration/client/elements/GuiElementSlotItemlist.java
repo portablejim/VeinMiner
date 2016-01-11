@@ -45,7 +45,7 @@ public class GuiElementSlotItemlist extends GuiScrollingList {
     String toolType;
 
     public GuiElementSlotItemlist(ItemlistConfigGuiScreen parent, String toolType) {
-        super(Minecraft.getMinecraft(), parent.width - 10, parent.height, 60, parent.height - 40, 5, 22);
+        super(Minecraft.getMinecraft(), parent.width - 10, parent.height, 60, parent.height - 40, 5, 22, parent.width, parent.height);
         iconRenderer = new IconRenderer(parent.mc, parent.getZLevel());
         this.parent = parent;
         this.toolType = toolType;
