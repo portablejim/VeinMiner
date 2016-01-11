@@ -3,9 +3,12 @@ Changelog
 
 0.31.0
 ------
+Changes:
+* Updated to 1.8.9.
 Fixes:
 * Torches and grass on top of blocks destroyed by veinminer now drop properly.
 * Veinminer should be faster, working closer to the advertised speed.
+* Crash on tools screen.
 
 0.30.2
 ------
