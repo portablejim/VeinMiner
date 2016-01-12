@@ -19,6 +19,7 @@ package portablejim.veinminer.server;
 
 import com.google.common.base.Joiner;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
@@ -393,7 +394,7 @@ public class MinerCommand extends CommandBase {
     }
 
     @SuppressWarnings("UnusedDeclaration")
-    public List addTabCompletionOptions(ICommandSender par1ICommandSender, String[] arguments) {
+    public List<String> addTabCompletionOptions(ICommandSender par1ICommandSender, String[] arguments, BlockPos pos) {
         switch (arguments.length) {
             case 1:
                 return getListOfStringsMatchingLastWord(arguments, commands);
