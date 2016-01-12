@@ -25,9 +25,12 @@ import portablejim.veinminer.core.MinerInstance;
 import portablejim.veinminer.util.PlayerStatus;
 import portablejim.veinminer.util.Point;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Singleton class that co-ordinates various actions. It allows the current
@@ -38,17 +41,17 @@ import java.util.UUID;
 
 public class MinerServer {
 
-    private HashSet<MinerInstance> minerInstances;
-    private HashMap<Point, MinerInstance> pointMinerInstances;
+    private Set<MinerInstance> minerInstances;
+    private ConcurrentHashMap<Point, MinerInstance> pointMinerInstances;
     private HashSet<UUID> clientPlayers;
-    private HashMap<UUID, PlayerStatus> players;
+    private ConcurrentHashMap<UUID, PlayerStatus> players;
     private ConfigurationSettings settings;
 
     public MinerServer(ConfigurationValues configValues) {
-        minerInstances = new HashSet<MinerInstance>();
-        pointMinerInstances = new HashMap<Point, MinerInstance>();
+        minerInstances = Collections.synchronizedSet(new HashSet<MinerInstance>());
+        pointMinerInstances = new ConcurrentHashMap<Point, MinerInstance>();
         clientPlayers = new HashSet<UUID>();
-        players = new HashMap<UUID, PlayerStatus>();
+        players = new ConcurrentHashMap<UUID, PlayerStatus>();
         settings = new ConfigurationSettings(configValues);
     }
 
