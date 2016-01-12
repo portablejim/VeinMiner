@@ -36,8 +36,8 @@ public class BlockLib {
             return false;
         }
 
-        int firstResultMeta = first.state.getBlock().getMetaFromState(first.state);
-        int secondResultMeta = second.state.getBlock().getMetaFromState(second.state);
+        int firstResultMeta = first.state.getBlock().damageDropped(first.state);
+        int secondResultMeta = second.state.getBlock().damageDropped(second.state);
 
         return first.name.equals(second.name) && firstResultMeta == secondResultMeta;
     }
