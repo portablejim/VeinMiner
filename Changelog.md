@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.31.2
+-------
+Fixes:
+* Fix autocomplete
+* Make detection of the same blocks better.
+
 0.31.1
 ------
 Fixes:
