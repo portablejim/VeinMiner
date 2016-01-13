@@ -56,7 +56,8 @@ import static net.minecraftforge.fml.common.Mod.Instance;
  */
 
 @Mod(modid = ModInfo.MOD_ID,
-        name = ModInfo.MOD_NAME)
+        name = ModInfo.MOD_NAME,
+        acceptedMinecraftVersions = "[1.8.8,1.9)")
 public class VeinMinerModSupport {
 
     private boolean debugMode = false;
