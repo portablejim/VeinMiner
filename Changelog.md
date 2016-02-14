@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.31.2
+------
+Fixes:
+* Further attempts to fix ConcurrentModificationException crashes.
+
 0.31.1
 ------
 Fixes:
