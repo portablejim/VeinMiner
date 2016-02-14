@@ -41,7 +41,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class MinerServer {
 
-    private Set<MinerInstance> minerInstances;
+    private final Set<MinerInstance> minerInstances;
     private ConcurrentHashMap<Point, MinerInstance> pointMinerInstances;
     private HashSet<UUID> clientPlayers;
     private ConcurrentHashMap<UUID, PlayerStatus> players;
@@ -79,41 +79,51 @@ public class MinerServer {
         }
         EntityItem entityItem = (EntityItem) entity;
 
-        for (MinerInstance minerInstance : minerInstances) {
-            if (minerInstance.isRegistered(p)) {
-                minerInstance.addDrop(entityItem);
+        synchronized (minerInstances) {
+            for (MinerInstance minerInstance : minerInstances) {
+                if (minerInstance.isRegistered(p)) {
+                    minerInstance.addDrop(entityItem);
+                }
             }
         }
     }
 
     public boolean awaitingDrop(Point p) {
-        for (MinerInstance minerInstance : minerInstances) {
-            if (minerInstance.isRegistered(p)) {
-                return true;
+        synchronized (minerInstances) {
+            for (MinerInstance minerInstance : minerInstances) {
+                if (minerInstance.isRegistered(p)) {
+                    return true;
+                }
             }
         }
         return false;
     }
 
     public boolean pointIsBlacklisted(Point point) {
-        for (MinerInstance minerInstance : minerInstances) {
-            if(minerInstance.pointIsBlacklisted(point)) {
-                return true;
+        synchronized (minerInstances) {
+            for (MinerInstance minerInstance : minerInstances) {
+                if (minerInstance.pointIsBlacklisted(point)) {
+                    return true;
+                }
             }
         }
         return false;
     }
 
     public void removeFromBlacklist(Point point) {
-        for (MinerInstance minerInstance : minerInstances) {
-            if(minerInstance.pointIsBlacklisted(point)) {
-                minerInstance.removeFromBlacklist(point);
+        synchronized (minerInstances) {
+            for (MinerInstance minerInstance : minerInstances) {
+                if (minerInstance.pointIsBlacklisted(point)) {
+                    minerInstance.removeFromBlacklist(point);
+                }
             }
         }
     }
 
     public void addInstance(MinerInstance ins) {
-        minerInstances.add(ins);
+        synchronized (minerInstances) {
+            minerInstances.add(ins);
+        }
         pointMinerInstances.put(ins.getInitalBlock(), ins);
     }
 
@@ -125,7 +135,9 @@ public class MinerServer {
     }
 
     public void removeInstance(MinerInstance ins) {
-        minerInstances.remove(ins);
+        synchronized (minerInstances) {
+            minerInstances.remove(ins);
+        }
         if(pointMinerInstances.containsKey(ins.getInitalBlock())) {
             pointMinerInstances.remove(ins);
         }
