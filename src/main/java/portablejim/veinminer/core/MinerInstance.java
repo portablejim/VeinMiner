@@ -18,6 +18,7 @@
 package portablejim.veinminer.core;
 
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.eventhandler.EventBus;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -57,6 +58,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.logging.Logger;
 
 import static net.minecraftforge.event.entity.player.PlayerEvent.HarvestCheck;
 
@@ -444,21 +446,12 @@ public class MinerInstance {
 
         MinerInstance that = (MinerInstance) o;
 
-        if (finished != that.finished) return false;
-        if (numBlocksMined != that.numBlocksMined) return false;
         if (radiusLimit != that.radiusLimit) return false;
         if (blockLimit != that.blockLimit) return false;
         if (serverInstance != null ? !serverInstance.equals(that.serverInstance) : that.serverInstance != null)
             return false;
-        if (startBlacklist != null ? !startBlacklist.equals(that.startBlacklist) : that.startBlacklist != null)
-            return false;
-        if (destroyQueue != null ? !destroyQueue.equals(that.destroyQueue) : that.destroyQueue != null) return false;
-        if (awaitingEntityDrop != null ? !awaitingEntityDrop.equals(that.awaitingEntityDrop) : that.awaitingEntityDrop != null)
-            return false;
-        if (drops != null ? !drops.equals(that.drops) : that.drops != null) return false;
         if (world != null ? !world.equals(that.world) : that.world != null) return false;
         if (player != null ? !player.equals(that.player) : that.player != null) return false;
-        if (targetBlock != null ? !targetBlock.equals(that.targetBlock) : that.targetBlock != null) return false;
         if (usedItem != null ? !usedItem.equals(that.usedItem) : that.usedItem != null) return false;
         return initalBlock != null ? initalBlock.equals(that.initalBlock) : that.initalBlock == null;
 
@@ -467,16 +460,9 @@ public class MinerInstance {
     @Override
     public int hashCode() {
         int result = serverInstance != null ? serverInstance.hashCode() : 0;
-        result = 31 * result + (startBlacklist != null ? startBlacklist.hashCode() : 0);
-        result = 31 * result + (destroyQueue != null ? destroyQueue.hashCode() : 0);
-        result = 31 * result + (awaitingEntityDrop != null ? awaitingEntityDrop.hashCode() : 0);
-        result = 31 * result + (drops != null ? drops.hashCode() : 0);
         result = 31 * result + (world != null ? world.hashCode() : 0);
         result = 31 * result + (player != null ? player.hashCode() : 0);
-        result = 31 * result + (targetBlock != null ? targetBlock.hashCode() : 0);
-        result = 31 * result + (finished ? 1 : 0);
         result = 31 * result + (usedItem != null ? usedItem.hashCode() : 0);
-        result = 31 * result + numBlocksMined;
         result = 31 * result + (initalBlock != null ? initalBlock.hashCode() : 0);
         result = 31 * result + radiusLimit;
         result = 31 * result + blockLimit;
