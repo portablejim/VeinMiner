@@ -38,6 +38,10 @@ import portablejim.veinminer.util.Point;
 public class InjectedCalls {
     @SuppressWarnings("UnusedDeclaration")
     public static void blockMined(World world, EntityPlayerMP player, int x, int y, int z, boolean harvestBlockSuccess, BlockID blockName) {
+        if(world.isRemote) {
+            return;
+        }
+
         MinerLogger.debug("Block mined at %d,%d,%d, result %s, block id is %s/%d", x, y, z, harvestBlockSuccess, blockName.name, blockName.metadata);
 
         //noinspection ConstantConditions

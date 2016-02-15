@@ -24,6 +24,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import portablejim.veinminer.VeinMiner;
 import portablejim.veinminer.server.MinerServer;
 import portablejim.veinminer.util.Point;
 
@@ -48,6 +49,10 @@ public class EntityDropHook {
     @SubscribeEvent
     public void tryAddEntity(EntityJoinWorldEvent event) {
         Entity entity = event.entity;
+
+        if(event.world.isRemote) {
+            return;
+        }
 
         if(event.isCanceled()) {
             return;
