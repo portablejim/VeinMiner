@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.31.4
+------
+Fixes:
+* Allow IC2 rubber wood to work with VeinMiner.
+
 0.31.3
 ------
 Fixes:
