@@ -344,6 +344,15 @@ public class VeinMinerModSupport {
 
     @SuppressWarnings("UnusedDeclaration")
     @SubscribeEvent
+    public void fixFalseNegatives(VeinminerHarvestFailedCheck event) {
+        // Some blocks return false when they shouldn't.
+        if(event.allowContinue == Permission.DENY) {
+            if("IC2:blockRubWood".equals(event.blockName)) event.allowContinue = Permission.ALLOW;
+        }
+    }
+
+    @SuppressWarnings("UnusedDeclaration")
+    @SubscribeEvent
     public void applyForce(VeinminerPostUseTool event) {
         ItemStack currentEquippedItemStack = event.player.getCurrentEquippedItem();
 
