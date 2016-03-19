@@ -18,9 +18,9 @@
 package portablejim.veinminer.server;
 
 import net.minecraft.server.dedicated.DedicatedServer;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.IChatComponent;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.translation.I18n;
 
 /**
  * Allow MinerCommand to work with server consoles.
@@ -34,9 +34,9 @@ public class CommandSenderServer implements ICustomCommandSender {
 
     @Override
     public void sendProperChat(String incomingMessage, Object... params) {
-        IChatComponent message;
-        String rawMessage = StatCollector.translateToLocal(incomingMessage);
-        message = new ChatComponentText(String.format(rawMessage, params));
+        ITextComponent message;
+        String rawMessage = I18n.translateToLocal(incomingMessage);
+        message = new TextComponentString(String.format(rawMessage, params));
         server.addChatMessage(message);
     }
 
@@ -47,6 +47,6 @@ public class CommandSenderServer implements ICustomCommandSender {
 
     @Override
     public String localise(String input) {
-        return StatCollector.translateToLocal(input);
+        return I18n.translateToLocal(input);
     }
 }

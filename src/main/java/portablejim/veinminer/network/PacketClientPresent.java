@@ -19,10 +19,9 @@ package portablejim.veinminer.network;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.text.TextComponentTranslation;
 import portablejim.veinminer.VeinMiner;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import portablejim.veinminer.lib.MinerLogger;
 import portablejim.veinminer.server.MinerServer;
@@ -82,14 +81,14 @@ public class PacketClientPresent implements IMessage {
             switch (packetClientPresent.mode) {
                 case 2:
                     minerServer.setPlayerStatus(playerName, PlayerStatus.SNEAK_ACTIVE);
-                    player.addChatMessage(new ChatComponentTranslation("mod.veinminer.preferredmode.sneak"));
+                    player.addChatMessage(new TextComponentTranslation("mod.veinminer.preferredmode.sneak"));
                     break;
                 case 3:
                     minerServer.setPlayerStatus(playerName, PlayerStatus.SNEAK_INACTIVE);
-                    player.addChatMessage(new ChatComponentTranslation("mod.veinminer.preferredmode.nosneak"));
+                    player.addChatMessage(new TextComponentTranslation("mod.veinminer.preferredmode.nosneak"));
                     break;
                 case 1:
-                    player.addChatMessage(new ChatComponentTranslation("mod.veinminer.preferredmode.auto"));
+                    player.addChatMessage(new TextComponentTranslation("mod.veinminer.preferredmode.auto"));
                 default:
                     minerServer.setPlayerStatus(playerName, PlayerStatus.INACTIVE);
             }

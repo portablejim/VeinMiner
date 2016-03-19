@@ -19,7 +19,7 @@ package portablejim.veinminer.core;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import portablejim.veinminer.VeinMiner;
@@ -27,7 +27,6 @@ import portablejim.veinminer.api.VeinminerHarvestFailedCheck;
 import portablejim.veinminer.api.VeinminerInitalToolCheck;
 import portablejim.veinminer.configuration.ConfigurationSettings;
 import portablejim.veinminer.lib.MinerLogger;
-import portablejim.veinminer.server.MinerServer;
 import portablejim.veinminer.util.BlockID;
 import portablejim.veinminer.util.Point;
 

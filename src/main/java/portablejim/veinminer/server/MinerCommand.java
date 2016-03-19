@@ -19,19 +19,18 @@ package portablejim.veinminer.server;
 
 import com.google.common.base.Joiner;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.fml.common.registry.LanguageRegistry;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
-import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.dedicated.DedicatedServer;
-import net.minecraft.util.StatCollector;
 import portablejim.veinminer.configuration.ConfigurationSettings;
 import portablejim.veinminer.util.BlockID;
 import portablejim.veinminer.util.PlayerStatus;
@@ -84,7 +83,7 @@ public class MinerCommand extends CommandBase {
             senderPlayer = new CommandSenderServer((DedicatedServer)icommandsender);
         }
         else {
-            String message = StatCollector.translateToLocal("command.veinminer.cannotuse");
+            String message = I18n.translateToLocal("command.veinminer.cannotuse");
             throw new CommandException(message);
         }
 
@@ -135,24 +134,24 @@ public class MinerCommand extends CommandBase {
     }
 
     private void sendProperChatToPlayer(ICommandSender player, String incomingMessage, Object... params) {
-        IChatComponent message;
+        ITextComponent message;
         if(minerServer.playerHasClient(player.getCommandSenderEntity().getPersistentID())) {
-            message = new ChatComponentTranslation(incomingMessage, params);
+            message = new TextComponentTranslation(incomingMessage, params);
         }
         else {
-            String rawMessage = StatCollector.translateToLocal(incomingMessage);
-            message = new ChatComponentText(String.format(rawMessage, params));
+            String rawMessage = I18n.translateToLocal(incomingMessage);
+            message = new TextComponentString(String.format(rawMessage, params));
         }
         player.addChatMessage(message);
     }
 
     private void showUsageError(String errorKey) throws WrongUsageException {
-        String message = StatCollector.translateToLocal(errorKey);
+        String message = I18n.translateToLocal(errorKey);
         throw new WrongUsageException(message);
     }
 
     private void showUsageError(String errorKey, Object... params) throws WrongUsageException {
-        String message = StatCollector.translateToLocalFormatted(errorKey, params);
+        String message = I18n.translateToLocalFormatted(errorKey, params);
         throw new WrongUsageException(message);
     }
 
@@ -425,7 +424,7 @@ public class MinerCommand extends CommandBase {
 
     @Override
     public String getCommandUsage(ICommandSender par1ICommandSender) {
-        return StatCollector.translateToLocal("command.veinminer");
+        return I18n.translateToLocal("command.veinminer");
     }
 
     @SuppressWarnings("UnusedDeclaration")

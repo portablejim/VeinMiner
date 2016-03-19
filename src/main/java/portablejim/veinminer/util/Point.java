@@ -17,7 +17,7 @@
 
 package portablejim.veinminer.util;
 
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 
 /**
  * Point class to store a 3D point, including distance calculations.

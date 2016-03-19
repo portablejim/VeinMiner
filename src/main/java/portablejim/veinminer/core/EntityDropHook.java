@@ -77,9 +77,10 @@ public class EntityDropHook {
 
         EntityItem entityItem = (EntityItem) entity;
 
+        /* Possibly obsolete
         if(entityItem.getDataWatcher().getWatchableObjectItemStack(10) == null) {
             return;
-        }
+        } */
 
         if(entityItem.getEntityItem().hasTagCompound()) {
             return;

@@ -24,18 +24,13 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.FoodStats;
-import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import portablejim.veinminer.VeinMiner;
 import portablejim.veinminer.api.Permission;
 import portablejim.veinminer.api.VeinminerHarvestFailedCheck;
 import portablejim.veinminer.api.VeinminerNoToolCheck;
@@ -52,13 +47,11 @@ import portablejim.veinminer.util.Point;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.logging.Logger;
 
 import static net.minecraftforge.event.entity.player.PlayerEvent.HarvestCheck;
 

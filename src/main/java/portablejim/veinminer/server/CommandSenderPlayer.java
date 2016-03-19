@@ -18,10 +18,10 @@
 package portablejim.veinminer.server;
 
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.IChatComponent;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.fml.common.registry.LanguageRegistry;
 
 /**
@@ -42,13 +42,13 @@ public class CommandSenderPlayer implements ICustomCommandSender{
 
     @Override
     public void sendProperChat(String incomingMessage, Object... params) {
-        IChatComponent message;
+        ITextComponent message;
         if(minerServer.playerHasClient(player.getPersistentID())) {
-            message = new ChatComponentTranslation(incomingMessage, params);
+            message = new TextComponentTranslation(incomingMessage, params);
         }
         else {
-            String rawMessage = StatCollector.translateToLocal(incomingMessage);
-            message = new ChatComponentText(String.format(rawMessage, params));
+            String rawMessage = I18n.translateToLocal(incomingMessage);
+            message = new TextComponentString(String.format(rawMessage, params));
         }
         player.addChatMessage(message);
     }
