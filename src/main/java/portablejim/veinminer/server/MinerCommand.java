@@ -68,13 +68,9 @@ public class MinerCommand extends CommandBase {
         return "veinminer";
     }
 
-    @Override
-    public boolean canCommandSenderUseCommand(ICommandSender par1ICommandSender) {
-        return par1ICommandSender instanceof EntityPlayerMP || par1ICommandSender instanceof DedicatedServer;
-    }
 
     @Override
-    public void processCommand(ICommandSender icommandsender, String[] astring) throws CommandException {
+    public void execute(MinecraftServer server, ICommandSender icommandsender, String[] astring) throws CommandException {
         ICustomCommandSender senderPlayer;
         if(icommandsender instanceof EntityPlayerMP) {
             senderPlayer = new CommandSenderPlayer(minerServer, (EntityPlayerMP)icommandsender);
@@ -159,7 +155,7 @@ public class MinerCommand extends CommandBase {
         if(sender instanceof EntityPlayerMP) {
             EntityPlayerMP player = (EntityPlayerMP) sender;
             MinecraftServer server = player.mcServer;
-            if (server.isDedicatedServer() && !server.getConfigurationManager().canSendCommands(player.getGameProfile())) {
+            if (server.isDedicatedServer() && !player.canCommandSenderUseCommand(server.getOpPermissionLevel(), "veinminer.admin")) {
                 boolean playerNoClient = !minerServer.playerHasClient(player.getUniqueID());
                 String message = "command.veinminer.permissionDenied";
                 if (playerNoClient) {

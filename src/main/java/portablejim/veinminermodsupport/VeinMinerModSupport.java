@@ -33,6 +33,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.network.NetworkCheckHandler;
+import net.minecraftforge.fml.common.registry.GameData;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import portablejim.veinminer.api.IMCMessage;
@@ -57,7 +58,7 @@ import static net.minecraftforge.fml.common.Mod.Instance;
 
 @Mod(modid = ModInfo.MOD_ID,
         name = ModInfo.MOD_NAME,
-        acceptedMinecraftVersions = "[1.8.8,1.9)")
+        acceptedMinecraftVersions = "[1.9,1.10)")
 public class VeinMinerModSupport {
 
     private boolean debugMode = false;
@@ -246,13 +247,13 @@ public class VeinMinerModSupport {
     @SuppressWarnings("UnusedDeclaration")
     @SubscribeEvent
     public void makeToolsWork(VeinminerHarvestFailedCheck event) {
-        ItemStack currentEquipped = event.player.getCurrentEquippedItem();
+        ItemStack currentEquipped = event.player.getHeldItemMainhand();
 
         if(currentEquipped == null) {
             return;
         }
 
-        Item currentEquippedItem = event.player.getCurrentEquippedItem().getItem();
+        Item currentEquippedItem = event.player.getHeldItemMainhand().getItem();
         if(Loader.isModLoaded("DartCraft")) {
             devLog("Dartcraft detected");
             if(currentEquippedItem instanceof IBreakable && event.allowContinue == Permission.DENY) {
@@ -275,9 +276,9 @@ public class VeinMinerModSupport {
                     devLog(currentEquippedItem.getClass().getCanonicalName());
                 }
                 Block testLeaves = Block.getBlockFromName(event.blockName);
-                if(Block.getBlockFromName(event.blockName).isLeaves(event.player.getEntityWorld(), event.player.getPosition())
+                if(Block.getBlockFromName(event.blockName).isLeaves(testLeaves.getStateFromMeta(event.blockMetadata), event.player.getEntityWorld(), event.player.getPosition())
                         && event.allowContinue == Permission.DENY) {
-                    String item_name = GameRegistry.findUniqueIdentifierFor(currentEquippedItem).toString();
+                    String item_name = currentEquippedItem.getRegistryName();
                     if("exnihilo:crook".equals(item_name)) event.allowContinue = Permission.ALLOW;
                     if("exnihilo:crook_bone".equals(item_name)) event.allowContinue = Permission.ALLOW;
                     if("exastris:crook_rf".equals(item_name)) event.allowContinue = Permission.ALLOW;
@@ -314,7 +315,7 @@ public class VeinMinerModSupport {
     }
 
     private void tinkersConstructToolEvent(VeinminerHarvestFailedCheck event) {
-        ItemStack currentItem = event.player.getCurrentEquippedItem();
+        ItemStack currentItem = event.player.getHeldItemMainhand();
 
         if(currentItem == null) {
             devLog("ERROR: Item is null");
@@ -355,7 +356,7 @@ public class VeinMinerModSupport {
     @SuppressWarnings("UnusedDeclaration")
     @SubscribeEvent
     public void applyForce(VeinminerPostUseTool event) {
-        ItemStack currentEquippedItemStack = event.player.getCurrentEquippedItem();
+        ItemStack currentEquippedItemStack = event.player.getHeldItemMainhand();
 
         // Pre-compute if avaliable to short circuit logic if not found.
         // Method called lots (many times a second, possibly thousand times total).

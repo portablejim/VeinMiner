@@ -55,7 +55,7 @@ public class CommandSenderPlayer implements ICustomCommandSender{
 
     @Override
     public boolean canRunCommands() {
-        return !player.mcServer.isDedicatedServer() || player.mcServer.getConfigurationManager().canSendCommands(player.getGameProfile());
+        return !player.mcServer.isDedicatedServer() ; //|| player..mcServer.getConfigurationManager().canSendCommands(player.getGameProfile());
     }
 
     @Override

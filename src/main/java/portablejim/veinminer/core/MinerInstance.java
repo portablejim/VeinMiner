@@ -26,6 +26,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.FoodStats;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -88,7 +91,7 @@ public class MinerInstance {
         targetBlock = blockID;
         finished = false;
         serverInstance = server;
-        usedItem = player.getCurrentEquippedItem();
+        usedItem = player.getHeldItemMainhand();
         numBlocksMined = 1;
         initalBlock = new Point(x, y, z);
         this.radiusLimit = radiusLimit;
@@ -109,7 +112,7 @@ public class MinerInstance {
 
     private boolean shouldContinue() {
         // Item equipped
-        if(!serverInstance.getConfigurationSettings().getEnableAllTools() && player.getCurrentEquippedItem() == null) {
+        if(!serverInstance.getConfigurationSettings().getEnableAllTools() && player.getHeldItemMainhand() == null) {
             VeinminerNoToolCheck toolCheck = new VeinminerNoToolCheck(player);
             MinecraftForge.EVENT_BUS.post(toolCheck);
 
@@ -124,18 +127,18 @@ public class MinerInstance {
                 // If they can, they have other assistance and so should be
                 // considered a tool.
                 Block testBlock = Blocks.stone;
-                HarvestCheck event = new HarvestCheck(player, testBlock, false);
+                HarvestCheck event = new HarvestCheck(player, testBlock.getDefaultState(), false);
                 MinecraftForge.EVENT_BUS.post(event);
-                this.finished = !event.success;
+                this.finished = !event.canHarvest();
             }
         }
 
         if(usedItem == null) {
-            if(player.getCurrentEquippedItem() != null) {
+            if(player.getHeldItemMainhand() != null) {
                 this.finished = true;
             }
         }
-        else if(player.getCurrentEquippedItem() == null || !player.getCurrentEquippedItem().isItemEqual(usedItem)) {
+        else if(player.getHeldItemMainhand() == null || !player.getHeldItemMainhand().isItemEqual(usedItem)) {
             this.finished = true;
         }
 
@@ -162,11 +165,11 @@ public class MinerInstance {
 
             String problem = "mod.veinminer.finished.tooHungry";
             if(serverInstance.playerHasClient(player.getUniqueID())) {
-                player.addChatMessage(new ChatComponentTranslation(problem));
+                player.addChatMessage(new TextComponentTranslation(problem));
             }
             else {
-                String translatedProblem = StatCollector.translateToLocal(problem);
-                player.addChatMessage(new ChatComponentText(translatedProblem));
+                String translatedProblem = I18n.translateToLocal(problem);
+                player.addChatMessage(new TextComponentString(translatedProblem));
             }
         }
 
@@ -184,11 +187,11 @@ public class MinerInstance {
             player.addExperienceLevel(0);
 
             if(serverInstance.playerHasClient(player.getUniqueID())) {
-                player.addChatMessage(new ChatComponentTranslation(problem));
+                player.addChatMessage(new TextComponentTranslation(problem));
             }
             else {
-                String translatedProblem = StatCollector.translateToLocal(problem);
-                player.addChatMessage(new ChatComponentText(translatedProblem));
+                String translatedProblem = I18n.translateToLocal(problem);
+                player.addChatMessage(new TextComponentString(translatedProblem));
             }
         }
 
@@ -276,7 +279,7 @@ public class MinerInstance {
         startBlacklist.add(newPoint);
         if(mineAllowed(newBlock, newPoint, configurationSettings)) {
             awaitingEntityDrop.add(newPoint);
-            boolean success = player.theItemInWorldManager.tryHarvestBlock(new BlockPos(x, y, z));
+            boolean success = player.interactionManager.tryHarvestBlock(new BlockPos(x, y, z));
             numBlocksMined++;
 
             if(!player.capabilities.isCreativeMode) {

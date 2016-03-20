@@ -25,6 +25,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
@@ -70,7 +71,7 @@ import java.util.Set;
  * through ForgeModLoader.
  */
 
-@Mod(modid = ModInfo.MODID, acceptedMinecraftVersions = "[1.8.8,1.9)",
+@Mod(modid = ModInfo.MODID, acceptedMinecraftVersions = "[1.9,1.10)",
         canBeDeactivated = true, guiFactory = "portablejim.veinminer.configuration.client.ConfigGuiFactory")
 public class VeinMiner {
 
@@ -226,7 +227,7 @@ public class VeinMiner {
 
         proxy.setMinerServer(minerServer);
 
-        ServerCommandManager serverCommandManger = (ServerCommandManager) MinecraftServer.getServer().getCommandManager();
+        ServerCommandManager serverCommandManger = (ServerCommandManager) FMLCommonHandler.instance().getMinecraftServerInstance().getCommandManager();
         serverCommandManger.registerCommand(new MinerCommand(minerServer));
     }
 

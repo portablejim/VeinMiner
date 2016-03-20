@@ -64,7 +64,7 @@ public class IconRenderer {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         minecraft.getTextureManager().bindTexture(Gui.statIcons);
         Tessellator tessellator = Tessellator.getInstance();
-        VertexBuffer wr = tessellator.getWorldRenderer();
+        VertexBuffer wr = tessellator.getBuffer();
         wr.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
         wr.pos((double) (xBase), (double) (yBase + 18), zLevel).tex((double) ((float) (uBase) * 0.0078125F), (double) ((float) (vBase + 18) * 0.0078125F)).endVertex();
         wr.pos((double) (xBase + 18), (double) (yBase + 18), zLevel).tex((double) ((float) (uBase + 18) * 0.0078125F), (double) ((float) (vBase + 18) * 0.0078125F)).endVertex();

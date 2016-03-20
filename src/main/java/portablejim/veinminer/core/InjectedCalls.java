@@ -45,12 +45,12 @@ public class InjectedCalls {
         }
 
         //noinspection ConstantConditions
-        if(blockName == null || blockName.name == null || blockName.name.isEmpty() || Block.getBlockFromName(blockName.name) == null  || !player.canHarvestBlock(Block.getBlockFromName(blockName.name))) {
+        if(blockName == null || blockName.name == null || blockName.name.isEmpty() || Block.getBlockFromName(blockName.name) == null  || !player.canHarvestBlock(blockName.state)) {
             return;
         }
 
 
-        if(!harvestBlockSuccess && !player.theItemInWorldManager.isCreative()) {
+        if(!harvestBlockSuccess && !player.interactionManager.isCreative()) {
             VeinminerHarvestFailedCheck startEvent = new VeinminerHarvestFailedCheck(player, blockName.name, blockName.metadata);
             MinecraftForge.EVENT_BUS.post(startEvent);
             if(startEvent.allowContinue.isDenied()) {
