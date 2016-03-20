@@ -68,6 +68,15 @@ public class MinerCommand extends CommandBase {
         return "veinminer";
     }
 
+    public int getRequiredPermissionLevel()
+    {
+        return 0;
+    }
+
+    public boolean checkPermission(MinecraftServer server, ICommandSender sender)
+    {
+        return true;
+    }
 
     @Override
     public void execute(MinecraftServer server, ICommandSender icommandsender, String[] astring) throws CommandException {
@@ -152,11 +161,11 @@ public class MinerCommand extends CommandBase {
     }
 
     private void needAdmin(ICustomCommandSender sender) throws CommandException {
-        if(sender instanceof EntityPlayerMP) {
-            EntityPlayerMP player = (EntityPlayerMP) sender;
-            MinecraftServer server = player.mcServer;
-            if (server.isDedicatedServer() && !player.canCommandSenderUseCommand(server.getOpPermissionLevel(), "veinminer.admin")) {
-                boolean playerNoClient = !minerServer.playerHasClient(player.getUniqueID());
+        if(sender instanceof CommandSenderPlayer) {
+            CommandSenderPlayer player = (CommandSenderPlayer) sender;
+            MinecraftServer server = player.getPlayer().mcServer;
+            if (server.isDedicatedServer() && !player.getPlayer().canCommandSenderUseCommand(server.getOpPermissionLevel(), "veinminer.admin")) {
+                boolean playerNoClient = !minerServer.playerHasClient(player.getPlayer().getUniqueID());
                 String message = "command.veinminer.permissionDenied";
                 if (playerNoClient) {
                     message = LanguageRegistry.instance().getStringLocalization(message);
