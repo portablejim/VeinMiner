@@ -397,8 +397,9 @@ public class MinerCommand extends CommandBase {
         }
     }
 
+    @Override
     @SuppressWarnings("UnusedDeclaration")
-    public List<String> addTabCompletionOptions(ICommandSender par1ICommandSender, String[] arguments, BlockPos pos) {
+    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender par1ICommandSender, String[] arguments, BlockPos pos) {
         switch (arguments.length) {
             case 1:
                 return getListOfStringsMatchingLastWord(arguments, commands);
