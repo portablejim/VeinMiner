@@ -1,6 +1,14 @@
 Changelog
 =========
 
+0.31.5
+-------
+Ported to 1.9
+Fixes:
+* Bug with chat on multiplayer (separate client and server).
+Known problems:
+* Keybind does not work. This is a forge bug.
+
 0.31.4
 ------
 Fixes:
