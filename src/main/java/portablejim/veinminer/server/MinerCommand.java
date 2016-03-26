@@ -24,7 +24,6 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.translation.I18n;
-import net.minecraftforge.fml.common.registry.LanguageRegistry;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -168,7 +167,7 @@ public class MinerCommand extends CommandBase {
                 boolean playerNoClient = !minerServer.playerHasClient(player.getPlayer().getUniqueID());
                 String message = "command.veinminer.permissionDenied";
                 if (playerNoClient) {
-                    message = LanguageRegistry.instance().getStringLocalization(message);
+                    message = I18n.translateToFallback(message);
                 }
                 throw new CommandException(message);
             }

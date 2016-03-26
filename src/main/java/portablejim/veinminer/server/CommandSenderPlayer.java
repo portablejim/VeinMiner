@@ -22,7 +22,6 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.translation.I18n;
-import net.minecraftforge.fml.common.registry.LanguageRegistry;
 
 /**
  * Allow MinerCommand to work with Players
@@ -61,7 +60,7 @@ public class CommandSenderPlayer implements ICustomCommandSender{
     @Override
     public String localise(String input) {
         if(!minerServer.playerHasClient(player.getPersistentID())) {
-            return LanguageRegistry.instance().getStringLocalization(input);
+            return I18n.translateToFallback(input);
         }
         return input;
     }

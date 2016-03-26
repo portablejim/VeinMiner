@@ -17,14 +17,14 @@
 
 package portablejim.veinminer.core;
 
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.common.registry.GameRegistry.UniqueIdentifier;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import portablejim.veinminer.VeinMiner;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import portablejim.veinminer.server.MinerServer;
 import portablejim.veinminer.util.Point;
 
@@ -48,9 +48,9 @@ public class EntityDropHook {
     @SuppressWarnings("UnusedDeclaration")
     @SubscribeEvent
     public void tryAddEntity(EntityJoinWorldEvent event) {
-        Entity entity = event.entity;
+        Entity entity = event.getEntity();
 
-        if(event.world.isRemote) {
+        if(event.getWorld().isRemote) {
             return;
         }
 
@@ -89,14 +89,10 @@ public class EntityDropHook {
         boolean isBlock;
         boolean isItem;
 
-        UniqueIdentifier uniqueId = GameRegistry.findUniqueIdentifierFor(entityItem.getEntityItem().getItem());
+        ResourceLocation uniqueId = Item.itemRegistry.getNameForObject(entityItem.getEntityItem().getItem());
 
-        if(uniqueId == null) {
-            return;
-        }
-
-        isBlock = GameRegistry.findBlock(uniqueId.modId, uniqueId.name) != null;
-        isItem = GameRegistry.findItem(uniqueId.modId, uniqueId.name) != null;
+        isBlock = GameRegistry.findBlock(uniqueId.getResourceDomain(), uniqueId.getResourcePath()) != null;
+        isItem = GameRegistry.findItem(uniqueId.getResourceDomain(), uniqueId.getResourcePath()) != null;
 
         StackTraceElement[] stackTrace = (new Throwable()).getStackTrace();
         boolean veinminerMethod = false;
