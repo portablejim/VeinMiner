@@ -216,6 +216,9 @@ public class VeinMinerModSupport {
             IMCMessage.addBlock("hammer", "minecraft:gravel");
             IMCMessage.addBlock("hammer", "minecraft:sand");
         }
+        if(Loader.isModLoaded("excompressum")) {
+            IMCMessage.addToolType("hammer", "Hammer", "excompressum:chickenStick");
+        }
     }
 
     @SuppressWarnings("UnusedDeclaration")
@@ -262,6 +265,20 @@ public class VeinMinerModSupport {
         if(Loader.isModLoaded("TConstruct")) {
             devLog("Tinkers Construct detected");
             tinkersConstructToolEvent(event);
+        }
+        if(Loader.isModLoaded("excompressum")) {
+            if(event.allowContinue == Permission.DENY) {
+                String item_name = GameRegistry.findUniqueIdentifierFor(currentEquippedItem).toString();
+                if("excompressum:chickenStick".equals(item_name)) event.allowContinue = Permission.ALLOW;
+                if("excompressum:compressedHammerWood".equals(item_name)) event.allowContinue = Permission.ALLOW;
+                if("excompressum:compressedHammerStone".equals(item_name)) event.allowContinue = Permission.ALLOW;
+                if("excompressum:compressedHammerIron".equals(item_name)) event.allowContinue = Permission.ALLOW;
+                if("excompressum:compressedHammerGold".equals(item_name)) event.allowContinue = Permission.ALLOW;
+                if("excompressum:compressedHammerDiamond".equals(item_name)) event.allowContinue = Permission.ALLOW;
+                if("excompressum:doubleCompressedDiamondHammer".equals(item_name)) event.allowContinue = Permission.ALLOW;
+                if("excompressum:compressedCrook".equals(item_name)) event.allowContinue = Permission.ALLOW;
+
+            }
         }
         if(Loader.isModLoaded("exnihilo")) {
             devLog("Ex Nihilo detected");
