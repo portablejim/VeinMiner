@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.31.5
+------
+Changes:
+* Allow items from excompressum work with VeinMiner.
+
 0.31.4
 ------
 Fixes:
