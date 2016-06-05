@@ -50,6 +50,7 @@ import org.apache.logging.log4j.Logger;
 import portablejim.veinminer.configuration.ConfigurationSettings;
 import portablejim.veinminer.configuration.ConfigurationValues;
 import portablejim.veinminer.configuration.ToolType;
+import portablejim.veinminer.core.CoreEvents;
 import portablejim.veinminer.core.InjectedCalls;
 import portablejim.veinminer.lib.MinerLogger;
 import portablejim.veinminer.lib.ModInfo;
@@ -160,6 +161,7 @@ public class VeinMiner {
         proxy.registerClientEvents();
         proxy.registerCommonEvents();
         MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(new CoreEvents());
     }
 
     public void setupNetworking() {
@@ -277,28 +279,6 @@ public class VeinMiner {
 
                 configurationSettings.addCongruentBlocks(block1, block2);
             }
-        }
-    }
-
-    @SuppressWarnings("unused")
-    @SubscribeEvent
-    public void blockBreakEventFalse(BlockEvent.BreakEvent event) {
-        Point eventPoint = new Point(event.x, event.y, event.z);
-        if(!event.world.isRemote && !event.isCanceled() && event.getPlayer() instanceof EntityPlayerMP && !minerServer.pointIsBlacklisted(eventPoint)) {
-            MinerLogger.debug(String.format("Block Break (False) at %s | %s | %s || Cancel: %s / %s", event.x, event.y, event.z, !event.isCancelable(), event.isCanceled()));
-            InjectedCalls.blockMined(event.world, (EntityPlayerMP) event.getPlayer(), event.x, event.y, event.z, false, new BlockID(Block.blockRegistry.getNameForObject(event.block), event.blockMetadata));
-            minerServer.removeFromBlacklist(eventPoint);
-        }
-    }
-
-    @SuppressWarnings("unused")
-    @SubscribeEvent
-    public void blockBreakEventTrue(BlockEvent.HarvestDropsEvent event) {
-        Point eventPoint = new Point(event.x, event.y, event.z);
-        if(!event.world.isRemote && !event.isCanceled() && event.harvester instanceof EntityPlayerMP && !minerServer.pointIsBlacklisted(eventPoint)) {
-            MinerLogger.debug(String.format("Block Break (True) at %s | %s | %s || Cancel: %s / %s", event.x, event.y, event.z, !event.isCancelable(), event.isCanceled()));
-            InjectedCalls.blockMined(event.world, (EntityPlayerMP) event.harvester, event.x, event.y, event.z, true, new BlockID(Block.blockRegistry.getNameForObject(event.block), event.blockMetadata));
-            minerServer.removeFromBlacklist(eventPoint);
         }
     }
 }
