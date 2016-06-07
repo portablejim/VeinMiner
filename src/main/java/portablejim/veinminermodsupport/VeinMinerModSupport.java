@@ -35,6 +35,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.config.Configuration;
 import portablejim.veinminer.api.IMCMessage;
 import portablejim.veinminer.api.Permission;
 import portablejim.veinminer.api.VeinminerHarvestFailedCheck;
@@ -45,7 +46,11 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 import static cpw.mods.fml.common.Mod.EventHandler;
 import static cpw.mods.fml.common.Mod.Instance;
@@ -68,6 +73,27 @@ public class VeinMinerModSupport {
 
     private Boolean configLoaded = false;
 
+    private final static String[] FALSETOOLS_DEFAULT = {
+            "excompressum:chickenStick",
+            "excompressum:compressedHammerWood",
+            "excompressum:compressedHammerStone",
+            "excompressum:compressedHammerIron",
+            "excompressum:compressedHammerGold",
+            "excompressum:compressedHammerDiamond",
+            "excompressum:doubleCompressedDiamondHammer",
+            "excompressum:compressedCrook",
+    };
+    private Set<String> falseTools = new LinkedHashSet<String>();
+
+    private final static String[] OVERRIDE_BLACKLIST_DEFAULT = {
+            "EnderIO:blockConduitBundle",
+    };
+    private Set<String> overrideBlacklist = new LinkedHashSet<String>();
+
+    public VeinMinerModSupport(){
+
+    }
+
     @NetworkCheckHandler
     public boolean checkClientModVersion(Map<String, String> mods, Side side) {
         return true;
@@ -78,15 +104,23 @@ public class VeinMinerModSupport {
     public void preInit(FMLPreInitializationEvent event) {
         File configDir = new File(event.getModConfigurationDirectory(), "veinminer");
         File loadedFile = new File(configDir, "modSupport.cfg");
-        if(loadedFile.exists()) {
+        try {
+            Configuration config = new Configuration(loadedFile);
+            config.load();
+
+            config.setCategoryComment("advanced", "You probably don't want to touch these");
+
+            String[] falseTools_array = config.getStringList("special_snowflake_tools", "advanced", FALSETOOLS_DEFAULT, "Tools that need to be treated as special snowflakes\n");
+            String[] overrideBlacklist_array = config.getStringList("override_blacklist_blocks", "advanced", OVERRIDE_BLACKLIST_DEFAULT, "Blocks to not override success for\n");
+            falseTools = new LinkedHashSet<String>(Arrays.asList(falseTools_array));
+            overrideBlacklist = new LinkedHashSet<String>(Arrays.asList(overrideBlacklist_array));
+
+            config.save();
+
             configLoaded = true;
         }
-        else {
-            try {
-                //noinspection ResultOfMethodCallIgnored
-                loadedFile.createNewFile();
-                Files.write("#Nothing to see here!\n", loadedFile, Charset.defaultCharset());
-            } catch (IOException ignored) { }
+        catch(Exception e) {
+            event.getModLog().error("Error writing config file");
         }
     }
 
@@ -253,8 +287,18 @@ public class VeinMinerModSupport {
         if(currentEquipped == null) {
             return;
         }
+        Item currentEquippedItem = currentEquipped.getItem();
 
-        Item currentEquippedItem = event.player.getCurrentEquippedItem().getItem();
+        if(event.allowContinue == Permission.DENY) {
+            if(overrideBlacklist.contains(event.blockName)) {
+                devLog("Denied with block: " + event.blockName);
+                event.allowContinue = Permission.FORCE_DENY;
+            }
+            else {
+                devLog("Not Denied with block: " + event.blockName);
+            }
+        }
+
         if(Loader.isModLoaded("DartCraft")) {
             devLog("Dartcraft detected");
             if(currentEquippedItem instanceof IBreakable && event.allowContinue == Permission.DENY) {
@@ -266,20 +310,15 @@ public class VeinMinerModSupport {
             devLog("Tinkers Construct detected");
             tinkersConstructToolEvent(event);
         }
-        if(Loader.isModLoaded("excompressum")) {
-            if(event.allowContinue == Permission.DENY) {
-                String item_name = GameRegistry.findUniqueIdentifierFor(currentEquippedItem).toString();
-                if("excompressum:chickenStick".equals(item_name)) event.allowContinue = Permission.ALLOW;
-                if("excompressum:compressedHammerWood".equals(item_name)) event.allowContinue = Permission.ALLOW;
-                if("excompressum:compressedHammerStone".equals(item_name)) event.allowContinue = Permission.ALLOW;
-                if("excompressum:compressedHammerIron".equals(item_name)) event.allowContinue = Permission.ALLOW;
-                if("excompressum:compressedHammerGold".equals(item_name)) event.allowContinue = Permission.ALLOW;
-                if("excompressum:compressedHammerDiamond".equals(item_name)) event.allowContinue = Permission.ALLOW;
-                if("excompressum:doubleCompressedDiamondHammer".equals(item_name)) event.allowContinue = Permission.ALLOW;
-                if("excompressum:compressedCrook".equals(item_name)) event.allowContinue = Permission.ALLOW;
 
+        if(event.allowContinue == Permission.DENY) {
+            String item_name = GameRegistry.findUniqueIdentifierFor(currentEquippedItem).toString();
+            if(falseTools.contains(item_name)) {
+                devLog("Allowed start with " + item_name);
+                event.allowContinue = Permission.ALLOW;
             }
         }
+
         if(Loader.isModLoaded("exnihilo")) {
             devLog("Ex Nihilo detected");
             if(currentEquippedItem != null) {
