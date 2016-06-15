@@ -36,6 +36,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
+import portablejim.veinminer.VeinMiner;
 import portablejim.veinminer.api.IMCMessage;
 import portablejim.veinminer.api.Permission;
 import portablejim.veinminer.api.VeinminerHarvestFailedCheck;
@@ -90,6 +91,14 @@ public class VeinMinerModSupport {
     };
     private Set<String> overrideBlacklist = new LinkedHashSet<String>();
 
+    private static final String CONFIG_AUTODETECT = "autodetect";
+    private static final String CONFIG_AUTODETECT_COMMENT = "Autodetect items and blocks during game start-up.";
+
+    private boolean AUTODETECT_TOOLS_TOGGLE;
+    private static final boolean AUTODETECT_TOOLS_TOGGLE_DEFAULT = true;
+    private static final String AUTODETECT_TOOLS_TOGGLE_CONFIGNAME = "autodetect.tools";
+    private static final String AUTODETECT_TOOLS_TOGGLE_DESCRIPTION = "Autodetect tools on starting the game, adding the names to the list.";
+
     public VeinMinerModSupport(){
 
     }
@@ -107,6 +116,9 @@ public class VeinMinerModSupport {
         try {
             Configuration config = new Configuration(loadedFile);
             config.load();
+
+            config.addCustomCategoryComment(CONFIG_AUTODETECT, CONFIG_AUTODETECT_COMMENT);
+            AUTODETECT_TOOLS_TOGGLE = config.get(CONFIG_AUTODETECT, AUTODETECT_TOOLS_TOGGLE_CONFIGNAME, AUTODETECT_TOOLS_TOGGLE_DEFAULT, AUTODETECT_TOOLS_TOGGLE_DESCRIPTION).getBoolean(AUTODETECT_TOOLS_TOGGLE_DEFAULT);
 
             config.setCategoryComment("advanced", "You probably don't want to touch these");
 
@@ -138,7 +150,7 @@ public class VeinMinerModSupport {
         }
         forceConsumerAvailable = false;
 
-        if(!configLoaded) {
+        if(AUTODETECT_TOOLS_TOGGLE) {
             addTools();
         }
     }
