@@ -275,13 +275,18 @@ public class MinerInstance {
         player.addExperienceLevel(0);
     }
 
-    private boolean mineBlock(int x, int y, int z) {
-        boolean mineSuccessful = false;
+    public  int mineBlock(Point point) {
+        return mineBlock(point.getX(), point.getY(), point.getZ());
+    }
+
+    private int mineBlock(int x, int y, int z) {
+        int mineSuccessful = 0;
         Point newPoint = new Point(x, y, z);
         BlockID newBlock = new BlockID(world, new BlockPos(x , y, z ));
         ConfigurationSettings configurationSettings = serverInstance.getConfigurationSettings();
         startBlacklist.add(newPoint);
         if(mineAllowed(newBlock, newPoint, configurationSettings)) {
+            mineSuccessful = mineSuccessful | 1;
             awaitingEntityDrop.add(newPoint);
             boolean success = player.theItemInWorldManager.tryHarvestBlock(new BlockPos(x, y, z));
             numBlocksMined++;
@@ -298,7 +303,7 @@ public class MinerInstance {
             VeinminerHarvestFailedCheck continueCheck = new VeinminerHarvestFailedCheck(player, targetBlock.name, targetBlock.metadata);
             MinecraftForge.EVENT_BUS.post(continueCheck);
             if (success || continueCheck.allowContinue.isAllowed()) {
-                mineSuccessful = true;
+                mineSuccessful = mineSuccessful | 2;
                 postSuccessfulBreak(newPoint);
                 awaitingEntityDrop.remove(newPoint);
             } else {
@@ -370,7 +375,7 @@ public class MinerInstance {
         while(i < quantity) {
             if(!destroyQueue.isEmpty()) {
                 Point target = destroyQueue.remove();
-                if(mineBlock(target.getX(), target.getY(), target.getZ())) {
+                if((mineBlock(target.getX(), target.getY(), target.getZ()) & 2) == 2) {
                     i += 1;
                 }
             }

@@ -35,6 +35,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.network.NetworkCheckHandler;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.common.config.Configuration;
 import portablejim.veinminer.api.IMCMessage;
 import portablejim.veinminer.api.Permission;
 import portablejim.veinminer.api.VeinminerHarvestFailedCheck;
@@ -45,7 +46,11 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 import static net.minecraftforge.fml.common.Mod.EventHandler;
 import static net.minecraftforge.fml.common.Mod.Instance;
@@ -69,6 +74,35 @@ public class VeinMinerModSupport {
 
     private Boolean configLoaded = false;
 
+    private final static String[] FALSETOOLS_DEFAULT = {
+            "excompressum:chickenStick",
+            "excompressum:compressedHammerWood",
+            "excompressum:compressedHammerStone",
+            "excompressum:compressedHammerIron",
+            "excompressum:compressedHammerGold",
+            "excompressum:compressedHammerDiamond",
+            "excompressum:doubleCompressedDiamondHammer",
+            "excompressum:compressedCrook",
+    };
+    private Set<String> falseTools = new LinkedHashSet<String>();
+
+    private final static String[] OVERRIDE_BLACKLIST_DEFAULT = {
+            "EnderIO:blockConduitBundle",
+    };
+    private Set<String> overrideBlacklist = new LinkedHashSet<String>();
+
+    private static final String CONFIG_AUTODETECT = "autodetect";
+    private static final String CONFIG_AUTODETECT_COMMENT = "Autodetect items and blocks during game start-up.";
+
+    private boolean AUTODETECT_TOOLS_TOGGLE;
+    private static final boolean AUTODETECT_TOOLS_TOGGLE_DEFAULT = true;
+    private static final String AUTODETECT_TOOLS_TOGGLE_CONFIGNAME = "autodetect.tools";
+    private static final String AUTODETECT_TOOLS_TOGGLE_DESCRIPTION = "Autodetect tools on starting the game, adding the names to the list.";
+
+    public VeinMinerModSupport(){
+
+    }
+
     @NetworkCheckHandler
     public boolean checkClientModVersion(Map<String, String> mods, Side side) {
         return true;
@@ -79,15 +113,26 @@ public class VeinMinerModSupport {
     public void preInit(FMLPreInitializationEvent event) {
         File configDir = new File(event.getModConfigurationDirectory(), "veinminer");
         File loadedFile = new File(configDir, "modSupport.cfg");
-        if(loadedFile.exists()) {
+        try {
+            Configuration config = new Configuration(loadedFile);
+            config.load();
+
+            config.addCustomCategoryComment(CONFIG_AUTODETECT, CONFIG_AUTODETECT_COMMENT);
+            AUTODETECT_TOOLS_TOGGLE = config.get(CONFIG_AUTODETECT, AUTODETECT_TOOLS_TOGGLE_CONFIGNAME, AUTODETECT_TOOLS_TOGGLE_DEFAULT, AUTODETECT_TOOLS_TOGGLE_DESCRIPTION).getBoolean(AUTODETECT_TOOLS_TOGGLE_DEFAULT);
+
+            config.setCategoryComment("advanced", "You probably don't want to touch these");
+
+            String[] falseTools_array = config.getStringList("special_snowflake_tools", "advanced", FALSETOOLS_DEFAULT, "Tools that need to be treated as special snowflakes\n");
+            String[] overrideBlacklist_array = config.getStringList("override_blacklist_blocks", "advanced", OVERRIDE_BLACKLIST_DEFAULT, "Blocks to not override success for\n");
+            falseTools = new LinkedHashSet<String>(Arrays.asList(falseTools_array));
+            overrideBlacklist = new LinkedHashSet<String>(Arrays.asList(overrideBlacklist_array));
+
+            config.save();
+
             configLoaded = true;
         }
-        else {
-            try {
-                //noinspection ResultOfMethodCallIgnored
-                loadedFile.createNewFile();
-                Files.write("#Nothing to see here!\n", loadedFile, Charset.defaultCharset());
-            } catch (IOException ignored) { }
+        catch(Exception e) {
+            event.getModLog().error("Error writing config file");
         }
     }
 
@@ -105,7 +150,7 @@ public class VeinMinerModSupport {
         }
         forceConsumerAvailable = false;
 
-        if(!configLoaded) {
+        if(AUTODETECT_TOOLS_TOGGLE) {
             addTools();
         }
     }
@@ -217,6 +262,9 @@ public class VeinMinerModSupport {
             IMCMessage.addBlock("hammer", "minecraft:gravel");
             IMCMessage.addBlock("hammer", "minecraft:sand");
         }
+        if(Loader.isModLoaded("excompressum")) {
+            IMCMessage.addToolType("hammer", "Hammer", "excompressum:chickenStick");
+        }
     }
 
     @SuppressWarnings("UnusedDeclaration")
@@ -251,8 +299,18 @@ public class VeinMinerModSupport {
         if(currentEquipped == null) {
             return;
         }
+        Item currentEquippedItem = currentEquipped.getItem();
 
-        Item currentEquippedItem = event.player.getCurrentEquippedItem().getItem();
+        if(event.allowContinue == Permission.DENY) {
+            if(overrideBlacklist.contains(event.blockName)) {
+                devLog("Denied with block: " + event.blockName);
+                event.allowContinue = Permission.FORCE_DENY;
+            }
+            else {
+                devLog("Not Denied with block: " + event.blockName);
+            }
+        }
+
         if(Loader.isModLoaded("DartCraft")) {
             devLog("Dartcraft detected");
             if(currentEquippedItem instanceof IBreakable && event.allowContinue == Permission.DENY) {
@@ -264,6 +322,15 @@ public class VeinMinerModSupport {
             devLog("Tinkers Construct detected");
             tinkersConstructToolEvent(event);
         }
+
+        if(event.allowContinue == Permission.DENY) {
+            String item_name = GameRegistry.findUniqueIdentifierFor(currentEquippedItem).toString();
+            if(falseTools.contains(item_name)) {
+                devLog("Allowed start with " + item_name);
+                event.allowContinue = Permission.ALLOW;
+            }
+        }
+
         if(Loader.isModLoaded("exnihilo")) {
             devLog("Ex Nihilo detected");
             if(currentEquippedItem != null) {
