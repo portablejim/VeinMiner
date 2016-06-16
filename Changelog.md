@@ -1,6 +1,18 @@
 Changelog
 =========
 
+0.32.0
+------
+Changes:
+* Rewrite some things. Hopefully things still work.
+* If you have the mod client-side (and server side) you can no longer change mode using /veinminer mode <mode>.
+  Now you need to use /veinminerc <mode>
+* There will be a few more information about the state of Veinminer posted to chat log.
+* Tool auto-detect config option is now in "modSupport.cfg"
+* Add blacklist for tinkers tools
+Fixes:
+* Tool auto-detect actually works.
+
 0.31.6
 ------
 Changes:
