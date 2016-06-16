@@ -29,31 +29,26 @@ import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.NetworkCheckHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
-import net.minecraft.block.Block;
 import net.minecraft.command.ServerCommandManager;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.logging.log4j.Logger;
 import portablejim.veinminer.configuration.ConfigurationSettings;
 import portablejim.veinminer.configuration.ConfigurationValues;
 import portablejim.veinminer.configuration.ToolType;
 import portablejim.veinminer.core.CoreEvents;
-import portablejim.veinminer.core.InjectedCalls;
 import portablejim.veinminer.lib.MinerLogger;
 import portablejim.veinminer.lib.ModInfo;
+import portablejim.veinminer.network.PacketChangeMode;
 import portablejim.veinminer.network.PacketClientPresent;
 import portablejim.veinminer.network.PacketMinerActivate;
 import portablejim.veinminer.network.PacketPingClient;
@@ -61,7 +56,7 @@ import portablejim.veinminer.proxy.CommonProxy;
 import portablejim.veinminer.server.MinerCommand;
 import portablejim.veinminer.server.MinerServer;
 import portablejim.veinminer.util.BlockID;
-import portablejim.veinminer.util.Point;
+import portablejim.veinminer.util.PreferredMode;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -89,6 +84,7 @@ public class VeinMiner {
     public ConfigurationSettings configurationSettings;
 
     public MinerServer minerServer = null;
+    public int currentMode = PreferredMode.DISABLED;
 
     public Logger logger;
 
@@ -169,6 +165,8 @@ public class VeinMiner {
         networkWrapper.registerMessage(PacketPingClient.Handler.class, PacketPingClient.class, 0, Side.CLIENT);
         networkWrapper.registerMessage(PacketClientPresent.Handler.class, PacketClientPresent.class, 1, Side.SERVER);
         networkWrapper.registerMessage(PacketMinerActivate.Handler.class, PacketMinerActivate.class, 2, Side.SERVER);
+        networkWrapper.registerMessage(PacketChangeMode.Handler.class, PacketChangeMode.class, 3, Side.CLIENT);
+        networkWrapper.registerMessage(PacketChangeMode.Handler.class, PacketChangeMode.class, 4, Side.SERVER);
     }
 
     @SuppressWarnings("UnusedDeclaration")
@@ -221,6 +219,8 @@ public class VeinMiner {
             }
         }
         configurationSettings.saveConfigs();
+
+        proxy.registerPostinitCommands();
     }
 
     @SuppressWarnings("UnusedDeclaration")

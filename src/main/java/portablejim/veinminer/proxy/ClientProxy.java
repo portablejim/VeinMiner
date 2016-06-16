@@ -17,6 +17,8 @@
 
 package portablejim.veinminer.proxy;
 
+import net.minecraftforge.client.ClientCommandHandler;
+import portablejim.veinminer.client.ClientCommand;
 import portablejim.veinminer.event.client.ActivateMinerKeybindManager;
 import portablejim.veinminer.event.client.ItemNameTooltip;
 
@@ -28,10 +30,22 @@ import portablejim.veinminer.event.client.ItemNameTooltip;
 public class ClientProxy extends CommonProxy {
     private ActivateMinerKeybindManager keybindManager;
     private ItemNameTooltip itemNameTooltip;
+    private ClientCommand clientCommand;
 
     @Override
     public void registerClientEvents() {
         keybindManager = new ActivateMinerKeybindManager();
         itemNameTooltip = new ItemNameTooltip();
+    }
+
+    @Override
+    public void resetKeybindPacketCount() {
+        keybindManager.resetCount();
+    }
+
+    @Override
+    public void registerPostinitCommands() {
+        clientCommand = new ClientCommand();
+        ClientCommandHandler.instance.registerCommand(clientCommand);
     }
 }

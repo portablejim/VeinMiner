@@ -159,6 +159,9 @@ public class MinerCommand extends CommandBase {
             if(astring.length == 1) {
                 showUsageError("command.veinminer.enable");
             }
+            else if(minerServer.playerHasClient(player)) {
+                showUsageError("command.veinminer.hasclient");
+            }
             else if(astring[1].equals(modes[0])) {
                 minerServer.setPlayerStatus(player, PlayerStatus.INACTIVE);
                 senderPlayer.sendProperChat("command.veinminer.set.auto");
