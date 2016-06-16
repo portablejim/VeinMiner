@@ -41,4 +41,8 @@ public class CommonProxy {
         playerServerEvent.setServer(server);
         entityDropHook.setServer(server);
     }
+
+    public void resetKeybindPacketCount() { }
+
+    public void registerPostinitCommands() { }
 }

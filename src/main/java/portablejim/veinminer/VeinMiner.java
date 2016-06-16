@@ -19,7 +19,6 @@ package portablejim.veinminer;
 
 import net.minecraft.block.Block;
 import net.minecraft.command.ServerCommandManager;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -43,15 +42,15 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.logging.log4j.Logger;
 import portablejim.veinminer.configuration.ConfigurationSettings;
 import portablejim.veinminer.configuration.ConfigurationValues;
 import portablejim.veinminer.configuration.ToolType;
-import portablejim.veinminer.core.InjectedCalls;
+import portablejim.veinminer.core.CoreEvents;
 import portablejim.veinminer.lib.MinerLogger;
 import portablejim.veinminer.lib.ModInfo;
+import portablejim.veinminer.network.PacketChangeMode;
 import portablejim.veinminer.network.PacketClientPresent;
 import portablejim.veinminer.network.PacketMinerActivate;
 import portablejim.veinminer.network.PacketPingClient;
@@ -59,7 +58,7 @@ import portablejim.veinminer.proxy.CommonProxy;
 import portablejim.veinminer.server.MinerCommand;
 import portablejim.veinminer.server.MinerServer;
 import portablejim.veinminer.util.BlockID;
-import portablejim.veinminer.util.Point;
+import portablejim.veinminer.util.PreferredMode;
 
 import java.io.File;
 import java.util.List;
@@ -87,6 +86,7 @@ public class VeinMiner {
     public ConfigurationSettings configurationSettings;
 
     public MinerServer minerServer = null;
+    public int currentMode = PreferredMode.DISABLED;
 
     public Logger logger;
 
@@ -159,6 +159,7 @@ public class VeinMiner {
         proxy.registerClientEvents();
         proxy.registerCommonEvents();
         MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(new CoreEvents());
     }
 
     public void setupNetworking() {
@@ -166,6 +167,8 @@ public class VeinMiner {
         networkWrapper.registerMessage(PacketPingClient.Handler.class, PacketPingClient.class, 0, Side.CLIENT);
         networkWrapper.registerMessage(PacketClientPresent.Handler.class, PacketClientPresent.class, 1, Side.SERVER);
         networkWrapper.registerMessage(PacketMinerActivate.Handler.class, PacketMinerActivate.class, 2, Side.SERVER);
+        networkWrapper.registerMessage(PacketChangeMode.Handler.class, PacketChangeMode.class, 3, Side.CLIENT);
+        networkWrapper.registerMessage(PacketChangeMode.Handler.class, PacketChangeMode.class, 4, Side.SERVER);
     }
 
     @SuppressWarnings("UnusedDeclaration")
@@ -218,6 +221,8 @@ public class VeinMiner {
             }
         }
         configurationSettings.saveConfigs();
+
+        proxy.registerPostinitCommands();
     }
 
     @SuppressWarnings("UnusedDeclaration")
@@ -276,28 +281,6 @@ public class VeinMiner {
 
                 configurationSettings.addCongruentBlocks(block1, block2);
             }
-        }
-    }
-
-    @SuppressWarnings("unused")
-    @SubscribeEvent
-    public void blockBreakEventFalse(BlockEvent.BreakEvent event) {
-        Point eventPoint = new Point(event.getPos().getX(), event.getPos().getY(), event.getPos().getZ());
-        if(!event.getWorld().isRemote && !event.isCanceled() && event.getPlayer() instanceof EntityPlayerMP && !minerServer.pointIsBlacklisted(eventPoint)) {
-            MinerLogger.debug(String.format("Block Break (False) at %s | %s | %s || Cancel: %s / %s", event.getPos().getX(), event.getPos().getY(), event.getPos().getZ(), !event.isCancelable(), event.isCanceled()));
-            InjectedCalls.blockMined(event.getWorld(), (EntityPlayerMP) event.getPlayer(), event.getPos(), false, new BlockID(event.getState()));
-            minerServer.removeFromBlacklist(eventPoint);
-        }
-    }
-
-    @SuppressWarnings("unused")
-    @SubscribeEvent
-    public void blockBreakEventTrue(BlockEvent.HarvestDropsEvent event) {
-        Point eventPoint = new Point(event.getPos().getX(), event.getPos().getY(), event.getPos().getZ());
-        if(!event.getWorld().isRemote && !event.isCanceled() && event.getHarvester() instanceof EntityPlayerMP && !minerServer.pointIsBlacklisted(eventPoint)) {
-            MinerLogger.debug(String.format("Block Break (True) at %s | %s | %s || Cancel: %s / %s", event.getPos().getX(), event.getPos().getY(), event.getPos().getZ(), !event.isCancelable(), event.isCanceled()));
-            InjectedCalls.blockMined(event.getWorld(), (EntityPlayerMP) event.getHarvester(), event.getPos(), true, new BlockID(event.getState()));
-            minerServer.removeFromBlacklist(eventPoint);
         }
     }
 }
