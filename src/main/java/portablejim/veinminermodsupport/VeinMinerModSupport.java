@@ -345,7 +345,7 @@ public class VeinMinerModSupport {
                 Block testLeaves = Block.getBlockFromName(event.blockName);
                 if(Block.getBlockFromName(event.blockName).isLeaves(testLeaves.getStateFromMeta(event.blockMetadata), event.player.getEntityWorld(), event.player.getPosition())
                         && event.allowContinue == Permission.DENY) {
-                    String item_name = currentEquippedItem.getRegistryName();
+                    String item_name = currentEquippedItem.getRegistryName().toString();
                     if("exnihilo:crook".equals(item_name)) event.allowContinue = Permission.ALLOW;
                     if("exnihilo:crook_bone".equals(item_name)) event.allowContinue = Permission.ALLOW;
                     if("exastris:crook_rf".equals(item_name)) event.allowContinue = Permission.ALLOW;
