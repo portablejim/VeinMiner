@@ -18,6 +18,7 @@
 package portablejim.veinminer.api;
 
 import cpw.mods.fml.common.eventhandler.Event;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 /**
@@ -26,13 +27,13 @@ import net.minecraft.entity.player.EntityPlayerMP;
 
 public class VeinminerInitalToolCheck extends Event {
     public Permission allowVeinminerStart;
-    public final EntityPlayerMP player;
+    public final EntityPlayer player;
     public final int radiusLimitConfig;
     public final int blockLimitConfig;
     public int radiusLimit;
     public int blockLimit;
 
-    public VeinminerInitalToolCheck(EntityPlayerMP player, int radiusLimit, int blockLimit, int radiusLimitConfig, int blockLimitConfig) {
+    public VeinminerInitalToolCheck(EntityPlayer player, int radiusLimit, int blockLimit, int radiusLimitConfig, int blockLimitConfig) {
         this.allowVeinminerStart = Permission.ALLOW;
         this.player = player;
         this.radiusLimitConfig = radiusLimitConfig;
