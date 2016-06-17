@@ -39,7 +39,7 @@ public class CoreEvents {
         if(startConfig.allowVeinminerStart.isAllowed()) {
             radiusLimit = Math.min(startConfig.radiusLimit, radiusLimit);
             blockLimit = Math.min(startConfig.blockLimit, blockLimit);
-            MinerInstance instance = new MinerInstance(event.world, (EntityPlayerMP) event.getPlayer(), event.x, event.y, event.z, new BlockID(Block.blockRegistry.getNameForObject(event.block), event.blockMetadata), server, radiusLimit, blockLimit);
+            MinerInstance instance = new MinerInstance(event.world, (EntityPlayerMP) event.getPlayer(), Compatibility.getPoint(event), new BlockID(Block.blockRegistry.getNameForObject(event.block), event.blockMetadata), server, radiusLimit, blockLimit);
 
             if (instance.mineBlock(breakPont) > 0) {
                 event.setCanceled(true);

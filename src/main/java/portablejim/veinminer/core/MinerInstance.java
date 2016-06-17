@@ -85,7 +85,7 @@ public class MinerInstance {
 
     private static final int MIN_HUNGER = 1;
 
-    public MinerInstance(World world, EntityPlayerMP player, int x, int y, int z, BlockID blockID, MinerServer server, int radiusLimit, int blockLimit) {
+    public MinerInstance(World world, EntityPlayerMP player, Point startPoint, BlockID blockID, MinerServer server, int radiusLimit, int blockLimit) {
         startBlacklist = new HashSet<Point>();
         destroyQueue = new ConcurrentLinkedQueue<Point>();
         awaitingEntityDrop = new HashSet<Point>();
@@ -97,7 +97,7 @@ public class MinerInstance {
         serverInstance = server;
         usedItem = player.getCurrentEquippedItem();
         numBlocksMined = 1;
-        initalBlock = new Point(x, y, z);
+        initalBlock = startPoint;
         this.radiusLimit = radiusLimit;
         this.blockLimit = blockLimit;
 
