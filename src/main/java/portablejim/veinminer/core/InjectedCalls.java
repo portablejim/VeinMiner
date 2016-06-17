@@ -26,9 +26,8 @@ import portablejim.veinminer.api.VeinminerHarvestFailedCheck;
 import portablejim.veinminer.api.VeinminerInitalToolCheck;
 import portablejim.veinminer.configuration.ConfigurationSettings;
 import portablejim.veinminer.lib.MinerLogger;
-import portablejim.veinminer.server.MinerServer;
 import portablejim.veinminer.util.BlockID;
-import portablejim.veinminer.util.Point;
+import portablejim.veinminer.api.Point;
 
 /**
  * Holds functions called by calls injected via ASM.
@@ -51,7 +50,7 @@ public class InjectedCalls {
 
 
         if(!harvestBlockSuccess && !player.theItemInWorldManager.isCreative()) {
-            VeinminerHarvestFailedCheck startEvent = new VeinminerHarvestFailedCheck(player, blockName.name, blockName.metadata);
+            VeinminerHarvestFailedCheck startEvent = new VeinminerHarvestFailedCheck(player, new Point(x,y,z), blockName.name, blockName.metadata);
             MinecraftForge.EVENT_BUS.post(startEvent);
             if(startEvent.allowContinue.isDenied()) {
                 return;
@@ -62,13 +61,13 @@ public class InjectedCalls {
         int radiusLimit = configurationSettings.getRadiusLimit();
         int blockLimit = configurationSettings.getBlockLimit();
 
-        VeinminerInitalToolCheck startConfig = new VeinminerInitalToolCheck(player, radiusLimit, blockLimit, configurationSettings.getRadiusLimit(), configurationSettings.getBlockLimit());
+        VeinminerInitalToolCheck startConfig = new VeinminerInitalToolCheck(player, new Point(x,y,z), radiusLimit, blockLimit, configurationSettings.getRadiusLimit(), configurationSettings.getBlockLimit());
         MinecraftForge.EVENT_BUS.post(startConfig);
         if(startConfig.allowVeinminerStart.isAllowed()) {
             radiusLimit = Math.min(startConfig.radiusLimit, radiusLimit);
             blockLimit = Math.min(startConfig.blockLimit, blockLimit);
 
-            MinerInstance ins = new MinerInstance(world, player, x, y, z, blockName, VeinMiner.instance.minerServer, radiusLimit, blockLimit);
+            MinerInstance ins = new MinerInstance(world, player, new Point(x, y, z), blockName, VeinMiner.instance.minerServer, radiusLimit, blockLimit);
             ins.postSuccessfulBreak(new Point(x, y, z));
         }
     }

@@ -18,7 +18,6 @@
 package portablejim.veinminer.core;
 
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.eventhandler.EventBus;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -34,8 +33,6 @@ import net.minecraft.util.FoodStats;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import portablejim.veinminer.VeinMiner;
 import portablejim.veinminer.api.Permission;
 import portablejim.veinminer.api.VeinminerHarvestFailedCheck;
 import portablejim.veinminer.api.VeinminerNoToolCheck;
@@ -48,17 +45,15 @@ import portablejim.veinminer.util.BlockID;
 import portablejim.veinminer.util.ExpCalculator;
 import portablejim.veinminer.util.ItemStackID;
 import portablejim.veinminer.util.PlayerStatus;
-import portablejim.veinminer.util.Point;
+import portablejim.veinminer.api.Point;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.logging.Logger;
 
 import static net.minecraftforge.event.entity.player.PlayerEvent.HarvestCheck;
 
@@ -300,7 +295,7 @@ public class MinerInstance {
             MinecraftForge.EVENT_BUS.post(toolUsedEvent);
 
             // Only go ahead if block was destroyed. Stops mining through protected areas.
-            VeinminerHarvestFailedCheck continueCheck = new VeinminerHarvestFailedCheck(player, targetBlock.name, targetBlock.metadata);
+            VeinminerHarvestFailedCheck continueCheck = new VeinminerHarvestFailedCheck(player, newPoint, targetBlock.name, targetBlock.metadata);
             MinecraftForge.EVENT_BUS.post(continueCheck);
             if (success || continueCheck.allowContinue.isAllowed()) {
                 mineSuccessful = mineSuccessful | 2;

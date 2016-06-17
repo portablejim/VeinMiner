@@ -24,9 +24,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import portablejim.veinminer.VeinMiner;
 import portablejim.veinminer.server.MinerServer;
-import portablejim.veinminer.util.Point;
+import portablejim.veinminer.api.Point;
 
 /**
  * Hooks into the entity that are dropped into the world to stop entities that

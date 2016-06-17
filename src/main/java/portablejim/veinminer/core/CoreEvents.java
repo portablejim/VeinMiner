@@ -1,11 +1,9 @@
 package portablejim.veinminer.core;
 
-import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.server.management.ItemInWorldManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BlockEvent;
 import portablejim.veinminer.VeinMiner;
@@ -14,9 +12,7 @@ import portablejim.veinminer.configuration.ConfigurationSettings;
 import portablejim.veinminer.server.MinerServer;
 import portablejim.veinminer.util.BlockID;
 import portablejim.veinminer.util.Compatibility;
-import portablejim.veinminer.util.Point;
-
-import java.util.logging.Logger;
+import portablejim.veinminer.api.Point;
 
 /**
  * Created by james on 27/05/16.
@@ -34,7 +30,7 @@ public class CoreEvents {
         int radiusLimit = configurationSettings.getRadiusLimit();
         int blockLimit = configurationSettings.getBlockLimit();
 
-        VeinminerInitalToolCheck startConfig = new VeinminerInitalToolCheck(event.getPlayer(), radiusLimit, blockLimit, configurationSettings.getRadiusLimit(), configurationSettings.getBlockLimit());
+        VeinminerInitalToolCheck startConfig = new VeinminerInitalToolCheck(event.getPlayer(), breakPont, radiusLimit, blockLimit, configurationSettings.getRadiusLimit(), configurationSettings.getBlockLimit());
         MinecraftForge.EVENT_BUS.post(startConfig);
         if(startConfig.allowVeinminerStart.isAllowed()) {
             radiusLimit = Math.min(startConfig.radiusLimit, radiusLimit);

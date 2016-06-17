@@ -1,6 +1,7 @@
 package portablejim.veinminer.util;
 
 import net.minecraftforge.event.world.BlockEvent;
+import portablejim.veinminer.api.Point;
 
 /**
  * Created by james on 5/06/16.
