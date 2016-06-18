@@ -1,6 +1,15 @@
 Changelog
 =========
 
+0.33.0
+------
+Changes:
+* API: InitialToolCheck includes Point parameter.
+* API: HarvestFailedCheck includes Point parameter.
+* API: PostUseTool includes Point parameter.
+Fixes:
+* InitialToolCheck is actually fired
+
 0.32.0
 ------
 Changes:

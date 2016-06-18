@@ -23,10 +23,9 @@ import portablejim.veinminer.configuration.ConfigurationSettings;
 import portablejim.veinminer.configuration.ConfigurationValues;
 import portablejim.veinminer.core.MinerInstance;
 import portablejim.veinminer.util.PlayerStatus;
-import portablejim.veinminer.util.Point;
+import portablejim.veinminer.api.Point;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;

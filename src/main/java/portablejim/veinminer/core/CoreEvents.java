@@ -2,18 +2,17 @@ package portablejim.veinminer.core;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.server.management.ItemInWorldManager;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import portablejim.veinminer.VeinMiner;
+import portablejim.veinminer.api.VeinminerInitalToolCheck;
 import portablejim.veinminer.configuration.ConfigurationSettings;
 import portablejim.veinminer.server.MinerServer;
 import portablejim.veinminer.util.BlockID;
 import portablejim.veinminer.util.Compatibility;
-import portablejim.veinminer.util.Point;
-
-import java.util.logging.Logger;
+import portablejim.veinminer.api.Point;
 
 /**
  * Created by james on 27/05/16.
@@ -31,10 +30,17 @@ public class CoreEvents {
         int radiusLimit = configurationSettings.getRadiusLimit();
         int blockLimit = configurationSettings.getBlockLimit();
 
-        MinerInstance instance = new MinerInstance(event.world, (EntityPlayerMP) event.getPlayer(), event.pos.getX(), event.pos.getY(), event.pos.getZ(), new BlockID(event.state), server, radiusLimit, blockLimit);
+        VeinminerInitalToolCheck startConfig = new VeinminerInitalToolCheck(event.getPlayer(), breakPont, radiusLimit, blockLimit, configurationSettings.getRadiusLimit(), configurationSettings.getBlockLimit());
+        MinecraftForge.EVENT_BUS.post(startConfig);
+        if(startConfig.allowVeinminerStart.isAllowed()) {
+            radiusLimit = Math.min(startConfig.radiusLimit, radiusLimit);
+            blockLimit = Math.min(startConfig.blockLimit, blockLimit);
+            //MinerInstance instance = new MinerInstance(event.world, (EntityPlayerMP) event.getPlayer(), Compatibility.getPoint(event), new BlockID(Block.blockRegistry.getNameForObject(event.block), event.blockMetadata), server, radiusLimit, blockLimit);
+            MinerInstance instance = new MinerInstance(event.world, (EntityPlayerMP) event.getPlayer(), Compatibility.getPoint(event), new BlockID(event.state), server, radiusLimit, blockLimit);
 
-        if(instance.mineBlock(breakPont) > 0) {
-            event.setCanceled(true);
+            if (instance.mineBlock(breakPont) > 0) {
+                event.setCanceled(true);
+            }
         }
     }
 

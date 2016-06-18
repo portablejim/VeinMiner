@@ -48,17 +48,15 @@ import portablejim.veinminer.util.BlockID;
 import portablejim.veinminer.util.ExpCalculator;
 import portablejim.veinminer.util.ItemStackID;
 import portablejim.veinminer.util.PlayerStatus;
-import portablejim.veinminer.util.Point;
+import portablejim.veinminer.api.Point;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.logging.Logger;
 
 import static net.minecraftforge.event.entity.player.PlayerEvent.HarvestCheck;
 
@@ -85,7 +83,7 @@ public class MinerInstance {
 
     private static final int MIN_HUNGER = 1;
 
-    public MinerInstance(World world, EntityPlayerMP player, int x, int y, int z, BlockID blockID, MinerServer server, int radiusLimit, int blockLimit) {
+    public MinerInstance(World world, EntityPlayerMP player, Point startPoint, BlockID blockID, MinerServer server, int radiusLimit, int blockLimit) {
         startBlacklist = new HashSet<Point>();
         destroyQueue = new ConcurrentLinkedQueue<Point>();
         awaitingEntityDrop = new HashSet<Point>();
@@ -97,7 +95,7 @@ public class MinerInstance {
         serverInstance = server;
         usedItem = player.getCurrentEquippedItem();
         numBlocksMined = 1;
-        initalBlock = new Point(x, y, z);
+        initalBlock = startPoint;
         this.radiusLimit = radiusLimit;
         this.blockLimit = blockLimit;
 
@@ -296,11 +294,11 @@ public class MinerInstance {
                 takeExperience();
             }
 
-            VeinminerPostUseTool toolUsedEvent = new VeinminerPostUseTool(player);
+            VeinminerPostUseTool toolUsedEvent = new VeinminerPostUseTool(player, newPoint);
             MinecraftForge.EVENT_BUS.post(toolUsedEvent);
 
             // Only go ahead if block was destroyed. Stops mining through protected areas.
-            VeinminerHarvestFailedCheck continueCheck = new VeinminerHarvestFailedCheck(player, targetBlock.name, targetBlock.metadata);
+            VeinminerHarvestFailedCheck continueCheck = new VeinminerHarvestFailedCheck(player, newPoint, targetBlock.name, targetBlock.metadata);
             MinecraftForge.EVENT_BUS.post(continueCheck);
             if (success || continueCheck.allowContinue.isAllowed()) {
                 mineSuccessful = mineSuccessful | 2;
