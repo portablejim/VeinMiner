@@ -291,7 +291,7 @@ public class MinerInstance {
                 takeExperience();
             }
 
-            VeinminerPostUseTool toolUsedEvent = new VeinminerPostUseTool(player);
+            VeinminerPostUseTool toolUsedEvent = new VeinminerPostUseTool(player, newPoint);
             MinecraftForge.EVENT_BUS.post(toolUsedEvent);
 
             // Only go ahead if block was destroyed. Stops mining through protected areas.
