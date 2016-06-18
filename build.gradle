@@ -162,6 +162,7 @@ curseforge {
             displayName = "VeinMiner $config.mod_version [MC$config.compatible_versions; rev $depth]"
         }
 
+        addArtifact apiJar
         addArtifact deobfJar
 
         for (String newVersion : config.compatible_versions.split(",")) {
