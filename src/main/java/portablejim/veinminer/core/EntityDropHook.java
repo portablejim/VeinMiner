@@ -99,11 +99,7 @@ public class EntityDropHook {
         StackTraceElement[] stackTrace = (new Throwable()).getStackTrace();
         boolean veinminerMethod = false;
         for(StackTraceElement element : stackTrace) {
-            if(InjectedCalls.class.getCanonicalName().equals(element.getClassName())) {
-                veinminerMethod = true;
-                break;
-            }
-            else if(MinerInstance.class.getCanonicalName().equals(element.getClassName()) && "mineBlock".equals(element.getMethodName())) {
+            if(MinerInstance.class.getCanonicalName().equals(element.getClassName()) && "mineBlock".equals(element.getMethodName())) {
                 veinminerMethod = true;
                 break;
             }
