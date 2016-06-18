@@ -26,7 +26,7 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import portablejim.veinminer.server.MinerServer;
-import portablejim.veinminer.util.Point;
+import portablejim.veinminer.api.Point;
 
 /**
  * Hooks into the entity that are dropped into the world to stop entities that
@@ -97,11 +97,7 @@ public class EntityDropHook {
         StackTraceElement[] stackTrace = (new Throwable()).getStackTrace();
         boolean veinminerMethod = false;
         for(StackTraceElement element : stackTrace) {
-            if(InjectedCalls.class.getCanonicalName().equals(element.getClassName())) {
-                veinminerMethod = true;
-                break;
-            }
-            else if(MinerInstance.class.getCanonicalName().equals(element.getClassName()) && "mineBlock".equals(element.getMethodName())) {
+            if(MinerInstance.class.getCanonicalName().equals(element.getClassName()) && "mineBlock".equals(element.getMethodName())) {
                 veinminerMethod = true;
                 break;
             }

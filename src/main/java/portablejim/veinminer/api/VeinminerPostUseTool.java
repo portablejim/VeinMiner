@@ -26,8 +26,10 @@ import net.minecraft.entity.player.EntityPlayerMP;
 
 public class VeinminerPostUseTool extends Event {
     public final EntityPlayerMP player;
+    public final Point blockPos;
 
-    public VeinminerPostUseTool(EntityPlayerMP player) {
+    public VeinminerPostUseTool(EntityPlayerMP player, Point blockPos) {
         this.player = player;
+        this.blockPos = blockPos;
     }
 }
