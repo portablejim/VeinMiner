@@ -70,7 +70,7 @@ import java.util.Set;
  * through ForgeModLoader.
  */
 
-@Mod(modid = ModInfo.MODID, acceptedMinecraftVersions = "[1.9,1.10)",
+@Mod(modid = ModInfo.MODID, acceptedMinecraftVersions = "[1.9,1.11)",
         canBeDeactivated = true, guiFactory = "portablejim.veinminer.configuration.client.ConfigGuiFactory")
 public class VeinMiner {
 

@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.33.1
+------
+Changes:
+* Allow loading in 1.10.
+
 0.33.0
 ------
 Changes:
