@@ -1,7 +1,9 @@
 package portablejim.veinminer.core;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.relauncher.Side;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.MinecraftForge;
@@ -20,6 +22,12 @@ import portablejim.veinminer.api.Point;
 public class CoreEvents {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void blockBreakEvent(BlockEvent.BreakEvent event) {
+        if(event.world.isRemote) {
+            // I am officially lost.
+            // I am a server method but I find myself on the client.
+            return;
+        }
+
         Point breakPont = Compatibility.getPoint(event);
         MinerServer server = VeinMiner.instance.minerServer;
         if(server.pointIsBlacklisted(breakPont)) {
