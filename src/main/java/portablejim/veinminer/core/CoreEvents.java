@@ -20,7 +20,7 @@ import portablejim.veinminer.api.Point;
 public class CoreEvents {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void blockBreakEvent(BlockEvent.BreakEvent event) {
-        if(event.world.isRemote) {
+        if(event.getWorld().isRemote) {
             // I am officially lost.
             // I am a server method but I find myself on the client.
             return;
