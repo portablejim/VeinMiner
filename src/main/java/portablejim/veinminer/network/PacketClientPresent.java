@@ -45,14 +45,15 @@ public class PacketClientPresent implements IMessage {
     public PacketClientPresent(int clientMode) {
         switch(clientMode) {
             case PreferredMode.PRESSED:
-            case PreferredMode.RELEASED:
                 mode = 1;
-                break;
-            case PreferredMode.SNEAK_ACTIVE:
+            case PreferredMode.RELEASED:
                 mode = 2;
                 break;
-            case PreferredMode.SNEAK_INACTIVE:
+            case PreferredMode.SNEAK_ACTIVE:
                 mode = 3;
+                break;
+            case PreferredMode.SNEAK_INACTIVE:
+                mode = 4;
                 break;
             default:
                 mode = 0;
@@ -78,15 +79,16 @@ public class PacketClientPresent implements IMessage {
             MinerServer minerServer = VeinMiner.instance.minerServer;
             minerServer.addClientPlayer(playerName);
             switch (packetClientPresent.mode) {
-                case 2:
+                case 3:
                     minerServer.setPlayerStatus(playerName, PlayerStatus.SNEAK_ACTIVE);
                     player.addChatMessage(new ChatComponentTranslation("mod.veinminer.preferredmode.sneak"));
                     break;
-                case 3:
+                case 4:
                     minerServer.setPlayerStatus(playerName, PlayerStatus.SNEAK_INACTIVE);
                     player.addChatMessage(new ChatComponentTranslation("mod.veinminer.preferredmode.nosneak"));
                     break;
                 case 1:
+                case 2:
                     player.addChatMessage(new ChatComponentTranslation("mod.veinminer.preferredmode.auto"));
                 default:
                     minerServer.setPlayerStatus(playerName, PlayerStatus.INACTIVE);
