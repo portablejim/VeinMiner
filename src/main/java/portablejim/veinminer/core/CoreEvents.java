@@ -30,7 +30,7 @@ public class CoreEvents {
 
         Point breakPont = Compatibility.getPoint(event);
         MinerServer server = VeinMiner.instance.minerServer;
-        if(server.pointIsBlacklisted(breakPont)) {
+        if(server == null || server.pointIsBlacklisted(breakPont)) {
            return;
         }
 
