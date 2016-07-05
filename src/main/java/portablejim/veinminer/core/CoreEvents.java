@@ -20,9 +20,15 @@ import portablejim.veinminer.api.Point;
 public class CoreEvents {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void blockBreakEvent(BlockEvent.BreakEvent event) {
+        if(event.world.isRemote) {
+            // I am officially lost.
+            // I am a server method but I find myself on the client.
+            return;
+        }
+
         Point breakPont = Compatibility.getPoint(event);
         MinerServer server = VeinMiner.instance.minerServer;
-        if(server.pointIsBlacklisted(breakPont)) {
+        if(server == null || server.pointIsBlacklisted(breakPont)) {
            return;
         }
 

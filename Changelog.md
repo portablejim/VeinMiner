@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.33.2
+------
+Fixes:
+* Fix possible issues with tinkers construct tools.
+
 0.33.1
 ------
 Changes:
