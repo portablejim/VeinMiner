@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.34.0
+------
+Fixes:
+* Fix mode pressed/released always defaulting to pressed.
+
 0.33.2
 ------
 Fixes:
