@@ -46,6 +46,7 @@ public class PacketClientPresent implements IMessage {
         switch(clientMode) {
             case PreferredMode.PRESSED:
                 mode = 1;
+                break;
             case PreferredMode.RELEASED:
                 mode = 2;
                 break;
