@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.34.1
+------
+Fixes:
+* Fix modes again.
+* (Hopefully) Fix Tinkers support.
+
 0.34.0
 ------
 Fixes:

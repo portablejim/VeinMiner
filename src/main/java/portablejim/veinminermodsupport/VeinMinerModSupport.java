@@ -195,13 +195,13 @@ public class VeinMinerModSupport {
             IMCMessage.addTool("shears", "BiomesOPlenty:scytheMud");
             IMCMessage.addTool("shears", "BiomesOPlenty:scytheAmethyst");
         }
-        if(Loader.isModLoaded("TConstruct")) {
+        if(Loader.isModLoaded("tconstruct")) {
             devLog("Tinkers support loaded");
-            IMCMessage.addTool("axe", "TConstruct:hatchet");
-            IMCMessage.addTool("hoe", "TConstruct:mattock");
-            IMCMessage.addTool("pickaxe", "TConstruct:pickaxe");
-            IMCMessage.addTool("shovel", "TConstruct:shovel");
-            IMCMessage.addTool("shovel", "TConstruct:mattock");
+            IMCMessage.addTool("axe", "tconstruct:hatchet");
+            IMCMessage.addTool("hoe", "tconstruct:mattock");
+            IMCMessage.addTool("pickaxe", "tconstruct:pickaxe");
+            IMCMessage.addTool("shovel", "tconstruct:shovel");
+            IMCMessage.addTool("shovel", "tconstruct:mattock");
         }
         if(Loader.isModLoaded("exnihilo")) {
             devLog("Ex Nihilo support loaded");
@@ -319,7 +319,7 @@ public class VeinMinerModSupport {
                 event.allowContinue = Permission.ALLOW;
             }
         }
-        if(Loader.isModLoaded("TConstruct")) {
+        if(Loader.isModLoaded("tconstruct")) {
             devLog("Tinkers Construct detected");
             tinkersConstructToolEvent(event);
         }
@@ -393,8 +393,8 @@ public class VeinMinerModSupport {
             devLog("ERROR: No NBT data");
             return;
         }
-        NBTTagCompound toolTags = currentItem.getTagCompound().getCompoundTag("InfiTool");
-        if(toolTags == null) {
+        NBTTagCompound toolTags = currentItem.getTagCompound().getCompoundTag("Stats");
+        if(toolTags == null || toolTags.hasNoTags()) {
             devLog("ERROR: Not Tinkers Construct Tool");
             return;
         }
@@ -404,6 +404,14 @@ public class VeinMinerModSupport {
             devLog("ERROR: Block id wrong.");
             return;
         }
+
+        /*if(toolTags.hasKey("Broken")) {
+            devLog("DENY: Tool broken");
+            if(event.allowContinue == Permission.ALLOW) {
+                event.allowContinue = Permission.DENY;
+            }
+            return;
+        }*/
 
         devLog("Allowing event");
         if(event.allowContinue == Permission.DENY) {
