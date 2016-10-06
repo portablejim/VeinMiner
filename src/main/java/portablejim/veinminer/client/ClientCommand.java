@@ -12,7 +12,6 @@ import portablejim.veinminer.network.PacketChangeMode;
 import portablejim.veinminer.util.PreferredMode;
 
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by james on 16/06/16.
@@ -46,7 +45,6 @@ public class ClientCommand extends CommandBase {
     public void execute(MinecraftServer server, ICommandSender sender, String[] astring) throws WrongUsageException {
         if(sender instanceof EntityPlayerSP) {
             EntityPlayerSP senderPlayer = (EntityPlayerSP) sender;
-            UUID player = senderPlayer.getPersistentID();
             PacketChangeMode p = null;
 
             if(astring.length < 1) {
@@ -87,6 +85,7 @@ public class ClientCommand extends CommandBase {
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender par1ICommandSender, String[] arguments, BlockPos pos) {
         return getListOfStringsMatchingLastWord(arguments, modes);

@@ -62,6 +62,7 @@ public class BlockID implements Comparable<BlockID>
         metadata = preMeta >= -1 ? preMeta : -1;
     }
 
+    @Deprecated
     public BlockID(String name, int meta) {
         this.name = name;
         this.metadata =  meta < -1 || meta == OreDictionary.WILDCARD_VALUE ? -1 : meta;
