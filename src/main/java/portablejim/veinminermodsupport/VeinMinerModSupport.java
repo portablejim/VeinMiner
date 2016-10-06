@@ -325,7 +325,7 @@ public class VeinMinerModSupport {
         }
 
         if(event.allowContinue == Permission.DENY) {
-            String item_name = Item.itemRegistry.getNameForObject(currentEquippedItem).toString();
+            String item_name = Item.REGISTRY.getNameForObject(currentEquippedItem).toString();
             if(falseTools.contains(item_name)) {
                 devLog("Allowed start with " + item_name);
                 event.allowContinue = Permission.ALLOW;

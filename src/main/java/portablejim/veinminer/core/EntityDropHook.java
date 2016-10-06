@@ -89,7 +89,7 @@ public class EntityDropHook {
         boolean isBlock;
         boolean isItem;
 
-        ResourceLocation uniqueId = Item.itemRegistry.getNameForObject(entityItem.getEntityItem().getItem());
+        ResourceLocation uniqueId = Item.REGISTRY.getNameForObject(entityItem.getEntityItem().getItem());
 
         isBlock = GameRegistry.findBlock(uniqueId.getResourceDomain(), uniqueId.getResourcePath()) != null;
         isItem = GameRegistry.findItem(uniqueId.getResourceDomain(), uniqueId.getResourcePath()) != null;

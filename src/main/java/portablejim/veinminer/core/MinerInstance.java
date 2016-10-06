@@ -131,7 +131,7 @@ public class MinerInstance {
                 // Test to see if the player can mine stone.
                 // If they can, they have other assistance and so should be
                 // considered a tool.
-                Block testBlock = Blocks.stone;
+                Block testBlock = Blocks.STONE;
                 HarvestCheck event = new HarvestCheck(player, testBlock.getDefaultState(), false);
                 MinecraftForge.EVENT_BUS.post(event);
                 this.finished = !event.canHarvest();

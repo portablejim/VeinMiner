@@ -37,7 +37,7 @@ public class ItemStackID {
     }
 
     public ItemStackID(Item item, int damage, int stackSize) {
-        this(Item.itemRegistry.getNameForObject(item).toString(), damage, stackSize);
+        this(Item.REGISTRY.getNameForObject(item).toString(), damage, stackSize);
     }
 
     public String getItemId() {

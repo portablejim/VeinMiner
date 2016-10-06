@@ -41,7 +41,7 @@ public class ItemNameTooltip {
             if(event.getItemStack() == null || event.getItemStack().getItem() == null || event.getToolTip() == null) {
                 return;
             }
-            ResourceLocation uniqueIdentifierFor = Item.itemRegistry.getNameForObject(event.getItemStack().getItem());
+            ResourceLocation uniqueIdentifierFor = Item.REGISTRY.getNameForObject(event.getItemStack().getItem());
             if(uniqueIdentifierFor != null && event.isShowAdvancedItemTooltips()) {
                 // Sometimes this crashes. Not my fault. I can control the damage though.
                     event.getToolTip().add(uniqueIdentifierFor.toString());
