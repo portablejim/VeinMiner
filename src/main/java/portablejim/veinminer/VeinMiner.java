@@ -24,13 +24,8 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.FMLLog;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.*;
 import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.ModContainer;
-import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -70,7 +65,7 @@ import java.util.Set;
  * through ForgeModLoader.
  */
 
-@Mod(modid = ModInfo.MODID, acceptedMinecraftVersions = "[1.9,1.11)",
+@Mod(modid = ModInfo.MODID, version = ModInfo.VERSION, acceptedMinecraftVersions = "[1.9,1.11)",
         canBeDeactivated = true, guiFactory = "portablejim.veinminer.configuration.client.ConfigGuiFactory")
 public class VeinMiner {
 

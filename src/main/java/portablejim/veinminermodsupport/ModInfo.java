@@ -22,6 +22,7 @@ package portablejim.veinminermodsupport;
  */
 
 public class ModInfo {
-    public static final String MOD_ID = "VeinMinerModSupport";
+    public static final String MOD_ID = "veinminermodsupport";
     public static final String MOD_NAME = "VeinMiner Mod Support";
+    public static final String VERSION = "0.34.2";
 }
