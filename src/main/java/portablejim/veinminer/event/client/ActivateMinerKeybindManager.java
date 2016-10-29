@@ -27,6 +27,9 @@ import portablejim.veinminer.VeinMiner;
 import portablejim.veinminer.network.PacketMinerActivate;
 import portablejim.veinminer.util.PreferredMode;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Manages the keybind for the client side of VeinMiner.
  * Registers, keybind and sends packets on the key being pressed and released.
@@ -35,6 +38,8 @@ import portablejim.veinminer.util.PreferredMode;
 public class ActivateMinerKeybindManager {
     public KeyBinding keyBinding = new KeyBinding("veinminer.key.enable", Keyboard.KEY_GRAVE, "veinminer.key.category");
     private static boolean statusEnabled = false;
+    private  int[] count = {0, 0, 0};
+    private final int PACKET_COUNT = 5;
 
     public ActivateMinerKeybindManager() {
         ClientRegistry.registerKeyBinding(keyBinding);
@@ -46,22 +51,46 @@ public class ActivateMinerKeybindManager {
     public void KeyEvent(InputEvent.KeyInputEvent event) {
         boolean sendPacket = false;
 
-        int mode = VeinMiner.instance.configurationSettings.getPreferredMode();
+        int mode = VeinMiner.instance.currentMode;
         boolean pressed = keyBinding.isKeyDown();
         if(mode == PreferredMode.DISABLED) {
             statusEnabled = false;
-            sendPacket = true; // If enabled when changing, notify server that it is disabled.
+            if(count[0] < PACKET_COUNT) {
+                sendPacket = true; // If enabled when changing, notify server that it is disabled.
+
+                count[0]++;
+                count[1] = 0;
+                count[2] = 0;
+            }
         }
         else if ((pressed &&  mode == PreferredMode.PRESSED) || (!pressed && mode == PreferredMode.RELEASED) && !statusEnabled) {
             statusEnabled = true;
-            sendPacket = true;
+            if(count[1] < PACKET_COUNT) {
+                sendPacket = true; // If enabled when changing, notify server that it is disabled.
+
+                count[0] = 0;
+                count[1]++;
+                count[2] = 0;
+            }
         } else if (((pressed &&  mode == PreferredMode.RELEASED) || (!pressed && mode == PreferredMode.PRESSED)) && statusEnabled) {
             statusEnabled = false;
-            sendPacket = true;
+            if(count[2] < PACKET_COUNT) {
+                sendPacket = true; // If enabled when changing, notify server that it is disabled.
+
+                count[0] = 0;
+                count[1] = 0;
+                count[2]++;
+            }
         }
         if (sendPacket) {
             PacketMinerActivate packet = new PacketMinerActivate(statusEnabled);
             VeinMiner.instance.networkWrapper.sendToServer(packet);
         }
+    }
+
+    public void resetCount() {
+        count[0] = 0;
+        count[1] = 0;
+        count[2] = 0;
     }
 }

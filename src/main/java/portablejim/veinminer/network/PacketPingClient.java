@@ -45,6 +45,7 @@ public class PacketPingClient implements IMessage {
         public void processMessage(PacketPingClient message, MessageContext context) {
             PacketClientPresent p = new PacketClientPresent(VeinMiner.instance.configurationSettings.getPreferredMode());
             VeinMiner.instance.networkWrapper.sendToServer(p);
+            VeinMiner.proxy.resetKeybindPacketCount();
         }
     }
 }

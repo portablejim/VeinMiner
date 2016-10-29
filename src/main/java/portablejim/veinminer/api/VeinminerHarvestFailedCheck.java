@@ -31,8 +31,10 @@ public class VeinminerHarvestFailedCheck extends Event {
     public final EntityPlayerMP player;
     public final String blockName;
     public final int blockMetadata;
+    public final Point blockPoint;
 
-    public VeinminerHarvestFailedCheck(EntityPlayerMP player, String name, int metadata) {
+    public VeinminerHarvestFailedCheck(EntityPlayerMP player, Point blockPoint, String name, int metadata) {
+        this.blockPoint = blockPoint;
         allowContinue = Permission.DENY;
         this.player = player;
         this.blockName = name;

@@ -30,7 +30,7 @@ public abstract class GenericHandler<REQ extends IMessage> implements IMessageHa
                 FMLLog.warning("onMessage-server: Player is null");
                 return null;
             }
-            playerEntity.getServerForPlayer().addScheduledTask(task);
+            playerEntity.getServer().addScheduledTask(task);
         }
         return null;
     }

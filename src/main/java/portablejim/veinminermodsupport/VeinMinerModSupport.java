@@ -33,8 +33,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.network.NetworkCheckHandler;
+import net.minecraftforge.fml.common.registry.GameData;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.common.config.Configuration;
 import portablejim.veinminer.api.IMCMessage;
 import portablejim.veinminer.api.Permission;
 import portablejim.veinminer.api.VeinminerHarvestFailedCheck;
@@ -45,7 +47,11 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 import static net.minecraftforge.fml.common.Mod.EventHandler;
 import static net.minecraftforge.fml.common.Mod.Instance;
@@ -56,7 +62,9 @@ import static net.minecraftforge.fml.common.Mod.Instance;
  */
 
 @Mod(modid = ModInfo.MOD_ID,
-        name = ModInfo.MOD_NAME)
+        name = ModInfo.MOD_NAME,
+        version = ModInfo.VERSION,
+        acceptedMinecraftVersions = "[1.9,1.11)")
 public class VeinMinerModSupport {
 
     private boolean debugMode = false;
@@ -68,6 +76,35 @@ public class VeinMinerModSupport {
 
     private Boolean configLoaded = false;
 
+    private final static String[] FALSETOOLS_DEFAULT = {
+            "excompressum:chickenStick",
+            "excompressum:compressedHammerWood",
+            "excompressum:compressedHammerStone",
+            "excompressum:compressedHammerIron",
+            "excompressum:compressedHammerGold",
+            "excompressum:compressedHammerDiamond",
+            "excompressum:doubleCompressedDiamondHammer",
+            "excompressum:compressedCrook",
+    };
+    private Set<String> falseTools = new LinkedHashSet<String>();
+
+    private final static String[] OVERRIDE_BLACKLIST_DEFAULT = {
+            "EnderIO:blockConduitBundle",
+    };
+    private Set<String> overrideBlacklist = new LinkedHashSet<String>();
+
+    private static final String CONFIG_AUTODETECT = "autodetect";
+    private static final String CONFIG_AUTODETECT_COMMENT = "Autodetect items and blocks during game start-up.";
+
+    private boolean AUTODETECT_TOOLS_TOGGLE;
+    private static final boolean AUTODETECT_TOOLS_TOGGLE_DEFAULT = true;
+    private static final String AUTODETECT_TOOLS_TOGGLE_CONFIGNAME = "autodetect.tools";
+    private static final String AUTODETECT_TOOLS_TOGGLE_DESCRIPTION = "Autodetect tools on starting the game, adding the names to the list.";
+
+    public VeinMinerModSupport(){
+
+    }
+
     @NetworkCheckHandler
     public boolean checkClientModVersion(Map<String, String> mods, Side side) {
         return true;
@@ -78,15 +115,26 @@ public class VeinMinerModSupport {
     public void preInit(FMLPreInitializationEvent event) {
         File configDir = new File(event.getModConfigurationDirectory(), "veinminer");
         File loadedFile = new File(configDir, "modSupport.cfg");
-        if(loadedFile.exists()) {
+        try {
+            Configuration config = new Configuration(loadedFile);
+            config.load();
+
+            config.addCustomCategoryComment(CONFIG_AUTODETECT, CONFIG_AUTODETECT_COMMENT);
+            AUTODETECT_TOOLS_TOGGLE = config.get(CONFIG_AUTODETECT, AUTODETECT_TOOLS_TOGGLE_CONFIGNAME, AUTODETECT_TOOLS_TOGGLE_DEFAULT, AUTODETECT_TOOLS_TOGGLE_DESCRIPTION).getBoolean(AUTODETECT_TOOLS_TOGGLE_DEFAULT);
+
+            config.setCategoryComment("advanced", "You probably don't want to touch these");
+
+            String[] falseTools_array = config.getStringList("special_snowflake_tools", "advanced", FALSETOOLS_DEFAULT, "Tools that need to be treated as special snowflakes\n");
+            String[] overrideBlacklist_array = config.getStringList("override_blacklist_blocks", "advanced", OVERRIDE_BLACKLIST_DEFAULT, "Blocks to not override success for\n");
+            falseTools = new LinkedHashSet<String>(Arrays.asList(falseTools_array));
+            overrideBlacklist = new LinkedHashSet<String>(Arrays.asList(overrideBlacklist_array));
+
+            config.save();
+
             configLoaded = true;
         }
-        else {
-            try {
-                //noinspection ResultOfMethodCallIgnored
-                loadedFile.createNewFile();
-                Files.write("#Nothing to see here!\n", loadedFile, Charset.defaultCharset());
-            } catch (IOException ignored) { }
+        catch(Exception e) {
+            event.getModLog().error("Error writing config file");
         }
     }
 
@@ -104,7 +152,7 @@ public class VeinMinerModSupport {
         }
         forceConsumerAvailable = false;
 
-        if(!configLoaded) {
+        if(AUTODETECT_TOOLS_TOGGLE) {
             addTools();
         }
     }
@@ -148,13 +196,13 @@ public class VeinMinerModSupport {
             IMCMessage.addTool("shears", "BiomesOPlenty:scytheMud");
             IMCMessage.addTool("shears", "BiomesOPlenty:scytheAmethyst");
         }
-        if(Loader.isModLoaded("TConstruct")) {
+        if(Loader.isModLoaded("tconstruct")) {
             devLog("Tinkers support loaded");
-            IMCMessage.addTool("axe", "TConstruct:hatchet");
-            IMCMessage.addTool("hoe", "TConstruct:mattock");
-            IMCMessage.addTool("pickaxe", "TConstruct:pickaxe");
-            IMCMessage.addTool("shovel", "TConstruct:shovel");
-            IMCMessage.addTool("shovel", "TConstruct:mattock");
+            IMCMessage.addTool("axe", "tconstruct:hatchet");
+            IMCMessage.addTool("hoe", "tconstruct:mattock");
+            IMCMessage.addTool("pickaxe", "tconstruct:pickaxe");
+            IMCMessage.addTool("shovel", "tconstruct:shovel");
+            IMCMessage.addTool("shovel", "tconstruct:mattock");
         }
         if(Loader.isModLoaded("exnihilo")) {
             devLog("Ex Nihilo support loaded");
@@ -216,6 +264,9 @@ public class VeinMinerModSupport {
             IMCMessage.addBlock("hammer", "minecraft:gravel");
             IMCMessage.addBlock("hammer", "minecraft:sand");
         }
+        if(Loader.isModLoaded("excompressum")) {
+            IMCMessage.addToolType("hammer", "Hammer", "excompressum:chickenStick");
+        }
     }
 
     @SuppressWarnings("UnusedDeclaration")
@@ -245,13 +296,23 @@ public class VeinMinerModSupport {
     @SuppressWarnings("UnusedDeclaration")
     @SubscribeEvent
     public void makeToolsWork(VeinminerHarvestFailedCheck event) {
-        ItemStack currentEquipped = event.player.getCurrentEquippedItem();
+        ItemStack currentEquipped = event.player.getHeldItemMainhand();
 
         if(currentEquipped == null) {
             return;
         }
 
-        Item currentEquippedItem = event.player.getCurrentEquippedItem().getItem();
+        if(event.allowContinue == Permission.DENY) {
+            if(overrideBlacklist.contains(event.blockName)) {
+                devLog("Denied with block: " + event.blockName);
+                event.allowContinue = Permission.FORCE_DENY;
+            }
+            else {
+                devLog("Not Denied with block: " + event.blockName);
+            }
+        }
+
+        Item currentEquippedItem = event.player.getHeldItemMainhand().getItem();
         if(Loader.isModLoaded("DartCraft")) {
             devLog("Dartcraft detected");
             if(currentEquippedItem instanceof IBreakable && event.allowContinue == Permission.DENY) {
@@ -259,10 +320,19 @@ public class VeinMinerModSupport {
                 event.allowContinue = Permission.ALLOW;
             }
         }
-        if(Loader.isModLoaded("TConstruct")) {
+        if(Loader.isModLoaded("tconstruct")) {
             devLog("Tinkers Construct detected");
             tinkersConstructToolEvent(event);
         }
+
+        if(event.allowContinue == Permission.DENY) {
+            String item_name = Item.REGISTRY.getNameForObject(currentEquippedItem).toString();
+            if(falseTools.contains(item_name)) {
+                devLog("Allowed start with " + item_name);
+                event.allowContinue = Permission.ALLOW;
+            }
+        }
+
         if(Loader.isModLoaded("exnihilo")) {
             devLog("Ex Nihilo detected");
             if(currentEquippedItem != null) {
@@ -274,9 +344,9 @@ public class VeinMinerModSupport {
                     devLog(currentEquippedItem.getClass().getCanonicalName());
                 }
                 Block testLeaves = Block.getBlockFromName(event.blockName);
-                if(Block.getBlockFromName(event.blockName).isLeaves(event.player.getEntityWorld(), event.player.getPosition())
+                if(Block.getBlockFromName(event.blockName).isLeaves(testLeaves.getStateFromMeta(event.blockMetadata), event.player.getEntityWorld(), event.player.getPosition())
                         && event.allowContinue == Permission.DENY) {
-                    String item_name = GameRegistry.findUniqueIdentifierFor(currentEquippedItem).toString();
+                    String item_name = currentEquippedItem.getRegistryName().toString();
                     if("exnihilo:crook".equals(item_name)) event.allowContinue = Permission.ALLOW;
                     if("exnihilo:crook_bone".equals(item_name)) event.allowContinue = Permission.ALLOW;
                     if("exastris:crook_rf".equals(item_name)) event.allowContinue = Permission.ALLOW;
@@ -313,7 +383,7 @@ public class VeinMinerModSupport {
     }
 
     private void tinkersConstructToolEvent(VeinminerHarvestFailedCheck event) {
-        ItemStack currentItem = event.player.getCurrentEquippedItem();
+        ItemStack currentItem = event.player.getHeldItemMainhand();
 
         if(currentItem == null) {
             devLog("ERROR: Item is null");
@@ -324,8 +394,8 @@ public class VeinMinerModSupport {
             devLog("ERROR: No NBT data");
             return;
         }
-        NBTTagCompound toolTags = currentItem.getTagCompound().getCompoundTag("InfiTool");
-        if(toolTags == null) {
+        NBTTagCompound toolTags = currentItem.getTagCompound().getCompoundTag("Stats");
+        if(toolTags == null || toolTags.hasNoTags()) {
             devLog("ERROR: Not Tinkers Construct Tool");
             return;
         }
@@ -335,6 +405,14 @@ public class VeinMinerModSupport {
             devLog("ERROR: Block id wrong.");
             return;
         }
+        
+        /*if(toolTags.hasKey("Broken")) {
+            devLog("DENY: Tool broken");
+            if(event.allowContinue == Permission.ALLOW) {
+                event.allowContinue = Permission.DENY;
+            }
+            return;
+        }*/
 
         devLog("Allowing event");
         if(event.allowContinue == Permission.DENY) {
@@ -344,8 +422,17 @@ public class VeinMinerModSupport {
 
     @SuppressWarnings("UnusedDeclaration")
     @SubscribeEvent
+    public void fixFalseNegatives(VeinminerHarvestFailedCheck event) {
+        // Some blocks return false when they shouldn't.
+        if(event.allowContinue == Permission.DENY) {
+            if("IC2:blockRubWood".equals(event.blockName)) event.allowContinue = Permission.ALLOW;
+        }
+    }
+
+    @SuppressWarnings("UnusedDeclaration")
+    @SubscribeEvent
     public void applyForce(VeinminerPostUseTool event) {
-        ItemStack currentEquippedItemStack = event.player.getCurrentEquippedItem();
+        ItemStack currentEquippedItemStack = event.player.getHeldItemMainhand();
 
         // Pre-compute if avaliable to short circuit logic if not found.
         // Method called lots (many times a second, possibly thousand times total).

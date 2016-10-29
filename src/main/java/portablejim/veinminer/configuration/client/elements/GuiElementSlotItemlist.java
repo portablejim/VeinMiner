@@ -17,6 +17,7 @@
 
 package portablejim.veinminer.configuration.client.elements;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraftforge.fml.client.GuiScrollingList;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
@@ -44,7 +45,7 @@ public class GuiElementSlotItemlist extends GuiScrollingList {
     String toolType;
 
     public GuiElementSlotItemlist(ItemlistConfigGuiScreen parent, String toolType) {
-        super(Minecraft.getMinecraft(), parent.width - 10, parent.height, 60, parent.height - 40, 5, 22);
+        super(Minecraft.getMinecraft(), parent.width - 10, parent.height, 60, parent.height - 40, 5, 22, parent.width, parent.height);
         iconRenderer = new IconRenderer(parent.mc, parent.getZLevel());
         this.parent = parent;
         this.toolType = toolType;
@@ -107,7 +108,6 @@ public class GuiElementSlotItemlist extends GuiScrollingList {
             itemStack.setItemDamage(itemParts.metadata == -1 ? 0 : itemParts.metadata);
 
             // Get new name based on damage value.
-            tryBlock.getStateForEntityRender(tryBlock.getDefaultState());
             displayName = itemStack.getUnlocalizedName();
             iconRenderer.renderItemStackIcon(this.listWidth / 2 - 148, var3 - 1 , itemStack);
         }

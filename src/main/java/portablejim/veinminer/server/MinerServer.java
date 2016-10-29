@@ -19,15 +19,19 @@ package portablejim.veinminer.server;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayerMP;
 import portablejim.veinminer.configuration.ConfigurationSettings;
 import portablejim.veinminer.configuration.ConfigurationValues;
 import portablejim.veinminer.core.MinerInstance;
+import portablejim.veinminer.lib.MinerLogger;
 import portablejim.veinminer.util.PlayerStatus;
-import portablejim.veinminer.util.Point;
+import portablejim.veinminer.api.Point;
 
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Singleton class that co-ordinates various actions. It allows the current
@@ -38,17 +42,17 @@ import java.util.UUID;
 
 public class MinerServer {
 
-    private HashSet<MinerInstance> minerInstances;
-    private HashMap<Point, MinerInstance> pointMinerInstances;
+    private final Set<MinerInstance> minerInstances;
+    private ConcurrentHashMap<EntityPlayerMP, MinerInstance> pointMinerInstances;
     private HashSet<UUID> clientPlayers;
-    private HashMap<UUID, PlayerStatus> players;
+    private ConcurrentHashMap<UUID, PlayerStatus> players;
     private ConfigurationSettings settings;
 
     public MinerServer(ConfigurationValues configValues) {
-        minerInstances = new HashSet<MinerInstance>();
-        pointMinerInstances = new HashMap<Point, MinerInstance>();
+        minerInstances = Collections.synchronizedSet(new HashSet<MinerInstance>());
+        pointMinerInstances = new ConcurrentHashMap<EntityPlayerMP, MinerInstance>();
         clientPlayers = new HashSet<UUID>();
-        players = new HashMap<UUID, PlayerStatus>();
+        players = new ConcurrentHashMap<UUID, PlayerStatus>();
         settings = new ConfigurationSettings(configValues);
     }
 
@@ -76,46 +80,73 @@ public class MinerServer {
         }
         EntityItem entityItem = (EntityItem) entity;
 
-        for (MinerInstance minerInstance : minerInstances) {
-            if (minerInstance.isRegistered(p)) {
-                minerInstance.addDrop(entityItem);
+        synchronized (minerInstances) {
+            for (MinerInstance minerInstance : minerInstances) {
+                if (minerInstance.isRegistered(p)) {
+                    minerInstance.addDrop(entityItem);
+                }
             }
         }
     }
 
-    public boolean pointIsBlacklisted(Point point) {
-        for (MinerInstance minerInstance : minerInstances) {
-            if(minerInstance.pointIsBlacklisted(point)) {
-                return true;
+    public boolean awaitingDrop(Point p) {
+        synchronized (minerInstances) {
+            for (MinerInstance minerInstance : minerInstances) {
+                if (minerInstance.isRegistered(p)) {
+                    return true;
+                }
             }
         }
         return false;
     }
 
+    public boolean pointIsBlacklisted(Point point) {
+        synchronized (minerInstances) {
+            for (MinerInstance minerInstance : minerInstances) {
+                if (minerInstance.pointIsBlacklisted(point)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean isPlayerInactive(EntityPlayerMP player) {
+        return !pointMinerInstances.containsKey(player);
+    }
+
     public void removeFromBlacklist(Point point) {
-        for (MinerInstance minerInstance : minerInstances) {
-            if(minerInstance.pointIsBlacklisted(point)) {
-                minerInstance.removeFromBlacklist(point);
+        synchronized (minerInstances) {
+            for (MinerInstance minerInstance : minerInstances) {
+                if (minerInstance.pointIsBlacklisted(point)) {
+                    minerInstance.removeFromBlacklist(point);
+                }
             }
         }
     }
 
     public void addInstance(MinerInstance ins) {
-        minerInstances.add(ins);
-        pointMinerInstances.put(ins.getInitalBlock(), ins);
+        synchronized (minerInstances) {
+            minerInstances.add(ins);
+        }
+        pointMinerInstances.put(ins.getPlayer(), ins);
     }
 
-    public MinerInstance getInstance(Point point) {
-        if(pointMinerInstances.containsKey(point)) {
-            return pointMinerInstances.get(point);
+    public MinerInstance getInstance(EntityPlayerMP player) {
+        if(pointMinerInstances.containsKey(player)) {
+            return pointMinerInstances.get(player);
         }
         return null;
     }
 
     public void removeInstance(MinerInstance ins) {
-        minerInstances.remove(ins);
-        if(pointMinerInstances.containsKey(ins.getInitalBlock())) {
-            pointMinerInstances.remove(ins);
+        MinerLogger.debug("Removing a MinerInstance.");
+        synchronized (minerInstances) {
+            minerInstances.remove(ins);
+        }
+        if(pointMinerInstances.containsKey(ins.getPlayer())) {
+            MinerLogger.debug("Player found, removing it from the instance.");
+            pointMinerInstances.remove(ins.getPlayer());
         }
     }
 

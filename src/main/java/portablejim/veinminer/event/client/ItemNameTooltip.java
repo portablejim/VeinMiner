@@ -17,6 +17,8 @@
 
 package portablejim.veinminer.event.client;
 
+import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.common.MinecraftForge;
@@ -36,17 +38,17 @@ public class ItemNameTooltip {
     @SubscribeEvent
     public void addTooltip(ItemTooltipEvent event) {
         try {
-            if(event.itemStack == null || event.itemStack.getItem() == null || event.toolTip == null) {
+            if(event.getItemStack() == null || event.getItemStack().getItem() == null || event.getToolTip() == null) {
                 return;
             }
-            GameRegistry.UniqueIdentifier uniqueIdentifierFor = GameRegistry.findUniqueIdentifierFor(event.itemStack.getItem());
-            if(uniqueIdentifierFor != null && event.showAdvancedItemTooltips) {
+            ResourceLocation uniqueIdentifierFor = Item.REGISTRY.getNameForObject(event.getItemStack().getItem());
+            if(uniqueIdentifierFor != null && event.isShowAdvancedItemTooltips()) {
                 // Sometimes this crashes. Not my fault. I can control the damage though.
-                    event.toolTip.add(uniqueIdentifierFor.toString());
+                    event.getToolTip().add(uniqueIdentifierFor.toString());
             }
         }
         catch (NullPointerException exception) {
-            VeinMiner.instance.logger.error(String.format("NPE getting unique identifier for %s", event.itemStack.getItem().getClass().toString()));
+            VeinMiner.instance.logger.error(String.format("NPE getting unique identifier for %s", event.getItemStack().getItem().getClass().toString()));
             VeinMiner.instance.logger.error("Contact the mod author responsible.");
         }
     }

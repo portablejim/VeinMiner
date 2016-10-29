@@ -24,11 +24,11 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.FoodStats;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -46,14 +46,12 @@ import portablejim.veinminer.util.BlockID;
 import portablejim.veinminer.util.ExpCalculator;
 import portablejim.veinminer.util.ItemStackID;
 import portablejim.veinminer.util.PlayerStatus;
-import portablejim.veinminer.util.Point;
+import portablejim.veinminer.api.Point;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -83,7 +81,7 @@ public class MinerInstance {
 
     private static final int MIN_HUNGER = 1;
 
-    public MinerInstance(World world, EntityPlayerMP player, int x, int y, int z, BlockID blockID, MinerServer server, int radiusLimit, int blockLimit) {
+    public MinerInstance(World world, EntityPlayerMP player, Point startPoint, BlockID blockID, MinerServer server, int radiusLimit, int blockLimit) {
         startBlacklist = new HashSet<Point>();
         destroyQueue = new ConcurrentLinkedQueue<Point>();
         awaitingEntityDrop = new HashSet<Point>();
@@ -93,9 +91,9 @@ public class MinerInstance {
         targetBlock = blockID;
         finished = false;
         serverInstance = server;
-        usedItem = player.getCurrentEquippedItem();
+        usedItem = player.getHeldItemMainhand();
         numBlocksMined = 1;
-        initalBlock = new Point(x, y, z);
+        initalBlock = startPoint;
         this.radiusLimit = radiusLimit;
         this.blockLimit = blockLimit;
 
@@ -108,13 +106,18 @@ public class MinerInstance {
         return initalBlock;
     }
 
+    public EntityPlayerMP getPlayer() {
+        return player;
+    }
+
     public void cleanUp() {
+        MinerLogger.debug("Cleaning up MinerInstance");
         FMLCommonHandler.instance().bus().unregister(this);
     }
 
     private boolean shouldContinue() {
         // Item equipped
-        if(!serverInstance.getConfigurationSettings().getEnableAllTools() && player.getCurrentEquippedItem() == null) {
+        if(!serverInstance.getConfigurationSettings().getEnableAllTools() && player.getHeldItemMainhand() == null) {
             VeinminerNoToolCheck toolCheck = new VeinminerNoToolCheck(player);
             MinecraftForge.EVENT_BUS.post(toolCheck);
 
@@ -128,19 +131,19 @@ public class MinerInstance {
                 // Test to see if the player can mine stone.
                 // If they can, they have other assistance and so should be
                 // considered a tool.
-                Block testBlock = Blocks.stone;
-                HarvestCheck event = new HarvestCheck(player, testBlock, false);
+                Block testBlock = Blocks.STONE;
+                HarvestCheck event = new HarvestCheck(player, testBlock.getDefaultState(), false);
                 MinecraftForge.EVENT_BUS.post(event);
-                this.finished = !event.success;
+                this.finished = !event.canHarvest();
             }
         }
 
         if(usedItem == null) {
-            if(player.getCurrentEquippedItem() != null) {
+            if(player.getHeldItemMainhand() != null) {
                 this.finished = true;
             }
         }
-        else if(player.getCurrentEquippedItem() == null || !player.getCurrentEquippedItem().isItemEqual(usedItem)) {
+        else if(player.getHeldItemMainhand() == null || !player.getHeldItemMainhand().isItemEqual(usedItem)) {
             this.finished = true;
         }
 
@@ -167,11 +170,11 @@ public class MinerInstance {
 
             String problem = "mod.veinminer.finished.tooHungry";
             if(serverInstance.playerHasClient(player.getUniqueID())) {
-                player.addChatMessage(new ChatComponentTranslation(problem));
+                player.addChatMessage(new TextComponentTranslation(problem));
             }
             else {
-                String translatedProblem = StatCollector.translateToLocal(problem);
-                player.addChatMessage(new ChatComponentText(translatedProblem));
+                String translatedProblem = I18n.translateToLocal(problem);
+                player.addChatMessage(new TextComponentString(translatedProblem));
             }
         }
 
@@ -189,11 +192,11 @@ public class MinerInstance {
             player.addExperienceLevel(0);
 
             if(serverInstance.playerHasClient(player.getUniqueID())) {
-                player.addChatMessage(new ChatComponentTranslation(problem));
+                player.addChatMessage(new TextComponentTranslation(problem));
             }
             else {
-                String translatedProblem = StatCollector.translateToLocal(problem);
-                player.addChatMessage(new ChatComponentText(translatedProblem));
+                String translatedProblem = I18n.translateToLocal(problem);
+                player.addChatMessage(new TextComponentString(translatedProblem));
             }
         }
 
@@ -273,14 +276,20 @@ public class MinerInstance {
         player.addExperienceLevel(0);
     }
 
-    private void mineBlock(int x, int y, int z) {
+    public  int mineBlock(Point point) {
+        return mineBlock(point.getX(), point.getY(), point.getZ());
+    }
+
+    private int mineBlock(int x, int y, int z) {
+        int mineSuccessful = 0;
         Point newPoint = new Point(x, y, z);
         BlockID newBlock = new BlockID(world, new BlockPos(x , y, z ));
         ConfigurationSettings configurationSettings = serverInstance.getConfigurationSettings();
         startBlacklist.add(newPoint);
         if(mineAllowed(newBlock, newPoint, configurationSettings)) {
+            mineSuccessful = mineSuccessful | 1;
             awaitingEntityDrop.add(newPoint);
-            boolean success = player.theItemInWorldManager.tryHarvestBlock(new BlockPos(x, y, z));
+            boolean success = player.interactionManager.tryHarvestBlock(new BlockPos(x, y, z));
             numBlocksMined++;
 
             if(!player.capabilities.isCreativeMode) {
@@ -288,18 +297,24 @@ public class MinerInstance {
                 takeExperience();
             }
 
-            VeinminerPostUseTool toolUsedEvent = new VeinminerPostUseTool(player);
+            VeinminerPostUseTool toolUsedEvent = new VeinminerPostUseTool(player, newPoint);
             MinecraftForge.EVENT_BUS.post(toolUsedEvent);
 
             // Only go ahead if block was destroyed. Stops mining through protected areas.
-            VeinminerHarvestFailedCheck continueCheck = new VeinminerHarvestFailedCheck(player, targetBlock.name, targetBlock.metadata);
+            VeinminerHarvestFailedCheck continueCheck = new VeinminerHarvestFailedCheck(player, newPoint, targetBlock.name, targetBlock.metadata);
             MinecraftForge.EVENT_BUS.post(continueCheck);
             if (success || continueCheck.allowContinue.isAllowed()) {
+                mineSuccessful = mineSuccessful | 2;
                 postSuccessfulBreak(newPoint);
+                awaitingEntityDrop.remove(newPoint);
+                MinerLogger.debug("Mining Successful");
             } else {
                 awaitingEntityDrop.remove(newPoint);
+                MinerLogger.debug("Mining failed");
             }
         }
+
+        return mineSuccessful;
     }
 
 
@@ -359,19 +374,25 @@ public class MinerInstance {
     @SubscribeEvent
     public void mineScheduled(ServerTickEvent event) {
         int quantity = serverInstance.getConfigurationSettings().getBlocksPerTick();
-        for(int i = 0; i < quantity; i++) {
-            if(!destroyQueue.isEmpty()) {
+        int i = 0;
+        while(i < quantity) {
+            if (!destroyQueue.isEmpty()) {
                 Point target = destroyQueue.remove();
-                mineBlock(target.getX(), target.getY(), target.getZ());
-            }
-            else {
-                // All blocks have been mined. This is done last.
-                serverInstance.removeInstance(this);
-                if(!drops.isEmpty()) {
-                    spawnDrops();
+                i += 1;
+                int status = (mineBlock(target.getX(), target.getY(), target.getZ()) & 2);
+                if (status != 2) {
+                    MinerLogger.debug("Failed to remove block: " + status);
                 }
-                cleanUp();
-                return;
+                MinerLogger.debug("Emptying queue: " + i);
+            } else {
+                MinerLogger.debug("All mining tasks have been dequeued");
+            // All blocks have been mined. This is done last.
+            serverInstance.removeInstance(this);
+            if(!drops.isEmpty()) {
+                spawnDrops();
+            }
+            cleanUp();
+            return;
             }
         }
     }
@@ -429,5 +450,35 @@ public class MinerInstance {
         if(startBlacklist.contains(point)) {
             startBlacklist.remove(point);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MinerInstance that = (MinerInstance) o;
+
+        if (radiusLimit != that.radiusLimit) return false;
+        if (blockLimit != that.blockLimit) return false;
+        if (serverInstance != null ? !serverInstance.equals(that.serverInstance) : that.serverInstance != null)
+            return false;
+        if (world != null ? !world.equals(that.world) : that.world != null) return false;
+        if (player != null ? !player.equals(that.player) : that.player != null) return false;
+        if (usedItem != null ? !usedItem.equals(that.usedItem) : that.usedItem != null) return false;
+        return initalBlock != null ? initalBlock.equals(that.initalBlock) : that.initalBlock == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = serverInstance != null ? serverInstance.hashCode() : 0;
+        result = 31 * result + (world != null ? world.hashCode() : 0);
+        result = 31 * result + (player != null ? player.hashCode() : 0);
+        result = 31 * result + (usedItem != null ? usedItem.hashCode() : 0);
+        result = 31 * result + (initalBlock != null ? initalBlock.hashCode() : 0);
+        result = 31 * result + radiusLimit;
+        result = 31 * result + blockLimit;
+        return result;
     }
 }

@@ -53,11 +53,6 @@ public class ConfigurationValues {
     public static final String CONFIG_CLIENT = "client";
     public static final String CONFIG_CLIENT_COMMENT = "These settings are used client side, so they have no impact on servers.";
 
-    public boolean AUTODETECT_TOOLS_TOGGLE;
-    public static final boolean AUTODETECT_TOOLS_TOGGLE_DEFAULT = true;
-    public static final String AUTODETECT_TOOLS_TOGGLE_CONFIGNAME = "autodetect.tools.enable";
-    public static final String AUTODETECT_TOOLS_TOGGLE_DESCRIPTION = "Autodetect tools on starting the game, adding the names to the list.";
-
     public HashMap<ToolType, ConfigToolValue> toolConfig = new HashMap<ToolType, ConfigToolValue>(ToolType.values().length);
 
     public String BLOCK_EQUIVALENCY_LIST;
@@ -155,6 +150,7 @@ public class ConfigurationValues {
         }
         catch(JsonParseException e) {
             VeinMiner.instance.logger.error(String.format("Error parsing %s; Json error: %s", configFileJson.getName(), e.getLocalizedMessage()));
+            VeinMiner.instance.logger.error("The above line number may be inexact.");
             VeinMiner.instance.logger.error("Asking java to exit");
             FMLCommonHandler.instance().exitJava(1, false);
         }
@@ -162,7 +158,6 @@ public class ConfigurationValues {
         configFile.load();
 
         configFile.addCustomCategoryComment(CONFIG_AUTODETECT, CONFIG_AUTODETECT_COMMENT);
-        AUTODETECT_TOOLS_TOGGLE = configFile.get(CONFIG_AUTODETECT, AUTODETECT_TOOLS_TOGGLE_CONFIGNAME, AUTODETECT_TOOLS_TOGGLE_DEFAULT, AUTODETECT_TOOLS_TOGGLE_DESCRIPTION).getBoolean(AUTODETECT_TOOLS_TOGGLE_DEFAULT);
 
         for(ToolType toolType : ToolType.values()) {
             ConfigOptionBoolean autoToggle = toolConfig.get(toolType).autodetectToggle;

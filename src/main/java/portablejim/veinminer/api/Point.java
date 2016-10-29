@@ -15,9 +15,9 @@
  *    If not, see <http://www.gnu.org/licenses/>.
  */
 
-package portablejim.veinminer.util;
+package portablejim.veinminer.api;
 
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 
 /**
  * Point class to store a 3D point, including distance calculations.

@@ -1,6 +1,80 @@
 Changelog
 =========
 
+0.33.2
+------
+Fixes:
+* Fix possible issues with tinkers construct tools.
+
+0.33.1
+------
+Changes:
+* Allow loading in 1.10.
+
+0.33.0
+------
+Changes:
+* API: InitialToolCheck includes Point parameter.
+* API: HarvestFailedCheck includes Point parameter.
+* API: PostUseTool includes Point parameter.
+Fixes:
+* InitialToolCheck is actually fired
+
+0.32.0
+------
+Changes:
+* Rewrite some things. Hopefully things still work.
+* If you have the mod client-side (and server side) you can no longer change mode using /veinminer mode <mode>.
+  Now you need to use /veinminerc <mode>
+* There will be a few more information about the state of Veinminer posted to chat log.
+* Tool auto-detect config option is now in "modSupport.cfg"
+* Add blacklist for tinkers tools
+Fixes:
+* Tool auto-detect actually works.
+
+0.31.5
+-------
+Ported to 1.9
+Fixes:
+* Bug with chat on multiplayer (separate client and server).
+Known problems:
+* Keybind does not work. This is a forge bug.
+
+0.31.6
+------
+Changes:
+* Allow items from excompressum work with VeinMiner.
+
+0.31.4
+------
+Fixes:
+* Allow IC2 rubber wood to work with VeinMiner.
+
+0.31.3
+------
+Fixes:
+* Further attempts to fix ConcurrentModificationException crashes.
+
+0.31.2
+-------
+Fixes:
+* Fix autocomplete
+* Make detection of the same blocks better.
+
+0.31.1
+------
+Fixes:
+* Fix possible crashes with ConcurrentModificationException.
+
+0.31.0
+------
+Changes:
+* Updated to 1.8.9.
+Fixes:
+* Torches and grass on top of blocks destroyed by veinminer now drop properly.
+* Veinminer should be faster, working closer to the advertised speed.
+* Crash on tools screen.
+
 0.30.2
 ------
 Fixes:

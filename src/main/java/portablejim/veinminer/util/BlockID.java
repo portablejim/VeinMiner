@@ -19,7 +19,7 @@ package portablejim.veinminer.util;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -62,6 +62,7 @@ public class BlockID implements Comparable<BlockID>
         metadata = preMeta >= -1 ? preMeta : -1;
     }
 
+    @Deprecated
     public BlockID(String name, int meta) {
         this.name = name;
         this.metadata =  meta < -1 || meta == OreDictionary.WILDCARD_VALUE ? -1 : meta;
@@ -72,7 +73,7 @@ public class BlockID implements Comparable<BlockID>
     }
 
     public BlockID(IBlockState state) {
-        this(Block.blockRegistry.getNameForObject(state.getBlock()).toString(), state.getBlock().getMetaFromState(state));
+        this(Block.REGISTRY.getNameForObject(state.getBlock()).toString(), state.getBlock().getMetaFromState(state));
         this.state = state;
     }
 
