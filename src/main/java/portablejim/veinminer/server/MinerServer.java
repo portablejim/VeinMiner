@@ -23,6 +23,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import portablejim.veinminer.configuration.ConfigurationSettings;
 import portablejim.veinminer.configuration.ConfigurationValues;
 import portablejim.veinminer.core.MinerInstance;
+import portablejim.veinminer.lib.MinerLogger;
 import portablejim.veinminer.util.PlayerStatus;
 import portablejim.veinminer.api.Point;
 
@@ -139,12 +140,12 @@ public class MinerServer {
     }
 
     public void removeInstance(MinerInstance ins) {
-        System.out.println("Removing a MinerInstance.");
+        MinerLogger.debug("Removing a MinerInstance.");
         synchronized (minerInstances) {
             minerInstances.remove(ins);
         }
         if(pointMinerInstances.containsKey(ins.getPlayer())) {
-            System.out.println("Player found, removing it from the instance.");
+            MinerLogger.debug("Player found, removing it from the instance.");
             pointMinerInstances.remove(ins.getPlayer());
         }
     }
