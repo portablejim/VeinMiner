@@ -111,7 +111,7 @@ public class MinerInstance {
     }
 
     public void cleanUp() {
-        System.out.println("Cleaning up MinerInstance");
+        MinerLogger.debug("Cleaning up MinerInstance");
         FMLCommonHandler.instance().bus().unregister(this);
     }
 
@@ -307,10 +307,10 @@ public class MinerInstance {
                 mineSuccessful = mineSuccessful | 2;
                 postSuccessfulBreak(newPoint);
                 awaitingEntityDrop.remove(newPoint);
-                System.out.println("Mining Successful");
+                MinerLogger.debug("Mining Successful");
             } else {
                 awaitingEntityDrop.remove(newPoint);
-                System.out.println("Mining failed");
+                MinerLogger.debug("Mining failed");
             }
         }
 
@@ -381,11 +381,11 @@ public class MinerInstance {
                 i += 1;
                 int status = (mineBlock(target.getX(), target.getY(), target.getZ()) & 2);
                 if (status != 2) {
-                    System.out.println("Failed to remove block: " + status);
+                    MinerLogger.debug("Failed to remove block: " + status);
                 }
-                System.out.println("Emptying queue: " + i);
+                MinerLogger.debug("Emptying queue: " + i);
             } else {
-            System.out.println("All mining tasks have been dequeued");
+                MinerLogger.debug("All mining tasks have been dequeued");
             // All blocks have been mined. This is done last.
             serverInstance.removeInstance(this);
             if(!drops.isEmpty()) {
