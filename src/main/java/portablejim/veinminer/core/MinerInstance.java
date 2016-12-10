@@ -104,10 +104,6 @@ public class MinerInstance {
         FMLCommonHandler.instance().bus().register(this);
     }
 
-    public Point getInitalBlock() {
-        return initalBlock;
-    }
-
     public void cleanUp() {
         FMLCommonHandler.instance().bus().unregister(this);
     }
@@ -472,5 +468,9 @@ public class MinerInstance {
         result = 31 * result + radiusLimit;
         result = 31 * result + blockLimit;
         return result;
+    }
+
+    public EntityPlayerMP getPlayer() {
+        return player;
     }
 }

@@ -32,6 +32,11 @@ public class CoreEvents {
            return;
         }
 
+        if(event.getPlayer() != null && server.getInstance(event.getPlayer()) != null) {
+            // Ignore additional blocks for the player whilst still veinmining.
+            return;
+        }
+
         ConfigurationSettings configurationSettings = VeinMiner.instance.minerServer.getConfigurationSettings();
         int radiusLimit = configurationSettings.getRadiusLimit();
         int blockLimit = configurationSettings.getBlockLimit();

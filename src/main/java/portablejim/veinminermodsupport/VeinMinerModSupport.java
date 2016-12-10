@@ -99,6 +99,9 @@ public class VeinMinerModSupport {
     private static final String AUTODETECT_TOOLS_TOGGLE_CONFIGNAME = "autodetect.tools";
     private static final String AUTODETECT_TOOLS_TOGGLE_DESCRIPTION = "Autodetect tools on starting the game, adding the names to the list.";
 
+    private final static String[] BADTOOLS_DEFAULT = {};
+    private Set<String> badTools = new LinkedHashSet<String>();
+
     public VeinMinerModSupport(){
 
     }
@@ -122,10 +125,12 @@ public class VeinMinerModSupport {
 
             config.setCategoryComment("advanced", "You probably don't want to touch these");
 
+            String[] badTools_array = config.getStringList("bad_tools", "advanced", BADTOOLS_DEFAULT, "Tools that break veinminer.");
             String[] falseTools_array = config.getStringList("special_snowflake_tools", "advanced", FALSETOOLS_DEFAULT, "Tools that need to be treated as special snowflakes\n");
             String[] overrideBlacklist_array = config.getStringList("override_blacklist_blocks", "advanced", OVERRIDE_BLACKLIST_DEFAULT, "Blocks to not override success for\n");
             falseTools = new LinkedHashSet<String>(Arrays.asList(falseTools_array));
             overrideBlacklist = new LinkedHashSet<String>(Arrays.asList(overrideBlacklist_array));
+            badTools = new LinkedHashSet<String>(Arrays.asList(badTools_array));
 
             config.save();
 
@@ -288,6 +293,17 @@ public class VeinMinerModSupport {
     private void devLog(String string) {
         if(debugMode) {
             FMLLog.getLogger().info("[" + ModInfo.MOD_ID + "] " + string);
+        }
+    }
+
+    @SuppressWarnings("UnusedDeclaration")
+    @SubscribeEvent
+    public void banBadTools(VeinminerHarvestFailedCheck event) {
+        ItemStack currentEquipped = event.player.getCurrentEquippedItem();
+
+        if(currentEquipped != null && currentEquipped.getItem() != null) {
+            String item_name = GameRegistry.findUniqueIdentifierFor(currentEquipped.getItem()).toString();
+            event.allowContinue = Permission.FORCE_DENY;
         }
     }
 
