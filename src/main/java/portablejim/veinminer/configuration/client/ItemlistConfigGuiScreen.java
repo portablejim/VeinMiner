@@ -17,6 +17,7 @@
 
 package portablejim.veinminer.configuration.client;
 
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
@@ -101,7 +102,7 @@ public class ItemlistConfigGuiScreen extends GuiScreen {
         String[] testItemName = testBlockId.name.split(":", 2);
         if(testItemName.length == 2) {
             Block testBlock = Block.getBlockFromName(testBlockId.name);
-            Item testItem = GameRegistry.findItem(testItemName[0], testItemName[1]);
+            Item testItem = Item.REGISTRY.getObject(new ResourceLocation(testItemName[0], testItemName[1]));
 
             switch(mode) {
                 case 0:

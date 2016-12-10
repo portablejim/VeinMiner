@@ -17,7 +17,6 @@
 
 package portablejim.veinminermodsupport;
 
-import bluedart.api.IBreakable;
 import com.google.common.io.Files;
 import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.Loader;
@@ -303,7 +302,7 @@ public class VeinMinerModSupport {
         ItemStack currentEquipped = event.player.getHeldItemMainhand();
 
         if(currentEquipped != null && currentEquipped.getItem() != null) {
-            String item_name = Item.itemRegistry.getNameForObject(currentEquipped.getItem()).toString();
+            String item_name = Item.REGISTRY.getNameForObject(currentEquipped.getItem()).toString();
             event.allowContinue = Permission.FORCE_DENY;
         }
     }
@@ -328,20 +327,13 @@ public class VeinMinerModSupport {
         }
 
         Item currentEquippedItem = event.player.getHeldItemMainhand().getItem();
-        if(Loader.isModLoaded("DartCraft")) {
-            devLog("Dartcraft detected");
-            if(currentEquippedItem instanceof IBreakable && event.allowContinue == Permission.DENY) {
-                devLog("Allowed start");
-                event.allowContinue = Permission.ALLOW;
-            }
-        }
         if(Loader.isModLoaded("tconstruct")) {
             devLog("Tinkers Construct detected");
             tinkersConstructToolEvent(event);
         }
 
         if(event.allowContinue == Permission.DENY) {
-            String item_name = Item.itemRegistry.getNameForObject(currentEquippedItem).toString();
+            String item_name = Item.REGISTRY.getNameForObject(currentEquipped.getItem()).toString();
             if(falseTools.contains(item_name)) {
                 devLog("Allowed start with " + item_name);
                 event.allowContinue = Permission.ALLOW;

@@ -17,6 +17,7 @@
 
 package portablejim.veinminer.core;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.Item;
@@ -89,10 +90,10 @@ public class EntityDropHook {
         boolean isBlock;
         boolean isItem;
 
-        ResourceLocation uniqueId = Item.itemRegistry.getNameForObject(entityItem.getEntityItem().getItem());
+        ResourceLocation uniqueId = Item.REGISTRY.getNameForObject(entityItem.getEntityItem().getItem());
 
-        isBlock = GameRegistry.findBlock(uniqueId.getResourceDomain(), uniqueId.getResourcePath()) != null;
-        isItem = GameRegistry.findItem(uniqueId.getResourceDomain(), uniqueId.getResourcePath()) != null;
+        isBlock = Block.REGISTRY.getObject(uniqueId) != null;
+        isItem = Item.REGISTRY.getObject(uniqueId) != null;
 
         StackTraceElement[] stackTrace = (new Throwable()).getStackTrace();
         boolean veinminerMethod = false;

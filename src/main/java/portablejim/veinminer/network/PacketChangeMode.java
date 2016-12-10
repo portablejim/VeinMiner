@@ -77,13 +77,13 @@ public class PacketChangeMode implements IMessage {
                     case PreferredMode.DISABLED:
                     case PreferredMode.SNEAK_ACTIVE:
                     case PreferredMode.SNEAK_INACTIVE:
-                        Minecraft.getMinecraft().thePlayer.addChatMessage(new TextComponentTranslation("command.veinminerc.set.disabled"));
+                        Minecraft.getMinecraft().player.sendMessage(new TextComponentTranslation("command.veinminerc.set.disabled"));
                         break;
                     case PreferredMode.PRESSED:
-                        Minecraft.getMinecraft().thePlayer.addChatMessage(new TextComponentTranslation("command.veinminerc.set.pressed"));
+                        Minecraft.getMinecraft().player.sendMessage(new TextComponentTranslation("command.veinminerc.set.pressed"));
                         break;
                     case PreferredMode.RELEASED:
-                        Minecraft.getMinecraft().thePlayer.addChatMessage(new TextComponentTranslation("command.veinminerc.set.released"));
+                        Minecraft.getMinecraft().player.sendMessage(new TextComponentTranslation("command.veinminerc.set.released"));
                         break;
                 }
             }
@@ -98,15 +98,15 @@ public class PacketChangeMode implements IMessage {
                     case PreferredMode.PRESSED:
                     case PreferredMode.RELEASED:
                         minerServer.setPlayerStatus(playerName, PlayerStatus.INACTIVE);
-                        player.addChatMessage(new TextComponentTranslation("mod.veinminer.preferredmode.auto"));
+                        player.sendMessage(new TextComponentTranslation("mod.veinminer.preferredmode.auto"));
                         break;
                     case PreferredMode.SNEAK_ACTIVE:
                         minerServer.setPlayerStatus(playerName, PlayerStatus.SNEAK_ACTIVE);
-                        player.addChatMessage(new TextComponentTranslation("mod.veinminer.preferredmode.sneak"));
+                        player.sendMessage(new TextComponentTranslation("mod.veinminer.preferredmode.sneak"));
                         break;
                     case PreferredMode.SNEAK_INACTIVE:
                         minerServer.setPlayerStatus(playerName, PlayerStatus.SNEAK_INACTIVE);
-                        player.addChatMessage(new TextComponentTranslation("mod.veinminer.preferredmode.nosneak"));
+                        player.sendMessage(new TextComponentTranslation("mod.veinminer.preferredmode.nosneak"));
                         break;
 
                 }

@@ -83,15 +83,15 @@ public class PacketClientPresent implements IMessage {
             switch (packetClientPresent.mode) {
                 case 3:
                     minerServer.setPlayerStatus(playerName, PlayerStatus.SNEAK_ACTIVE);
-                    player.addChatMessage(new TextComponentTranslation("mod.veinminer.preferredmode.sneak"));
+                    player.sendMessage(new TextComponentTranslation("mod.veinminer.preferredmode.sneak"));
                     break;
                 case 4:
                     minerServer.setPlayerStatus(playerName, PlayerStatus.SNEAK_INACTIVE);
-                    player.addChatMessage(new TextComponentTranslation("mod.veinminer.preferredmode.nosneak"));
+                    player.sendMessage(new TextComponentTranslation("mod.veinminer.preferredmode.nosneak"));
                     break;
                 case 1:
                 case 2:
-                    player.addChatMessage(new TextComponentTranslation("mod.veinminer.preferredmode.auto"));
+                    player.sendMessage(new TextComponentTranslation("mod.veinminer.preferredmode.auto"));
                 default:
                     minerServer.setPlayerStatus(playerName, PlayerStatus.INACTIVE);
             }

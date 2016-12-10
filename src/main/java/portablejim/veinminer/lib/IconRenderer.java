@@ -62,7 +62,7 @@ public class IconRenderer {
     private void setupRender(int xBase, int yBase, int uBase, int vBase)
     {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        minecraft.getTextureManager().bindTexture(Gui.statIcons);
+        minecraft.getTextureManager().bindTexture(Gui.STAT_ICONS);
         Tessellator tessellator = Tessellator.getInstance();
         VertexBuffer wr = tessellator.getBuffer();
         wr.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);

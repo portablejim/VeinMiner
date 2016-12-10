@@ -18,6 +18,7 @@
 package portablejim.veinminer.configuration.client.elements;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.GuiScrollingList;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
@@ -94,7 +95,7 @@ public class GuiElementSlotItemlist extends GuiScrollingList {
             renderItem = tryItem != null;
         }
         else if(nameParts.length == 2) {
-            tryItem = GameRegistry.findItem(nameParts[0], nameParts[1]);
+            tryItem = Item.REGISTRY.getObject(new ResourceLocation(nameParts[0], nameParts[1]));
             if(tryItem != null) {
                 ItemStack tryItemStack = new ItemStack(tryItem);
                 tryItemStack.setItemDamage(itemParts.metadata == -1 ? 0 : itemParts.metadata);

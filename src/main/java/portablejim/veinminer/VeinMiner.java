@@ -199,7 +199,7 @@ public class VeinMiner {
                             List<ItemStack> itemStacks = OreDictionary.getOres(oreDictEntry);
                             for(ItemStack item : itemStacks) {
                                 if(item.getItem() instanceof ItemBlock) {
-                                    String blockName = Item.itemRegistry.getNameForObject(item.getItem()).toString();
+                                    String blockName = Item.REGISTRY.getNameForObject(item.getItem()).toString();
                                     if(blockName != null) {
                                         configurationSettings.addBlockToWhitelist(toolType, new BlockID(blockName, item.getItemDamage()));
                                     }

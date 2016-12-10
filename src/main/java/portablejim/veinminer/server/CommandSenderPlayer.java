@@ -49,12 +49,12 @@ public class CommandSenderPlayer implements ICustomCommandSender{
             String rawMessage = I18n.translateToLocal(incomingMessage);
             message = new TextComponentString(String.format(rawMessage, params));
         }
-        player.addChatMessage(message);
+        player.sendMessage(message);
     }
 
     @Override
     public boolean canRunCommands() {
-        return !player.mcServer.isDedicatedServer() || player.canCommandSenderUseCommand(0, "veinminer"); //|| player..mcServer.getConfigurationManager().canSendCommands(player.getGameProfile());
+        return !player.mcServer.isDedicatedServer() || player.canUseCommand(0, "veinminer"); //|| player..mcServer.getConfigurationManager().canSendCommands(player.getGameProfile());
     }
 
     @Override

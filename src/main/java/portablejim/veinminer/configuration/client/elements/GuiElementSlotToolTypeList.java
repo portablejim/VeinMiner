@@ -17,6 +17,7 @@
 
 package portablejim.veinminer.configuration.client.elements;
 
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.GuiScrollingList;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraft.client.Minecraft;
@@ -84,7 +85,7 @@ public class GuiElementSlotToolTypeList extends GuiScrollingList {
 
         Item tryItem = new Item();
         if(iconParts.length == 2) {
-            tryItem = GameRegistry.findItem(iconParts[0], iconParts[1]);
+            tryItem = Item.REGISTRY.getObject(new ResourceLocation(iconParts[0], iconParts[1]));
             if (tryItem != null) {
                 ItemStack tryItemStack = new ItemStack(tryItem);
                 tryItemStack.setItemDamage(itemParts.metadata == -1 ? 0 : itemParts.metadata);

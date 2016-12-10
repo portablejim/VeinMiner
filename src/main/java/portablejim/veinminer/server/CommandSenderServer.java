@@ -37,7 +37,7 @@ public class CommandSenderServer implements ICustomCommandSender {
         ITextComponent message;
         String rawMessage = I18n.translateToLocal(incomingMessage);
         message = new TextComponentString(String.format(rawMessage, params));
-        server.addChatMessage(message);
+        server.sendMessage(message);
     }
 
     @Override

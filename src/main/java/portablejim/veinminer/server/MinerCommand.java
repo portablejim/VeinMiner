@@ -63,7 +63,7 @@ public class MinerCommand extends CommandBase {
     }
 
     @Override
-    public String getCommandName() {
+    public String getName() {
         return "veinminer";
     }
 
@@ -146,7 +146,7 @@ public class MinerCommand extends CommandBase {
             String rawMessage = I18n.translateToLocal(incomingMessage);
             message = new TextComponentString(String.format(rawMessage, params));
         }
-        player.addChatMessage(message);
+        player.sendMessage(message);
     }
 
     private void showUsageError(String errorKey) throws WrongUsageException {
@@ -163,7 +163,7 @@ public class MinerCommand extends CommandBase {
         if(sender instanceof CommandSenderPlayer) {
             CommandSenderPlayer player = (CommandSenderPlayer) sender;
             MinecraftServer server = player.getPlayer().mcServer;
-            if (server.isDedicatedServer() && !player.getPlayer().canCommandSenderUseCommand(server.getOpPermissionLevel(), "veinminer.admin")) {
+            if (server.isDedicatedServer() && !player.getPlayer().canUseCommand(server.getOpPermissionLevel(), "veinminer.admin")) {
                 boolean playerNoClient = !minerServer.playerHasClient(player.getPlayer().getUniqueID());
                 String message = "command.veinminer.permissionDenied";
                 if (playerNoClient) {
@@ -401,7 +401,7 @@ public class MinerCommand extends CommandBase {
 
     @Override
     @SuppressWarnings("UnusedDeclaration")
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender par1ICommandSender, String[] arguments, BlockPos pos) {
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender par1ICommandSender, String[] arguments, BlockPos pos) {
         switch (arguments.length) {
             case 1:
                 return getListOfStringsMatchingLastWord(arguments, commands);
@@ -431,13 +431,13 @@ public class MinerCommand extends CommandBase {
     }
 
     @Override
-    public String getCommandUsage(ICommandSender par1ICommandSender) {
+    public String getUsage(ICommandSender par1ICommandSender) {
         return I18n.translateToLocal("command.veinminer");
     }
 
     @SuppressWarnings("UnusedDeclaration")
     public int compareTo(MinerCommand par1ICommand)
     {
-        return this.getCommandName().compareTo(par1ICommand.getCommandName());
+        return this.getName().compareTo(par1ICommand.getName());
     }
 }

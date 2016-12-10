@@ -122,7 +122,7 @@ public class MinerInstance {
                 // Test to see if the player can mine stone.
                 // If they can, they have other assistance and so should be
                 // considered a tool.
-                Block testBlock = Blocks.stone;
+                Block testBlock = Blocks.STONE;
                 HarvestCheck event = new HarvestCheck(player, testBlock.getDefaultState(), false);
                 MinecraftForge.EVENT_BUS.post(event);
                 this.finished = !event.canHarvest();
@@ -161,11 +161,11 @@ public class MinerInstance {
 
             String problem = "mod.veinminer.finished.tooHungry";
             if(serverInstance.playerHasClient(player.getUniqueID())) {
-                player.addChatMessage(new TextComponentTranslation(problem));
+                player.sendMessage(new TextComponentTranslation(problem));
             }
             else {
                 String translatedProblem = I18n.translateToLocal(problem);
-                player.addChatMessage(new TextComponentString(translatedProblem));
+                player.sendMessage(new TextComponentString(translatedProblem));
             }
         }
 
@@ -183,11 +183,11 @@ public class MinerInstance {
             player.addExperienceLevel(0);
 
             if(serverInstance.playerHasClient(player.getUniqueID())) {
-                player.addChatMessage(new TextComponentTranslation(problem));
+                player.sendMessage(new TextComponentTranslation(problem));
             }
             else {
                 String translatedProblem = I18n.translateToLocal(problem);
-                player.addChatMessage(new TextComponentString(translatedProblem));
+                player.sendMessage(new TextComponentString(translatedProblem));
             }
         }
 
@@ -399,13 +399,13 @@ public class MinerInstance {
             while (numItems > itemStack.getMaxStackSize()) {
                 ItemStack newItemStack = new ItemStack(foundItem, itemStack.getMaxStackSize(), itemDamage);
                 EntityItem newEntityItem = new EntityItem(world, initalBlock.getX(), initalBlock.getY(), initalBlock.getZ(), newItemStack);
-                world.spawnEntityInWorld(newEntityItem);
+                world.spawnEntity(newEntityItem);
                 numItems -= itemStack.getMaxStackSize();
             }
             ItemStack newItemStack = new ItemStack(foundItem, numItems, itemDamage);
             newItemStack.setItemDamage(itemStack.getDamage());
             EntityItem newEntityItem = new EntityItem(world, initalBlock.getX(), initalBlock.getY(), initalBlock.getZ(), newItemStack);
-            world.spawnEntityInWorld(newEntityItem);
+            world.spawnEntity(newEntityItem);
         }
         drops.clear();
     }
@@ -420,11 +420,11 @@ public class MinerInstance {
 
         if(drops.containsKey(itemInfo)) {
             int oldDropNumber = drops.get(itemInfo);
-            int newDropNumber = oldDropNumber + item.stackSize;
+            int newDropNumber = oldDropNumber + item.getCount();
             drops.put(itemInfo, newDropNumber);
         }
         else {
-            drops.put(itemInfo, item.stackSize);
+            drops.put(itemInfo, item.getCount());
         }
     }
 
