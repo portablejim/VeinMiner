@@ -1,6 +1,13 @@
 Changelog
 =========
 
+0.35.1
+------
+Changes:
+* Users in creative can now use their hand when both overrides are enabled.
+Fixes:
+* Tool blacklisting working better.
+
 0.35.0
 ------
 Changes:
