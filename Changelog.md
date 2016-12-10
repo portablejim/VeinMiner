@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.35.0
+------
+Changes:
+* Every player can only mine 1 vein at a time. (Should help crashing issues)
+* Added options in modsupport.cfg for blacklisting tools.
+
 0.34.1
 ------
 Fixes:
