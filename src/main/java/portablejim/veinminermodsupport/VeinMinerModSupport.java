@@ -300,10 +300,10 @@ public class VeinMinerModSupport {
     @SuppressWarnings("UnusedDeclaration")
     @SubscribeEvent
     public void banBadTools(VeinminerHarvestFailedCheck event) {
-        ItemStack currentEquipped = event.player.getCurrentEquippedItem();
+        ItemStack currentEquipped = event.player.getHeldItemMainhand();
 
         if(currentEquipped != null && currentEquipped.getItem() != null) {
-            String item_name = GameRegistry.findUniqueIdentifierFor(currentEquipped.getItem()).toString();
+            String item_name = Item.itemRegistry.getNameForObject(currentEquipped.getItem()).toString();
             event.allowContinue = Permission.FORCE_DENY;
         }
     }
