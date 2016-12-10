@@ -112,7 +112,7 @@ public class MinerInstance {
             VeinminerNoToolCheck toolCheck = new VeinminerNoToolCheck(player);
             MinecraftForge.EVENT_BUS.post(toolCheck);
 
-            if(toolCheck.allowTool.isAllowed()) {
+            if(toolCheck.allowTool.isAllowed() || player.theItemInWorldManager.isCreative()) {
                 this.finished = false;
             }
             else if(toolCheck.allowTool == Permission.FORCE_DENY) {
