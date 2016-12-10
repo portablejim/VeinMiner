@@ -19,6 +19,8 @@ package portablejim.veinminer.server;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import portablejim.veinminer.configuration.ConfigurationSettings;
 import portablejim.veinminer.configuration.ConfigurationValues;
 import portablejim.veinminer.core.MinerInstance;
@@ -41,14 +43,14 @@ import java.util.concurrent.ConcurrentHashMap;
 public class MinerServer {
 
     private final Set<MinerInstance> minerInstances;
-    private ConcurrentHashMap<Point, MinerInstance> pointMinerInstances;
+    private ConcurrentHashMap<EntityPlayerMP, MinerInstance> playerMinerInstances;
     private HashSet<UUID> clientPlayers;
     private ConcurrentHashMap<UUID, PlayerStatus> players;
     private ConfigurationSettings settings;
 
     public MinerServer(ConfigurationValues configValues) {
         minerInstances = Collections.synchronizedSet(new HashSet<MinerInstance>());
-        pointMinerInstances = new ConcurrentHashMap<Point, MinerInstance>();
+        playerMinerInstances = new ConcurrentHashMap<EntityPlayerMP, MinerInstance>();
         clientPlayers = new HashSet<UUID>();
         players = new ConcurrentHashMap<UUID, PlayerStatus>();
         settings = new ConfigurationSettings(configValues);
@@ -123,12 +125,12 @@ public class MinerServer {
         synchronized (minerInstances) {
             minerInstances.add(ins);
         }
-        pointMinerInstances.put(ins.getInitalBlock(), ins);
+        playerMinerInstances.put(ins.getPlayer(), ins);
     }
 
-    public MinerInstance getInstance(Point point) {
-        if(pointMinerInstances.containsKey(point)) {
-            return pointMinerInstances.get(point);
+    public MinerInstance getInstance(EntityPlayer playerMP) {
+        if(playerMinerInstances.containsKey(playerMP)) {
+            return playerMinerInstances.get(playerMP);
         }
         return null;
     }
@@ -137,8 +139,8 @@ public class MinerServer {
         synchronized (minerInstances) {
             minerInstances.remove(ins);
         }
-        if(pointMinerInstances.containsKey(ins.getInitalBlock())) {
-            pointMinerInstances.remove(ins);
+        if(playerMinerInstances.containsKey(ins.getPlayer())) {
+            playerMinerInstances.remove(ins.getPlayer());
         }
     }
 

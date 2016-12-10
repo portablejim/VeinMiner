@@ -232,7 +232,7 @@ public class MinerCommand extends CommandBase {
 
         String toolString = settings.getToolTypeName(tool);
 
-        commandAction(astring, "blockList");
+        commandAction(astring, "blocklist");
         String action = astring[2];
 
         if(astring.length < 4) {
