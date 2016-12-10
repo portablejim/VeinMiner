@@ -1,6 +1,6 @@
 [
 {
-  "modid": "VeinMiner",
+  "modid": "veinminer",
   "name": "Vein Miner",
   "description": "When a configured block is harvested a chain reaction is initiated to break connected blocks of the same type. Takes durability and health for each block mined.",
   "version": "${version}",
@@ -13,7 +13,7 @@
   "dependencies": ["Forge"]
 },
 {
-  "modid": "VeinMinerModSupport",
+  "modid": "veinminermodsupport",
   "name": "Mod Support",
   "description": "Mod support for Vein Miner, improving inter-mod compatibility.",
   "version": "${version}",
