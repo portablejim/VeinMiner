@@ -303,7 +303,9 @@ public class VeinMinerModSupport {
 
         if(currentEquipped != null && currentEquipped.getItem() != null) {
             String item_name = GameRegistry.findUniqueIdentifierFor(currentEquipped.getItem()).toString();
-            event.allowContinue = Permission.FORCE_DENY;
+            if(badTools.contains(item_name)) {
+                event.allowContinue = Permission.FORCE_DENY;
+            }
         }
     }
 
