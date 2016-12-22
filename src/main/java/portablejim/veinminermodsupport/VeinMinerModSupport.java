@@ -301,7 +301,7 @@ public class VeinMinerModSupport {
     public void banBadTools(VeinminerHarvestFailedCheck event) {
         ItemStack currentEquipped = event.player.getCurrentEquippedItem();
 
-        if(currentEquipped != null && currentEquipped.getItem() != null) {
+        if(currentEquipped != null && currentEquipped.getItem() != null && GameRegistry.findUniqueIdentifierFor(currentEquipped.getItem()) != null) {
             String item_name = GameRegistry.findUniqueIdentifierFor(currentEquipped.getItem()).toString();
             if(badTools.contains(item_name)) {
                 event.allowContinue = Permission.FORCE_DENY;
