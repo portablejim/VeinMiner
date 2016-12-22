@@ -76,14 +76,14 @@ public class VeinMinerModSupport {
     private Boolean configLoaded = false;
 
     private final static String[] FALSETOOLS_DEFAULT = {
-            "excompressum:chickenStick",
-            "excompressum:compressedHammerWood",
-            "excompressum:compressedHammerStone",
-            "excompressum:compressedHammerIron",
-            "excompressum:compressedHammerGold",
-            "excompressum:compressedHammerDiamond",
-            "excompressum:doubleCompressedDiamondHammer",
-            "excompressum:compressedCrook",
+            "excompressum:chicken_stick",
+            "excompressum:compressed_hammer_wood",
+            "excompressum:compressed_hammer_stone",
+            "excompressum:compressed_hammer_iron",
+            "excompressum:compressed_hammer_gold",
+            "excompressum:compressed_hammer_diamond",
+            "excompressum:double_compressed_diamond_hammer",
+            "excompressum:compressed_crook",
     };
     private Set<String> falseTools = new LinkedHashSet<String>();
 
@@ -302,7 +302,7 @@ public class VeinMinerModSupport {
     public void banBadTools(VeinminerHarvestFailedCheck event) {
         ItemStack currentEquipped = event.player.getHeldItemMainhand();
 
-        if(currentEquipped != null && currentEquipped.getItem() != null) {
+        if(currentEquipped != null && currentEquipped.getItem() != null && Item.itemRegistry.getNameForObject(currentEquipped.getItem()) != null) {
             String item_name = Item.itemRegistry.getNameForObject(currentEquipped.getItem()).toString();
             if(badTools.contains(item_name)) {
                 event.allowContinue = Permission.FORCE_DENY;
