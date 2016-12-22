@@ -70,7 +70,7 @@ public class EntityDropHook {
             return;
         }
 
-        if(!EntityItem.class.isInstance(entity)) {
+        if(!(EntityItem.class == entity.getClass())) {
             return;
         }
 
