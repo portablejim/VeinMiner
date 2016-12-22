@@ -1,6 +1,17 @@
 Changelog
 =========
 
+0.35.2
+-------
+Changes:
+* Mods which drop custom entity items should not have their drops collected by Veinminer.
+* Excompressum support updated
+
+Fixes:
+* Veinmining with some items should no longer cause crashes.
+* Fewer dropped items are allowed to go AWOL.
+
+
 0.35.1
 ------
 Changes:
