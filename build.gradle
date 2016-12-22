@@ -56,7 +56,7 @@ if(System.getenv("BUILD_NUMBER") != null) {
     buildNumber = System.getenv("BUILD_NUMBER")
 }
 
-version = "${config.mod_version}-${config.minecraft_version}r${ext.depth}+${ext.revision}"
+version = "${config.minecraft_version}-${config.mod_version}.${ext.depth}+${ext.revision}"
 
 processResources {
     from(sourceSets.main.resources.srcDirs) {
