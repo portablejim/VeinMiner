@@ -112,7 +112,7 @@ public class MinerInstance {
             VeinminerNoToolCheck toolCheck = new VeinminerNoToolCheck(player);
             MinecraftForge.EVENT_BUS.post(toolCheck);
 
-            if(toolCheck.allowTool.isAllowed() || player.theItemInWorldManager.isCreative()) {
+            if(toolCheck.allowTool.isAllowed() || player.isCreative()) {
                 this.finished = false;
             }
             else if(toolCheck.allowTool == Permission.FORCE_DENY) {
@@ -398,13 +398,13 @@ public class MinerInstance {
             int numItems = schedDrop.getValue();
             while (numItems > itemStack.getMaxStackSize()) {
                 ItemStack newItemStack = new ItemStack(foundItem, itemStack.getMaxStackSize(), itemDamage);
-                EntityItem newEntityItem = new EntityItem(world, initalBlock.getX() + 0.5F, initalBlock.getY() + 0.5F, initalBlock.getZ() + 0.5F, newItemStack);
+                EntityItem newEntityItem = new EntityItem(world, initalBlock.getX(), initalBlock.getY(), initalBlock.getZ(), newItemStack);
                 world.spawnEntityInWorld(newEntityItem);
                 numItems -= itemStack.getMaxStackSize();
             }
             ItemStack newItemStack = new ItemStack(foundItem, numItems, itemDamage);
             newItemStack.setItemDamage(itemStack.getDamage());
-            EntityItem newEntityItem = new EntityItem(world, initalBlock.getX() + 0.5F, initalBlock.getY() + 0.5F, initalBlock.getZ() + 0.5F, newItemStack);
+            EntityItem newEntityItem = new EntityItem(world, initalBlock.getX(), initalBlock.getY(), initalBlock.getZ(), newItemStack);
             world.spawnEntityInWorld(newEntityItem);
         }
         drops.clear();
