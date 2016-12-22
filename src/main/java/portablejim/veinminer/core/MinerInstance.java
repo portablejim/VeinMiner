@@ -395,13 +395,13 @@ public class MinerInstance {
             while (numItems > itemStack.getMaxStackSize()) {
                 ItemStack newItemStack = GameRegistry.findItemStack(itemNames[0], itemNames[1], itemStack.getMaxStackSize());
                 newItemStack.setItemDamage(itemStack.getDamage());
-                EntityItem newEntityItem = new EntityItem(world, initalBlock.getX(), initalBlock.getY(), initalBlock.getZ(), newItemStack);
+                EntityItem newEntityItem = new EntityItem(world, initalBlock.getX() + 0.5F, initalBlock.getY() + 0.5F, initalBlock.getZ() + 0.5F, newItemStack);
                 world.spawnEntityInWorld(newEntityItem);
                 numItems -= itemStack.getMaxStackSize();
             }
             ItemStack newItemStack = GameRegistry.findItemStack(itemNames[0], itemNames[1], numItems);
             newItemStack.setItemDamage(itemStack.getDamage());
-            EntityItem newEntityItem = new EntityItem(world, initalBlock.getX(), initalBlock.getY(), initalBlock.getZ(), newItemStack);
+            EntityItem newEntityItem = new EntityItem(world, initalBlock.getX() + 0.5F, initalBlock.getY() + 0.5F, initalBlock.getZ() + 0.5F, newItemStack);
             world.spawnEntityInWorld(newEntityItem);
         }
         drops.clear();
