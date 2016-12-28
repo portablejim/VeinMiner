@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.35.3
+------
+Fixes:
+* Introduce item AWOL fix and slap the person that didn't implement the fix.
+
 0.35.2
 -------
 Changes:
