@@ -345,7 +345,8 @@ public class VeinMinerModSupport {
         if(Loader.isModLoaded("exnihilo")) {
             devLog("Ex Nihilo detected");
             if(currentEquippedItem != null) {
-                if (currentEquippedItem.getClass().getCanonicalName().startsWith("exnihilo.items.hammers") && event.allowContinue == Permission.DENY) {
+                if (currentEquipped.getClass() != null && currentEquipped.getClass().getCanonicalName() != null
+                        && currentEquippedItem.getClass().getCanonicalName().startsWith("exnihilo.items.hammers") && event.allowContinue == Permission.DENY) {
                     devLog("Allowed hammer start");
                     event.allowContinue = Permission.ALLOW;
                 }

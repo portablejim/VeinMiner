@@ -105,7 +105,7 @@ public class VeinMiner {
             if(mods.containsKey(ModInfo.MODID)) {
                 String clientVersion = mods.get(ModInfo.MODID);
                 // Connect with matching versions or if one side is a dev build.
-                String ourVersionString = Loader.instance().activeModContainer().getVersion();
+                String ourVersionString = Loader.instance().getIndexedModList().get(ModInfo.MODID).getVersion();
                 if(ourVersionString.equals(clientVersion) || ourVersionString.startsWith("${version}") || clientVersion.startsWith("${version}")) {
                     return true;
                 }

@@ -1,0 +1,93 @@
+# Command usage/error
+command.veinminer=/veinminer mode/blocklist/toollist/blocklimit/radius/per_tick/saveconfig/reloadconfig/help
+command.veinminer.enable=/veinminer mode auto/sneak/no_sneak
+command.veinminer.blocklist=/veinminer blocklist %s add/remove <mod id>:<block name> <metadata>
+command.veinminer.toollist=/veinminer toollist %s add/remove <tool id>
+
+command.veinminer.hasclient=Veinminerはクライアントで動作しています。代わりに /veinminerc を使用してください。
+
+# Client command usage
+command.veinminerc.set.disabled=Veinminerのキー設定は無視されます。
+command.veinminerc.set.pressed=Veinminerはキーを押している時に有効になります。
+command.veinminerc.set.released=Veinminerはキーを押しているときに無効になります。
+
+# Command result/Mode status
+command.veinminer.set.disable=Veinminer有効化: 無効
+command.veinminer.set.auto=Veinminer有効化: クライアントのキー設定
+command.veinminer.set.sneak=Veinminer有効化: スニーク時有効
+command.veinminer.set.nosneak=Veinminer有効化: スニーク時無効
+
+# Command blocklist
+command.veinminer.blocklist.actionerror=/veinminer blocklist %s add/remove <mod id>:<block name> <metadata>
+command.veinminer.blocklist.itemerror=/veinminer blocklist %s %s  <mod id>:<block name> <metadata>
+command.veinminer.blocklist.add=%s/%d を %s のホワイトリストに追加しました。
+command.veinminer.blocklist.remove=%s/%d を %s のホワイトリストから削除しました。
+
+# Command toollist
+command.veinminer.toollist.actionerror=/veinminer toollist %s add/remove <tool id>
+command.veinminer.toollist.itemerror=/veinminer toollist %s %s <tool id>
+command.veinminer.toollist.add=%s を %s のツールリストに追加しました。
+command.veinminer.toollist.remove=%s を %s のツールリストから削除しました。
+
+command.veinminer.blocklimit=/veinminer blocklimit [-1 - 2147483647]
+command.veinminer.blocklimit.set=ブロックの最大同時破壊数を %d ブロックに設定しました。
+command.veinminer.range=/veinminer radius [-1 - 1000]
+command.veinminer.range.set=ブロックの最大破壊半径を %d ブロックに設定しました。
+command.veinminer.pertick=/veinminer per_tick <# blocks to destroy each tick>
+command.veinminer.pertick.set=ブロックのtickごとの破壊数を %d ブロックに設定しました。
+
+command.veinminer.saveconfig=コンフィグファイルに設定をセーブしました。
+command.veinminer.loadconfig=コンフィグファイルから設定をロードしました。
+
+command.veinminer.cannotuse=非プレイヤーがveinminerコマンドを使用することはできません。
+command.veinminer.permissionDenied=このコマンドを実行するには権限が足りません。
+
+# Preferred mode confirmation
+mod.veinminer.preferredmode.auto=Veinminer using client keybind. See mod config for details.
+mod.veinminer.preferredmode.sneak=Veinminerはスニーク時に有効になりました。
+mod.veinminer.preferredmode.nosneak=Veinminerはスニーク時に無効になりました。
+
+mod.veinminer.finished.tooHungry=VeinMinerで掘るには満腹度が足りません。
+mod.veinminer.finished.noExp=VeinMinerで掘るには経験値が足りません。
+
+# Controls
+veinminer.key.category=Vein Miner
+veinminer.key.enable=Vein Minerを有効化
+
+# Command help.
+command.veinminer.help1=Sub-commands available:
+command.veinminer.help2='mode': change VeinMiner activation modes
+command.veinminer.help3='blocklist': Add or remove blocks from the VeinMiner whitelist
+command.veinminer.help4='toollist': Add ore remove tools to use with VeinMiner
+command.veinminer.help5='blocklimit': Set the limit on the number of blocks that can be destroyed at once by VeinMiner
+command.veinminer.help6='radius': Set the maximum distance Veinminer will collect blocks from the first block destroyed
+command.veinminer.help7='per_tick': Set the rate at which blocks are destroyed by VeinMiner
+command.veinminer.help8='saveconfig': Save current config values to config file
+command.veinminer.help9='reloadconfig': Load config values from config file
+command.veinminer.help10='help': This text
+command.veinminer.help.enable1=Available activation modes:
+command.veinminer.help.enable2='auto': Activate on keybind (useless without mod on client).
+command.veinminer.help.enable3='sneak': Activate while sneaking
+command.veinminer.help.enable4='no_sneak': Activate while not sneaking
+
+# GUI config
+gui.veinminer.back=戻る
+gui.veinminer.config=Veinminer設定
+gui.veinminer.config.disabled=無効
+gui.veinminer.config.pressed=キーを押しているとき
+gui.veinminer.config.released=キーを押していないとき
+gui.veinminer.config.sneak=スニークしているとき
+gui.veinminer.config.nosneak=スニークしていないとき
+gui.veinminer.config.enable.text=Veinminerを有効化:
+gui.veinminer.config.range=範囲: %d ブロック
+gui.veinminer.config.blocklimit=個数: %d ブロック
+gui.veinminer.config.blocklimit.infinite=個数: 無限
+gui.veinminer.config.toolTypes=ツールの種類
+gui.veinminer.config.blocklist=ブロックリスト
+gui.veinminer.config.toollist=ツールリスト
+gui.veinminer.unknown=<Unknown>
+gui.veinminer.item.delete=リストから削除
+gui.veinminer.item.add=追加
+gui.veinminer.item.clear=クリア
+gui.veinminer.title.toollist=%s ツールリスト
+gui.veinminer.title.blocklist=%s ブロックリスト

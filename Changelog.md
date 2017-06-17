@@ -1,10 +1,18 @@
 Changelog
 =========
 
+0.36.0
+-------
+Fixes:
+* Less crashes (hopefully)
+* Less problems joining servers
+
+
 0.35.3
 ------
 Fixes:
 * Introduce item AWOL fix and slap the person that didn't implement the fix.
+
 
 0.35.2
 -------
