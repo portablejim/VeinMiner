@@ -3,6 +3,8 @@ Changelog
 
 0.36.0
 -------
+Will partially work in 1.12. Config GUI does not work in 1.12.
+
 Fixes:
 * Less crashes (hopefully)
 * Less problems joining servers
