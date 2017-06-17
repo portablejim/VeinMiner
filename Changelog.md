@@ -1,6 +1,13 @@
 Changelog
 =========
 
+0.36.0
+-------
+Fixes:
+* Less crashes (hopefully)
+* Less problems joining servers
+
+
 0.35.2
 -------
 Changes:
