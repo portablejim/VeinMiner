@@ -18,7 +18,7 @@ import portablejim.veinminer.api.Point;
  * Created by james on 27/05/16.
  */
 public class CoreEvents {
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public void blockBreakEvent(BlockEvent.BreakEvent event) {
         if(event.getWorld().isRemote) {
             // I am officially lost.
