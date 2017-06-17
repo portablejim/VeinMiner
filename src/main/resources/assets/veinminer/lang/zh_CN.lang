@@ -4,6 +4,13 @@ command.veinminer.enable=/veinminer mode auto/sneak/no_sneak
 command.veinminer.blocklist=/veinminer blocklist %s add/remove <模组 id>:<方块名称> <元数据>
 command.veinminer.toollist=/veinminer toollist %s add/remove <工具 id>
 
+command.veinminer.hasclient=你的客户端似乎安装有 Veinminer. 请使用 /veinminerc 指令
+
+# Client command usage
+command.veinminerc.set.disabled=已禁用客户端 Veinminer 的热键
+command.veinminerc.set.pressed=已设置客户端 Veinminer 的热键为按下时启用
+command.veinminerc.set.released=已设置客户端 Veinminer 的热键为按下时不启用
+
 # Command result/Mode status
 command.veinminer.set.disable=已禁用 VeinMiner
 command.veinminer.set.auto=已设置 VeinMiner 为热键模式

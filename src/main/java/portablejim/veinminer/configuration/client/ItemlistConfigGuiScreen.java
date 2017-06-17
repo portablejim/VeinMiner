@@ -128,14 +128,16 @@ public class ItemlistConfigGuiScreen extends GuiScreen {
                     break;
                 case 2:
                 {
-                    String selectedItem = this.itemList.items.get(this.itemList.selectedItem);
-                    switch (mode) {
-                        case 0:
-                            BlockID targetItem = new BlockID(selectedItem);
-                            VeinMiner.instance.configurationSettings.removeBlockFromWhitelist(toolType, targetItem);
-                            break;
-                        case 1:
-                            VeinMiner.instance.configurationSettings.removeTool(toolType, selectedItem);
+                    if(this.itemList.items.size() > this.itemList.selectedItem) {
+                        String selectedItem = this.itemList.items.get(this.itemList.selectedItem);
+                        switch (mode) {
+                            case 0:
+                                BlockID targetItem = new BlockID(selectedItem);
+                                VeinMiner.instance.configurationSettings.removeBlockFromWhitelist(toolType, targetItem);
+                                break;
+                            case 1:
+                                VeinMiner.instance.configurationSettings.removeTool(toolType, selectedItem);
+                        }
                     }
                     VeinMiner.instance.configurationSettings.saveConfigs();
                     break;
