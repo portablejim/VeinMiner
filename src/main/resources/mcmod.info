@@ -23,7 +23,7 @@
   "credits": "",
   "logoFile": "",
   "screenshots": [],
-  "parent": "VeinMiner",
+  "parent": "veinminer",
   "dependencies": ["Forge", "VeinMiner"]
 }
 ]

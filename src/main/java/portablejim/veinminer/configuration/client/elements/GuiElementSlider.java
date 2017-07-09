@@ -60,7 +60,7 @@ public class GuiElementSlider extends GuiButton {
     public void mouseDragged(Minecraft minecraft, int par1, int par2) {
         if(this.visible) {
             if(mouseDragging) {
-                float rawValue = (float)(par1 - (this.xPosition + 4)) / (float)(this.width - 8);
+                float rawValue = (float)(par1 - (this.x + 4)) / (float)(this.width - 8);
 
                 if(rawValue < 0F) {
                     rawValue = 0F;
@@ -76,15 +76,15 @@ public class GuiElementSlider extends GuiButton {
             }
 
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-            this.drawTexturedModalRect(this.xPosition + (int)(this.storedValue * (float)(this.width - 8)), this.yPosition, 0, 66, 4, 20);
-            this.drawTexturedModalRect(this.xPosition + (int)(this.storedValue * (float)(this.width - 8)) + 4, this.yPosition, 196, 66, 4, 20);
+            this.drawTexturedModalRect(this.x + (int)(this.storedValue * (float)(this.width - 8)), this.y, 0, 66, 4, 20);
+            this.drawTexturedModalRect(this.x + (int)(this.storedValue * (float)(this.width - 8)) + 4, this.y, 196, 66, 4, 20);
         }
     }
 
     @Override
     public boolean mousePressed(Minecraft minecraft, int par1, int par2) {
         if(super.mousePressed(minecraft, par1, par2)) {
-            float rawValue = (float)(par1 - (this.xPosition + 4)) / (float)(this.width - 8);
+            float rawValue = (float)(par1 - (this.x + 4)) / (float)(this.width - 8);
 
             if(rawValue < 0F) {
                 rawValue = 0F;

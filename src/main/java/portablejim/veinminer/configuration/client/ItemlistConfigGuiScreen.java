@@ -89,7 +89,7 @@ public class ItemlistConfigGuiScreen extends GuiScreen {
     }
 
     public FontRenderer getFontRenderer() {
-        return fontRendererObj;
+        return fontRenderer;
     }
 
     public float getZLevel() {

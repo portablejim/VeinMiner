@@ -415,7 +415,7 @@ public class MinerInstance {
     }
 
     public void addDrop(EntityItem entity) {
-        ItemStack item = entity.getEntityItem();
+        ItemStack item = entity.getItem();
         ItemStackID itemInfo = new ItemStackID(item.getItem(), item.getItemDamage(), item.getMaxStackSize());
 
         if(drops.containsKey(itemInfo)) {

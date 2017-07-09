@@ -74,7 +74,7 @@ public class PacketClientPresent implements IMessage {
     public static class Handler extends GenericHandler<PacketClientPresent> {
         @Override
         public void processMessage(PacketClientPresent packetClientPresent, MessageContext context) {
-            EntityPlayerMP player = context.getServerHandler().playerEntity;
+            EntityPlayerMP player = context.getServerHandler().player;
             MinerLogger.debug("Received a PacketClientPresent");
             UUID playerName = player.getUniqueID();
 

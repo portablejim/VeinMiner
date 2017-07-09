@@ -25,7 +25,7 @@ public abstract class GenericHandler<REQ extends IMessage> implements IMessageHa
             Minecraft.getMinecraft().addScheduledTask(task);
         }
         else if(ctx.side == Side.SERVER) {
-            EntityPlayerMP playerEntity = ctx.getServerHandler().playerEntity;
+            EntityPlayerMP playerEntity = ctx.getServerHandler().player;
             if(playerEntity == null) {
                 FMLLog.warning("onMessage-server: Player is null");
                 return null;

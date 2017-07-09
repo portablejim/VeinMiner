@@ -139,9 +139,9 @@ public class ConfigGuiScreen extends GuiScreen implements IGuiElementValuePersis
     {
         this.drawDefaultBackground();
         toolTypeList.drawScreen(par1, par2, par3);
-        this.drawCenteredString(this.fontRendererObj, I18n.format("gui.veinminer.config"), this.width / 2, 15, 0xFFFFFF);
-        this.drawString(this.fontRendererObj, I18n.format("gui.veinminer.config.enable.text"), this.width / 2 - 95, 38, 0xFFFFFF);
-        this.drawCenteredString(this.fontRendererObj, I18n.format("gui.veinminer.config.toolTypes"), this.width / 2, 86, 0xFFFFFF);
+        this.drawCenteredString(this.fontRenderer, I18n.format("gui.veinminer.config"), this.width / 2, 15, 0xFFFFFF);
+        this.drawString(this.fontRenderer, I18n.format("gui.veinminer.config.enable.text"), this.width / 2 - 95, 38, 0xFFFFFF);
+        this.drawCenteredString(this.fontRenderer, I18n.format("gui.veinminer.config.toolTypes"), this.width / 2, 86, 0xFFFFFF);
         //this.drawCenteredString(this.fontRendererObj, I18n.format("gui.veinminer.config.toollist"), this.width / 2, this.height - 82, 0xFFFFFF);
         super.drawScreen(par1, par2, par3);
     }
@@ -207,7 +207,7 @@ public class ConfigGuiScreen extends GuiScreen implements IGuiElementValuePersis
     }
 
     public FontRenderer getFontRenderer() {
-        return fontRendererObj;
+        return fontRenderer;
     }
 
     public ArrayList<ToolDisplay> getList() {

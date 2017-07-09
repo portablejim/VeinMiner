@@ -88,7 +88,7 @@ public class PacketChangeMode implements IMessage {
                 }
             }
             else if (context.side == Side.SERVER) { // Server Side
-                EntityPlayerMP player = context.getServerHandler().playerEntity;
+                EntityPlayerMP player = context.getServerHandler().player;
                 UUID playerName = player.getUniqueID();
 
                 MinerServer minerServer = VeinMiner.instance.minerServer;

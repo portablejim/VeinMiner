@@ -83,14 +83,14 @@ public class EntityDropHook {
             return;
         } */
 
-        if(entityItem.getEntityItem().hasTagCompound()) {
+        if(entityItem.getItem().hasTagCompound()) {
             return;
         }
 
         boolean isBlock;
         boolean isItem;
 
-        ResourceLocation uniqueId = Item.REGISTRY.getNameForObject(entityItem.getEntityItem().getItem());
+        ResourceLocation uniqueId = Item.REGISTRY.getNameForObject(entityItem.getItem().getItem());
 
         isBlock = Block.REGISTRY.getObject(uniqueId) != null;
         isItem = Item.REGISTRY.getObject(uniqueId) != null;

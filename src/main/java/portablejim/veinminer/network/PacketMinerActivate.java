@@ -56,7 +56,7 @@ public class PacketMinerActivate implements IMessage {
     public static class Handler extends GenericHandler<PacketMinerActivate> {
         @Override
         public void processMessage(PacketMinerActivate packetMinerActivate, MessageContext context) {
-            EntityPlayerMP player = context.getServerHandler().playerEntity;
+            EntityPlayerMP player = context.getServerHandler().player;
             UUID playerName = player.getUniqueID();
 
             PlayerStatus status = VeinMiner.instance.minerServer.getPlayerStatus(playerName);
