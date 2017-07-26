@@ -17,6 +17,7 @@
 
 package portablejim.veinminer.configuration.client;
 
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -27,6 +28,7 @@ import portablejim.veinminer.configuration.ConfigurationSettings;
 import portablejim.veinminer.configuration.client.elements.GuiElementSliderLog;
 import portablejim.veinminer.configuration.client.elements.GuiElementSlotToolTypeList;
 import portablejim.veinminer.configuration.client.elements.IGuiElementValuePersist;
+import portablejim.veinminer.network.PacketClientPresent;
 import portablejim.veinminer.util.PreferredMode;
 
 import java.util.ArrayList;
@@ -42,14 +44,21 @@ public class ConfigGuiScreen extends GuiScreen implements IGuiElementValuePersis
     private GuiScreen parent;
 
     private ConfigurationSettings settings = VeinMiner.instance.configurationSettings;
+    private final int oldMode;
     private String[] currentModeStrings = { "disabled", "pressed", "released", "sneak", "nosneak" };
 
-    GuiElementSlotToolTypeList toolTypeList;
+    private boolean isSingleplayer;
+
+    private GuiElementSlotToolTypeList toolTypeList;
 
     private ArrayList<ToolDisplay> toolIds;
 
     public ConfigGuiScreen(GuiScreen parent) {
         this.parent = parent;
+
+        isSingleplayer = Minecraft.getMinecraft().isSingleplayer();
+
+        VeinMiner.instance.configurationSettings.reloadConfigFile();
 
         toolIds = new ArrayList<ToolDisplay>();
         for(String toolType : settings.getToolTypeNames()) {
@@ -66,6 +75,8 @@ public class ConfigGuiScreen extends GuiScreen implements IGuiElementValuePersis
                 return s1.compareTo(s2);
             }
         });
+
+        oldMode = settings.getPreferredMode();
     }
 
     @SuppressWarnings("unchecked")
@@ -76,29 +87,19 @@ public class ConfigGuiScreen extends GuiScreen implements IGuiElementValuePersis
 
         this.buttonList.add(new GuiButton(1, this.width / 2 - 75, this.height - 38, I18n.format("gui.done")));
 
-        //labelList.add(new GuiLabel());
-
-        toolTypeList = new GuiElementSlotToolTypeList(this);
-
         int topOffset = 32;
 
         this.buttonList.add(new GuiButton(2, this.width / 2 + 2, topOffset, 150, 20, I18n.format(String.format("gui.veinminer.config.%s", currentModeStrings[settings.getPreferredMode()]))));
-        //optionRange.setValueMax(100F);
-        this.buttonList.add(new GuiElementSliderLog(3, this.width / 2 - 152, topOffset + 24, this, 1F, 1000F, 4));
-        this.buttonList.add(new GuiElementSliderLog(4, this.width / 2 + 2, topOffset + 24, this, 1F, (2 << 16) + 1, 3));
+
+        if(this.isSingleplayer) {
+            this.buttonList.add(new GuiElementSliderLog(3, this.width / 2 - 152, topOffset + 24, this, 1F, 1000F, 4));
+            this.buttonList.add(new GuiElementSliderLog(4, this.width / 2 + 2, topOffset + 24, this, 1F, (2 << 16) + 1, 3));
+
+            toolTypeList = new GuiElementSlotToolTypeList(this);
+        }
 
         this.buttonList.add(new GuiButton(5, this.width / 2 + 2, 100, 150, 20, I18n.format("gui.veinminer.config.toollist")));
         this.buttonList.add(new GuiButton(6, this.width / 2 + 2, 122, 150, 20, I18n.format("gui.veinminer.config.blocklist")));
-        //this.buttonList.add(new GuiButton(5, this.width / 2 - 152, this.height - 38 - 3 * 22 - 6, 57, 20, I18n.format("gui.veinminer.config.list.axe")));
-        /*this.buttonList.add(new GuiButton(6, this.width / 2 - 152, this.height - 38 - 22 - 6, 57, 20, I18n.format("gui.veinminer.config.list.axe")));
-        this.buttonList.add(new GuiButton(7, this.width / 2 - 152 + 62 - 1, this.height - 38 - 3 * 22 - 6, 57, 20, I18n.format("gui.veinminer.config.list.hoe")));
-        this.buttonList.add(new GuiButton(8, this.width / 2 - 152 + 62 - 1, this.height - 38 - 22 - 6, 57, 20, I18n.format("gui.veinminer.config.list.hoe")));
-        this.buttonList.add(new GuiButton(9, this.width / 2 - 152 + 2 * 62 - 1, this.height - 38 - 3 * 22 - 6, 57, 20, I18n.format("gui.veinminer.config.list.pickaxe")));
-        this.buttonList.add(new GuiButton(10, this.width / 2 - 152 + 2 * 62 - 1, this.height - 38 - 22 - 6, 57, 20, I18n.format("gui.veinminer.config.list.pickaxe")));
-        this.buttonList.add(new GuiButton(11, this.width / 2 - 152 + 3 * 62 - 1, this.height - 38 - 3 * 22 - 6, 57, 20, I18n.format("gui.veinminer.config.list.shears")));
-        this.buttonList.add(new GuiButton(12, this.width / 2 - 152 + 3 * 62 - 1, this.height - 38 - 22 - 6, 57, 20, I18n.format("gui.veinminer.config.list.shears")));
-        this.buttonList.add(new GuiButton(13, this.width / 2 - 152 + 4 * 62 - 1, this.height - 38 - 3 * 22 - 6, 57, 20, I18n.format("gui.veinminer.config.list.shovel")));
-        this.buttonList.add(new GuiButton(14, this.width / 2 - 152 + 4 * 62 - 1, this.height - 38 - 22 - 6, 57, 20, I18n.format("gui.veinminer.config.list.shovel")));*/
     }
 
     @Override
@@ -110,6 +111,13 @@ public class ConfigGuiScreen extends GuiScreen implements IGuiElementValuePersis
         {
             switch (par1GuiButton.id) {
                 case 1:
+                    settings.saveConfigs();
+                    if(parent.mc.theWorld != null && isSingleplayer) {
+                        int newMode = settings.getPreferredMode();
+                        if(newMode != oldMode) {
+                            VeinMiner.instance.networkWrapper.sendToServer(new PacketClientPresent(newMode));
+                        }
+                    }
                     FMLClientHandler.instance().showGuiScreen(parent);
                     break;
                 case 2:
@@ -138,11 +146,18 @@ public class ConfigGuiScreen extends GuiScreen implements IGuiElementValuePersis
     public void drawScreen(int par1, int par2, float par3)
     {
         this.drawDefaultBackground();
-        toolTypeList.drawScreen(par1, par2, par3);
         this.drawCenteredString(this.fontRendererObj, I18n.format("gui.veinminer.config"), this.width / 2, 15, 0xFFFFFF);
         this.drawString(this.fontRendererObj, I18n.format("gui.veinminer.config.enable.text"), this.width / 2 - 95, 38, 0xFFFFFF);
-        this.drawCenteredString(this.fontRendererObj, I18n.format("gui.veinminer.config.toolTypes"), this.width / 2, 86, 0xFFFFFF);
-        //this.drawCenteredString(this.fontRendererObj, I18n.format("gui.veinminer.config.toollist"), this.width / 2, this.height - 82, 0xFFFFFF);
+
+        if(isSingleplayer) {
+            toolTypeList.drawScreen(par1, par2, par3);
+            this.drawCenteredString(this.fontRendererObj, I18n.format("gui.veinminer.config.toolTypes"), this.width / 2, 86, 0xFFFFFF);
+        }
+        else {
+          this.drawCenteredString(this.fontRendererObj, I18n.format("gui.veinminer.config.multiplayer1"), this.width / 2, 106, 0xFFFFFF);
+            this.drawCenteredString(this.fontRendererObj, I18n.format("gui.veinminer.config.multiplayer2"), this.width / 2, 126, 0xFFFFFF);
+            this.drawCenteredString(this.fontRendererObj, I18n.format("gui.veinminer.config.multiplayer3"), this.width / 2, 146, 0xFFFFFF);
+        }
         super.drawScreen(par1, par2, par3);
     }
 
