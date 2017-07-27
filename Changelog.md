@@ -1,6 +1,20 @@
 Changelog
 =========
 
+
+0.38.0
+-------
+Changes:
+* Stopped access to server-based settings from "Mod Options" GUI when in multi-player (it was just lying to you)
+* Added support for more tools.
+
+Fixes:
+* Hopefully improve syncing of settings when using the "Mod Options" GUI.
+* Fixed some crash bugs.
+* IMC messages should work again.
+* Tool and block auto-detection should be better.
+
+
 0.36.0
 -------
 Basic port to 1.12.

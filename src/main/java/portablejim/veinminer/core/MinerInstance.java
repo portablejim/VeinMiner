@@ -18,6 +18,7 @@
 package portablejim.veinminer.core;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
@@ -274,7 +275,11 @@ public class MinerInstance {
     private int mineBlock(int x, int y, int z) {
         int mineSuccessful = 0;
         Point newPoint = new Point(x, y, z);
-        BlockID newBlock = new BlockID(world, new BlockPos(x , y, z ));
+        IBlockState blockState = world.getBlockState(newPoint.toBlockPos());
+        if (blockState == null || blockState.equals(Blocks.AIR)) {
+            return mineSuccessful;
+        }
+        BlockID newBlock = new BlockID(blockState);
         ConfigurationSettings configurationSettings = serverInstance.getConfigurationSettings();
         startBlacklist.add(newPoint);
         if(mineAllowed(newBlock, newPoint, configurationSettings)) {

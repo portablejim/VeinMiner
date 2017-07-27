@@ -67,6 +67,7 @@ public class BlockID implements Comparable<BlockID>
         this.metadata =  meta < -1 || meta == OreDictionary.WILDCARD_VALUE ? -1 : meta;
     }
 
+    @Deprecated
     public BlockID(World world, BlockPos position) {
         this(world.getBlockState(position));
     }
