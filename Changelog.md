@@ -11,6 +11,8 @@ Changes:
 Fixes:
 * Hopefully improve syncing of settings when using the "Mod Options" GUI.
 * Fixed some crash bugs.
+* IMC messages should work again.
+* Tool and block auto-detection should be better.
 
 
 0.36.0
