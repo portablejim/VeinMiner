@@ -276,7 +276,7 @@ public class MinerInstance {
         int mineSuccessful = 0;
         Point newPoint = new Point(x, y, z);
         IBlockState blockState = world.getBlockState(newPoint.toBlockPos());
-        if (blockState == null || blockState.equals(Blocks.air)) {
+        if (blockState == null || blockState.equals(Blocks.AIR)) {
             return mineSuccessful;
         }
         BlockID newBlock = new BlockID(blockState);

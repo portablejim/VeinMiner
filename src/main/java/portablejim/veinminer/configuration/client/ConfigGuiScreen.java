@@ -112,7 +112,7 @@ public class ConfigGuiScreen extends GuiScreen implements IGuiElementValuePersis
             switch (par1GuiButton.id) {
                 case 1:
                     settings.saveConfigs();
-                    if(parent.mc.theWorld != null && isSingleplayer) {
+                    if(parent.mc.world != null && isSingleplayer) {
                         int newMode = settings.getPreferredMode();
                         if(newMode != oldMode) {
                             VeinMiner.instance.networkWrapper.sendToServer(new PacketClientPresent(newMode));
