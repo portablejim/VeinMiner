@@ -21,7 +21,7 @@ public class IMCMessage {
         message.setString("whitelistType", itemType);
         message.setString("toolType", toolType);
         message.setString("blockName", blockName);
-        FMLInterModComms.sendMessage("VeinMiner", "whitelist", message);
+        FMLInterModComms.sendMessage("veinminer", "whitelist", message);
     }
 
     public static void addToolType(String type, String name, String icon) {
@@ -29,13 +29,13 @@ public class IMCMessage {
         message.setString("toolType", type);
         message.setString("toolName", name);
         message.setString("toolIcon", icon);
-        FMLInterModComms.sendMessage("VeinMiner", "addTool", message);
+        FMLInterModComms.sendMessage("veinminer", "addTool", message);
     }
 
     public static void addBlockEquivalence(String existingBlock, String newBlock) {
         NBTTagCompound message = new NBTTagCompound();
         message.setString("existingBlock", existingBlock);
         message.setString("newBlock", newBlock);
-        FMLInterModComms.sendMessage("VeinMiner", "addEqualBlocks", message);
+        FMLInterModComms.sendMessage("veinminer", "addEqualBlocks", message);
     }
 }
