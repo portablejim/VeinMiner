@@ -1,6 +1,18 @@
 Changelog
 =========
 
+
+0.38.0
+-------
+Changes:
+* Stopped access to server-based settings from "Mod Options" GUI when in multi-player (it was just lying to you)
+* Added support for more tools.
+
+Fixes:
+* Hopefully improve syncing of settings when using the "Mod Options" GUI.
+* Fixed some crash bugs.
+
+
 0.36.0
 -------
 Fixes:
