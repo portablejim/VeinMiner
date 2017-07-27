@@ -17,7 +17,7 @@
 
 package portablejim.veinminermodsupport;
 
-import com.google.common.io.Files;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
@@ -32,8 +32,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.network.NetworkCheckHandler;
-import net.minecraftforge.fml.common.registry.GameData;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.common.config.Configuration;
 import portablejim.veinminer.api.IMCMessage;
@@ -42,11 +40,8 @@ import portablejim.veinminer.api.VeinminerHarvestFailedCheck;
 import portablejim.veinminer.api.VeinminerPostUseTool;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -70,9 +65,7 @@ public class VeinMinerModSupport {
     @Instance(ModInfo.MOD_ID)
     public static VeinMinerModSupport instance;
 
-    public boolean forceConsumerAvailable;
-
-    private Boolean configLoaded = false;
+    private boolean forceConsumerAvailable;
 
     private final static String[] FALSETOOLS_DEFAULT = {
             "excompressum:chicken_stick",
@@ -83,6 +76,14 @@ public class VeinMinerModSupport {
             "excompressum:compressed_hammer_diamond",
             "excompressum:double_compressed_diamond_hammer",
             "excompressum:compressed_crook",
+            "redstonearsenal:tool.axe_flux",
+            "redstonearsenal:tool.battlewrench_flux",
+            "redstonearsenal:tool.hammer_flux",
+            "redstonearsenal:tool.pickaxe_flux",
+            "redstonearsenal:tool.shovel_flux",
+            "redstonearsenal:tool.sickle_flux",
+            "redstonearsenal:tool.sword_flux",
+            "actuallyadditions:item_drill",
     };
     private Set<String> falseTools = new LinkedHashSet<String>();
 
@@ -106,6 +107,7 @@ public class VeinMinerModSupport {
 
     }
 
+    @SuppressWarnings("unused")
     @NetworkCheckHandler
     public boolean checkClientModVersion(Map<String, String> mods, Side side) {
         return true;
@@ -134,13 +136,13 @@ public class VeinMinerModSupport {
 
             config.save();
 
-            configLoaded = true;
         }
         catch(Exception e) {
             event.getModLog().error("Error writing config file");
         }
     }
 
+    @SuppressWarnings("unused")
     @EventHandler
     public void init(@SuppressWarnings("UnusedParameters") FMLInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(this);
@@ -161,115 +163,56 @@ public class VeinMinerModSupport {
     }
 
     private void addTools() {
-        if(Loader.isModLoaded("IC2")) {
-            IMCMessage.addTool("axe", "IC2:itemToolBronzeAxe");
-            IMCMessage.addTool("axe", "IC2:itemToolChainsaw");
-            IMCMessage.addTool("hoe", "IC2:itemToolBronzeHoe");
-            IMCMessage.addTool("pickaxe", "IC2:itemToolBronzePickaxe");
-            IMCMessage.addTool("pickaxe", "IC2:itemToolDrill");
-            IMCMessage.addTool("pickaxe", "IC2:itemToolDDrill");
-            IMCMessage.addTool("pickaxe", "IC2:itemToolIridiumDrill");
-            IMCMessage.addTool("shears", "IC2:itemToolBronzeHoe");
-            IMCMessage.addTool("shovel", "IC2:itemToolBronzeSpade");
-        }
-        if(Loader.isModLoaded("appliedenergistics2")) {
-            IMCMessage.addTool("axe", "appliedenergistics2:item.ToolCertusQuartzAxe");
-            IMCMessage.addTool("hoe", "appliedenergistics2:item.ToolCertusQuartzHoe");
-            IMCMessage.addTool("pickaxe", "appliedenergistics2:item.ToolCertusQuartzPickaxe");
-            IMCMessage.addTool("shovel", "appliedenergistics2:item.ToolCertusQuartzSpade");
-            IMCMessage.addTool("axe", "appliedenergistics2:item.ToolNetherQuartzAxe");
-            IMCMessage.addTool("hoe", "appliedenergistics2:item.ToolNetherQuartzHoe");
-            IMCMessage.addTool("pickaxe", "appliedenergistics2:item.ToolNetherQuartzPickaxe");
-            IMCMessage.addTool("shovel", "appliedenergistics2:item.ToolNetherQuartzSpade");
-        }
-        if(Loader.isModLoaded("BiomesOPlenty")) {
-            IMCMessage.addTool("axe", "BiomesOPlenty:axeMud");
-            IMCMessage.addTool("hoe", "BiomesOPlenty:hoeMud");
-            IMCMessage.addTool("pickaxe", "BiomesOPlenty:pickaxeMud");
-            IMCMessage.addTool("shovel", "BiomesOPlenty:shovelMud");
-            IMCMessage.addTool("axe", "BiomesOPlenty:axeAmethyst");
-            IMCMessage.addTool("hoe", "BiomesOPlenty:hoeAmethyst");
-            IMCMessage.addTool("pickaxe", "BiomesOPlenty:pickaxeAmethyst");
-            IMCMessage.addTool("shovel", "BiomesOPlenty:shovelAmethyst");
-            IMCMessage.addTool("shears", "BiomesOPlenty:scytheWood");
-            IMCMessage.addTool("shears", "BiomesOPlenty:scytheStone");
-            IMCMessage.addTool("shears", "BiomesOPlenty:scytheIron");
-            IMCMessage.addTool("shears", "BiomesOPlenty:scytheGold");
-            IMCMessage.addTool("shears", "BiomesOPlenty:scytheDiamond");
-            IMCMessage.addTool("shears", "BiomesOPlenty:scytheMud");
-            IMCMessage.addTool("shears", "BiomesOPlenty:scytheAmethyst");
-        }
         if(Loader.isModLoaded("tconstruct")) {
             devLog("Tinkers support loaded");
-            IMCMessage.addTool("axe", "tconstruct:hatchet");
-            IMCMessage.addTool("hoe", "tconstruct:mattock");
-            IMCMessage.addTool("pickaxe", "tconstruct:pickaxe");
-            IMCMessage.addTool("shovel", "tconstruct:shovel");
-            IMCMessage.addTool("shovel", "tconstruct:mattock");
         }
         if(Loader.isModLoaded("exnihilo")) {
             devLog("Ex Nihilo support loaded");
             IMCMessage.addToolType("crook", "Crook", "exnihilo:crook");
-            IMCMessage.addTool("crook", "exnihilo:crook");
-            IMCMessage.addTool("crook", "exnihilo:crook_bone");
             IMCMessage.addToolType("hammer", "Hammer", "exnihilo:hammer_stone");
-            IMCMessage.addTool("hammer", "exnihilo:hammer_wood");
-            IMCMessage.addTool("hammer", "exnihilo:hammer_stone");
-            IMCMessage.addTool("hammer", "exnihilo:hammer_iron");
-            IMCMessage.addTool("hammer", "exnihilo:hammer_gold");
-            IMCMessage.addTool("hammer", "exnihilo:hammer_diamond");
 
-            IMCMessage.addBlock("crook", "minecraft:leaves");
-            IMCMessage.addBlock("crook", "minecraft:leaves2");
-            IMCMessage.addBlock("crook", "minecraft:tallgrass");
-            IMCMessage.addBlock("crook", "minecraft:vine");
-            IMCMessage.addBlock("crook", "minecraft:web");
-            IMCMessage.addBlock("crook", "minecraft:wool");
-            IMCMessage.addBlock("hammer", "exnihilo:aluminum_dust");
-            IMCMessage.addBlock("hammer", "exnihilo:aluminum_gravel");
-            IMCMessage.addBlock("hammer", "exnihilo:aluminum_sand");
-            IMCMessage.addBlock("hammer", "exnihilo:copper_dust");
-            IMCMessage.addBlock("hammer", "exnihilo:copper_gravel");
-            IMCMessage.addBlock("hammer", "exnihilo:copper_sand");
-            IMCMessage.addBlock("hammer", "exnihilo:dust");
-            IMCMessage.addBlock("hammer", "exnihilo:ender_lead_gravel");
-            IMCMessage.addBlock("hammer", "exnihilo:ender_platinum_gravel");
-            IMCMessage.addBlock("hammer", "exnihilo:ender_silver_gravel");
-            IMCMessage.addBlock("hammer", "exnihilo:ender_tin_gravel");
-            IMCMessage.addBlock("hammer", "exnihilo:exnihilo.gravel_ender");
-            IMCMessage.addBlock("hammer", "exnihilo:exnihilo.gravel_nether");
-            IMCMessage.addBlock("hammer", "exnihilo:gold_dust");
-            IMCMessage.addBlock("hammer", "exnihilo:gold_gravel");
-            IMCMessage.addBlock("hammer", "exnihilo:gold_sand");
-            IMCMessage.addBlock("hammer", "exnihilo:iron_dust");
-            IMCMessage.addBlock("hammer", "exnihilo:iron_gravel");
-            IMCMessage.addBlock("hammer", "exnihilo:iron_sand");
-            IMCMessage.addBlock("hammer", "exnihilo:lead_dust");
-            IMCMessage.addBlock("hammer", "exnihilo:lead_gravel");
-            IMCMessage.addBlock("hammer", "exnihilo:lead_sand");
-            IMCMessage.addBlock("hammer", "exnihilo:nether_copper_gravel");
-            IMCMessage.addBlock("hammer", "exnihilo:nether_gold_gravel");
-            IMCMessage.addBlock("hammer", "exnihilo:nether_iron_gravel");
-            IMCMessage.addBlock("hammer", "exnihilo:nether_nickel_gravel");
-            IMCMessage.addBlock("hammer", "exnihilo:nickel_dust");
-            IMCMessage.addBlock("hammer", "exnihilo:nickel_gravel");
-            IMCMessage.addBlock("hammer", "exnihilo:nickel_sand");
-            IMCMessage.addBlock("hammer", "exnihilo:platinum_dust");
-            IMCMessage.addBlock("hammer", "exnihilo:platinum_gravel");
-            IMCMessage.addBlock("hammer", "exnihilo:platinum_sand");
-            IMCMessage.addBlock("hammer", "exnihilo:silver_dust");
-            IMCMessage.addBlock("hammer", "exnihilo:silver_gravel");
-            IMCMessage.addBlock("hammer", "exnihilo:silver_sand");
-            IMCMessage.addBlock("hammer", "exnihilo:tin_dust");
-            IMCMessage.addBlock("hammer", "exnihilo:tin_gravel");
-            IMCMessage.addBlock("hammer", "exnihilo:tin_sand");
-            IMCMessage.addBlock("hammer", "minecraft:cobblestone");
-            IMCMessage.addBlock("hammer", "minecraft:gravel");
-            IMCMessage.addBlock("hammer", "minecraft:sand");
+
         }
-        if(Loader.isModLoaded("excompressum")) {
+        else if(Loader.isModLoaded("excompressum")) {
             IMCMessage.addToolType("hammer", "Hammer", "excompressum:chickenStick");
         }
+        this.addAllTool(Lists.Tools.shears_array, "shears");
+        this.addAllTool(Lists.Tools.sickle_array, "hoe");
+        this.addAllTool(Lists.Tools.hammer_array, "pickaxe");
+        this.addAllTool(Lists.Tools.drill_array, "pickaxe");
+        this.addAllTool(Lists.Tools.drill_array, "shovel");
+        this.addAllTool(Lists.Tools.pickaxe_array, "pickaxe");
+        this.addAllTool(Lists.Tools.shovel_array, "shovel");
+        this.addAllTool(Lists.Tools.hoe_array, "hoe");
+        this.addAllTool(Lists.Tools.axe_array, "axe");
+        this.addAllTool(Lists.Tools.multitool_array, "axe");
+        this.addAllTool(Lists.Tools.multitool_array, "shovel");
+        this.addAllTool(Lists.Tools.multitool_array, "pickaxe");
+        this.addAllTool(Lists.Tools.multitool_array, "axe");
+        this.addAllTool(Lists.Tools.nihilo_hammer_array, "hammer");
+        this.addAllTool(Lists.Tools.nihilo_crook_array, "crook");
+
+        this.addAllBlock(Lists.Blocks.nihilo_hammer_array, "hammer");
+        this.addAllBlock(Lists.Blocks.nihilo_crook_array, "crook");
+    }
+
+    private void addAllTool(String[] list, String category) {
+        for (String item : list) {
+            ResourceLocation id = new ResourceLocation(item);
+            if (Loader.isModLoaded(id.getResourceDomain())) {
+                IMCMessage.addTool(category, item);
+            }
+        }
+    }
+
+    private void addAllBlock(String[] list, String category) {
+        for(String item : list) {
+            ResourceLocation id = new ResourceLocation(item);
+            if(Loader.isModLoaded(id.getResourceDomain())) {
+                IMCMessage.addBlock(category, item);
+            }
+        }
+
     }
 
     @SuppressWarnings("UnusedDeclaration")
