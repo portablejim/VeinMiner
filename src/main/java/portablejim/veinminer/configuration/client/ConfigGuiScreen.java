@@ -85,7 +85,7 @@ public class ConfigGuiScreen extends GuiScreen implements IGuiElementValuePersis
     {
         this.buttonList.clear();
 
-        this.buttonList.add(new GuiButton(1, this.width / 2 - 75, this.height - 38, I18n.format("gui.done")));
+        this.buttonList.add(new GuiButton(1, this.width / 2 - 100, this.height - 38, I18n.format("gui.done")));
 
         int topOffset = 32;
 
@@ -96,10 +96,10 @@ public class ConfigGuiScreen extends GuiScreen implements IGuiElementValuePersis
             this.buttonList.add(new GuiElementSliderLog(4, this.width / 2 + 2, topOffset + 24, this, 1F, (2 << 16) + 1, 3));
 
             toolTypeList = new GuiElementSlotToolTypeList(this);
-        }
 
-        this.buttonList.add(new GuiButton(5, this.width / 2 + 2, 100, 150, 20, I18n.format("gui.veinminer.config.toollist")));
-        this.buttonList.add(new GuiButton(6, this.width / 2 + 2, 122, 150, 20, I18n.format("gui.veinminer.config.blocklist")));
+            this.buttonList.add(new GuiButton(5, this.width / 2 + 2, 100, 150, 20, I18n.format("gui.veinminer.config.toollist")));
+            this.buttonList.add(new GuiButton(6, this.width / 2 + 2, 122, 150, 20, I18n.format("gui.veinminer.config.blocklist")));
+        }
     }
 
     @Override
@@ -157,6 +157,7 @@ public class ConfigGuiScreen extends GuiScreen implements IGuiElementValuePersis
           this.drawCenteredString(this.fontRendererObj, I18n.format("gui.veinminer.config.multiplayer1"), this.width / 2, 106, 0xFFFFFF);
             this.drawCenteredString(this.fontRendererObj, I18n.format("gui.veinminer.config.multiplayer2"), this.width / 2, 126, 0xFFFFFF);
             this.drawCenteredString(this.fontRendererObj, I18n.format("gui.veinminer.config.multiplayer3"), this.width / 2, 146, 0xFFFFFF);
+            this.drawCenteredString(this.fontRendererObj, I18n.format("gui.veinminer.config.multiplayer4"), this.width / 2, 166, 0xFFFFFF);
         }
         super.drawScreen(par1, par2, par3);
     }
