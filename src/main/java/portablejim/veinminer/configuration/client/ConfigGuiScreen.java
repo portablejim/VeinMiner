@@ -56,7 +56,7 @@ public class ConfigGuiScreen extends GuiScreen implements IGuiElementValuePersis
     public ConfigGuiScreen(GuiScreen parent) {
         this.parent = parent;
 
-        isSingleplayer = Minecraft.getMinecraft().isSingleplayer();
+        isSingleplayer = Minecraft.getMinecraft().isSingleplayer() || Minecraft.getMinecraft().theWorld == null;
 
         VeinMiner.instance.configurationSettings.reloadConfigFile();
 
@@ -112,7 +112,7 @@ public class ConfigGuiScreen extends GuiScreen implements IGuiElementValuePersis
             switch (par1GuiButton.id) {
                 case 1:
                     settings.saveConfigs();
-                    if(parent.mc.theWorld != null && isSingleplayer) {
+                    if(parent.mc.theWorld != null && !isSingleplayer) {
                         int newMode = settings.getPreferredMode();
                         if(newMode != oldMode) {
                             VeinMiner.instance.networkWrapper.sendToServer(new PacketClientPresent(newMode));
