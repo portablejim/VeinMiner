@@ -146,18 +146,18 @@ public class ConfigGuiScreen extends GuiScreen implements IGuiElementValuePersis
     public void drawScreen(int par1, int par2, float par3)
     {
         this.drawDefaultBackground();
-        this.drawCenteredString(this.fontRendererObj, I18n.format("gui.veinminer.config"), this.width / 2, 15, 0xFFFFFF);
-        this.drawString(this.fontRendererObj, I18n.format("gui.veinminer.config.enable.text"), this.width / 2 - 95, 38, 0xFFFFFF);
+        this.drawCenteredString(this.getFontRenderer(), I18n.format("gui.veinminer.config"), this.width / 2, 15, 0xFFFFFF);
+        this.drawString(this.getFontRenderer(), I18n.format("gui.veinminer.config.enable.text"), this.width / 2 - 95, 38, 0xFFFFFF);
 
         if(isSingleplayer) {
             toolTypeList.drawScreen(par1, par2, par3);
-            this.drawCenteredString(this.fontRendererObj, I18n.format("gui.veinminer.config.toolTypes"), this.width / 2, 86, 0xFFFFFF);
+            this.drawCenteredString(this.getFontRenderer(), I18n.format("gui.veinminer.config.toolTypes"), this.width / 2, 86, 0xFFFFFF);
         }
         else {
-          this.drawCenteredString(this.fontRendererObj, I18n.format("gui.veinminer.config.multiplayer1"), this.width / 2, 106, 0xFFFFFF);
-            this.drawCenteredString(this.fontRendererObj, I18n.format("gui.veinminer.config.multiplayer2"), this.width / 2, 126, 0xFFFFFF);
-            this.drawCenteredString(this.fontRendererObj, I18n.format("gui.veinminer.config.multiplayer3"), this.width / 2, 146, 0xFFFFFF);
-            this.drawCenteredString(this.fontRendererObj, I18n.format("gui.veinminer.config.multiplayer4"), this.width / 2, 166, 0xFFFFFF);
+          this.drawCenteredString(this.getFontRenderer(), I18n.format("gui.veinminer.config.multiplayer1"), this.width / 2, 106, 0xFFFFFF);
+            this.drawCenteredString(this.getFontRenderer(), I18n.format("gui.veinminer.config.multiplayer2"), this.width / 2, 126, 0xFFFFFF);
+            this.drawCenteredString(this.getFontRenderer(), I18n.format("gui.veinminer.config.multiplayer3"), this.width / 2, 146, 0xFFFFFF);
+            this.drawCenteredString(this.getFontRenderer(), I18n.format("gui.veinminer.config.multiplayer4"), this.width / 2, 166, 0xFFFFFF);
         }
         super.drawScreen(par1, par2, par3);
     }
