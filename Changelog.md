@@ -2,6 +2,13 @@ Changelog
 =========
 
 
+0.38.1
+-------
+Fixes:
+* Catch a potential NPE when veinmining.
+* Allow access to config GUI when not in any game.
+
+
 0.38.0
 -------
 Changes:
