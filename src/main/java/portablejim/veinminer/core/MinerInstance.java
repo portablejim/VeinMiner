@@ -35,6 +35,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
+import portablejim.veinminer.VeinMiner;
 import portablejim.veinminer.api.Permission;
 import portablejim.veinminer.api.VeinminerHarvestFailedCheck;
 import portablejim.veinminer.api.VeinminerNoToolCheck;
@@ -285,7 +286,15 @@ public class MinerInstance {
         if(mineAllowed(newBlock, newPoint, configurationSettings)) {
             mineSuccessful = mineSuccessful | 1;
             awaitingEntityDrop.add(newPoint);
-            boolean success = player.interactionManager.tryHarvestBlock(new BlockPos(x, y, z));
+            boolean success;
+            try {
+                success = player.interactionManager.tryHarvestBlock(new BlockPos(x, y, z));
+            }
+            catch(NullPointerException e) {
+                success = false;
+                VeinMiner.instance.logger.warn("TryHarvestBlock NPE");
+                VeinMiner.instance.logger.warn(e);
+            }
             numBlocksMined++;
 
             if(!player.capabilities.isCreativeMode) {
