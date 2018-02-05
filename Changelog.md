@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.38.2
+-------
+Fixes:
+* A tinkers tools actually stops when broken.
+* Improved mcmod.info
+
 
 0.38.1
 -------
