@@ -25,6 +25,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagByte;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.FoodStats;
 import net.minecraft.util.text.TextComponentString;
@@ -138,7 +139,19 @@ public class MinerInstance {
         }
         else if(player.getHeldItemMainhand() == null || !player.getHeldItemMainhand().isItemEqual(usedItem)) {
             this.finished = true;
-        }
+        } else {
+			//Check to see if tconstruct tool and broken.
+			NBTTagCompound tag = usedItem.getTagCompound();
+		    	if(tag != null) {
+					NBTTagCompound stats = (NBTTagCompound)usedItem.getTagCompound().getTag("Stats");
+					if(stats != null) {
+						NBTTagByte broken = (NBTTagByte) stats.getTag("Broken");
+						if(broken != null && broken.getInt() == 1) {
+							  this.finished = true;
+						}
+					}
+				}
+		}
 
         // Player exists and is in correct status (correct button held)
         UUID playerName = player.getUniqueID();

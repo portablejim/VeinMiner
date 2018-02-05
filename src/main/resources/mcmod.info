@@ -2,7 +2,7 @@
 {
   "modid": "veinminer",
   "name": "Vein Miner",
-  "description": "When a configured block is harvested a chain reaction is initiated to break connected blocks of the same type. Takes durability and health for each block mined.",
+  "description": "When a configured block is harvested a chain reaction is initiated to break connected blocks of the same type. Takes durability and food saturation (configurable) for each block mined.",
   "version": "${version}",
   "url": "http://minecraft.curseforge.com/mc-mods/veinminer/",
   "updateUrl": "",

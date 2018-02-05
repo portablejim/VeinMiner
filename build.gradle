@@ -155,7 +155,7 @@ curseforge {
     //debug = true
     project {
         id = '67133'
-        changelog = new File('Changelog.md').getText('utf-8').split('\n-{3,8}|\n\n')[2]
+        changelog = new File('Changelog.md').getText('utf-8').split('\n-{3,8}|\n\n\n')[2]
         changelogType = 'text'
         releaseType = 'alpha' // Just a default
         mainArtifact (jar) {
