@@ -111,7 +111,7 @@ public class MinerInstance {
 
     private boolean shouldContinue() {
         // Item equipped
-        if(!serverInstance.getConfigurationSettings().getEnableAllTools() && player.getHeldItemMainhand() == null) {
+        if(!serverInstance.getConfigurationSettings().getEnableAllTools() && player.getHeldItemMainhand() == ItemStack.EMPTY) {
             VeinminerNoToolCheck toolCheck = new VeinminerNoToolCheck(player);
             MinecraftForge.EVENT_BUS.post(toolCheck);
 
@@ -132,12 +132,12 @@ public class MinerInstance {
             }
         }
 
-        if(usedItem == null) {
-            if(player.getHeldItemMainhand() != null) {
+        if(usedItem == ItemStack.EMPTY) {
+            if(player.getHeldItemMainhand() != ItemStack.EMPTY) {
                 this.finished = true;
             }
         }
-        else if(player.getHeldItemMainhand() == null || !player.getHeldItemMainhand().isItemEqual(usedItem)) {
+        else if(player.getHeldItemMainhand() == ItemStack.EMPTY || !player.getHeldItemMainhand().isItemEqual(usedItem)) {
             this.finished = true;
         } else {
 			//Check to see if tconstruct tool and broken.
